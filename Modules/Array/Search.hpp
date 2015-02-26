@@ -16,7 +16,7 @@ namespace ArrayAlgorithms
   /// @param key the key value to be searched
   ///
   /// @complexity O(log(N))
-  /// @return The vector index of the found key, -1 otherwise
+  /// @return The vector index of the first found key, -1 otherwise
   template <class T>
 	int BinarySearchIterativeT(const std::vector<T>& sortedArray, const T& key)
   {
