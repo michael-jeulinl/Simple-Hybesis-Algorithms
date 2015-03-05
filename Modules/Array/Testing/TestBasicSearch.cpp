@@ -2,9 +2,9 @@
 #include <Search.hpp>
 
 namespace {
-  const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15,36, 212, 366}; // Simple sorted array of integers with negative values
+  const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366}; // Simple sorted array of integers with negative values
   const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5};// Simple random array of integers with negative values
-  const double SortedDoubleArray[] = {-.3, 0.0, 0.12, 2.5, 8};     // Simple sorted array of floats with negative values
+  const double SortedDoubleArray[] = {-.3, 0.0, 0.12, 2.5, 8};      // Simple sorted array of floats with negative values
 
 }
 
@@ -73,13 +73,13 @@ TEST(TestBasicSearch, SimpleStockMarketProblem)
 }
 
 
-// Test MaximalSubArray
-TEST(TestBasicSearch, MaximalSubArray)
+// Test MaxSubArray
+TEST(TestBasicSearch, MaxSubArray)
 {
   // Should return <5,9> (maximal sum of 17)
   {
     const std::vector<int> kMarketPrices(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    const std::pair<int, int> kMaxBeneficeIndexes = ArrayAlgorithms::MaximalSubArray<int, std::minus<int>, std::greater<int> >(kMarketPrices);
+    const std::pair<int, int> kMaxBeneficeIndexes = ArrayAlgorithms::MaxSubArray<int, std::minus<int>, std::greater<int> >(kMarketPrices);
     EXPECT_EQ(5, kMaxBeneficeIndexes.first);
     EXPECT_EQ(9, kMaxBeneficeIndexes.second);
   }
@@ -87,21 +87,21 @@ TEST(TestBasicSearch, MaximalSubArray)
   // Should return <FirstPositiveIdx, idxEnd> on sorted array
   {
     const std::vector<int> kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
-    const std::pair<int, int> kIndexes = ArrayAlgorithms::MaximalSubArray<int, std::minus<int>, std::greater<int> >(kSortedArray);
+    const std::pair<int, int> kIndexes = ArrayAlgorithms::MaxSubArray<int, std::minus<int>, std::greater<int> >(kSortedArray);
     EXPECT_EQ(2, kIndexes.first);
     EXPECT_EQ(static_cast<int>(kSortedArray.size()) - 1, kIndexes.second);
   }
 
   // Should return <-1,-1> on insufficient array
   {
-    const std::pair<int, int> kIndexes = ArrayAlgorithms::MaximalSubArray<int, std::minus<int>, std::greater<int> >(std::vector<int>(1, 2));
+    const std::pair<int, int> kIndexes = ArrayAlgorithms::MaxSubArray<int, std::minus<int>, std::greater<int> >(std::vector<int>(1, 2));
     EXPECT_EQ(-1, kIndexes.first);
     EXPECT_EQ(-1, kIndexes.second);
   }
 
   // Should return <0,1> on array containing only two positive elements
   {
-    const std::pair<int, int> kIndexes = ArrayAlgorithms::MaximalSubArray<int, std::minus<int>, std::greater<int> >(std::vector<int>(2, 2));
+    const std::pair<int, int> kIndexes = ArrayAlgorithms::MaxSubArray<int, std::minus<int>, std::greater<int> >(std::vector<int>(2, 2));
     EXPECT_EQ(0, kIndexes.first);
     EXPECT_EQ(1, kIndexes.second);
   }
@@ -109,8 +109,80 @@ TEST(TestBasicSearch, MaximalSubArray)
   // Should return <0, idxEnd> on array containing the same positive value
   {
     const int kSize = 10;
-    const std::pair<int, int> indexes = ArrayAlgorithms::MaximalSubArray<int, std::minus<int>, std::greater<int> >(std::vector<int>(kSize, 2));
+    const std::pair<int, int> indexes = ArrayAlgorithms::MaxSubArray<int, std::minus<int>, std::greater<int> >(std::vector<int>(kSize, 2));
     EXPECT_EQ(0, indexes.first);
     EXPECT_EQ(kSize - 1, indexes.second);
+  }
+}
+
+// Test MaxNElements
+TEST(TestBasicSearch, MaxNElements)
+{
+  // Should return the max value [5] for a unique element search
+  {
+    const std::vector<int> kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const std::vector<int> kMMaxElements = ArrayAlgorithms::MaxMElements<int, std::greater_equal<int> >(kRandomElements, 1);
+    EXPECT_EQ(5, kMMaxElements[0]);
+  }
+
+  // Should return [5,5,4]
+  {
+    const std::vector<int> kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const std::vector<int> kMMaxElements = ArrayAlgorithms::MaxMElements<int, std::greater_equal<int> >(kRandomElements, 3);
+    EXPECT_EQ(5, kMMaxElements[0]);
+    EXPECT_EQ(5, kMMaxElements[1]);
+    EXPECT_EQ(4, kMMaxElements[2]);
+  }
+
+  // Should return the last elements on sorted vector
+  {
+    const std::vector<int> kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+    const std::vector<int> kMMaxElements = ArrayAlgorithms::MaxMElements<int, std::greater_equal<int> >(kSortedArray, 4);
+    EXPECT_EQ(366, kMMaxElements[0]);
+    EXPECT_EQ(212, kMMaxElements[1]);
+    EXPECT_EQ(36, kMMaxElements[2]);
+    EXPECT_EQ(15, kMMaxElements[3]);
+  }
+
+  // Should return empty vector on insufficient vector
+  {
+    const std::vector<int> kMMaxElements = ArrayAlgorithms::MaxMElements<int, std::greater_equal<int> >(std::vector<int>(1, 2), 2);
+    EXPECT_EQ(0, static_cast<int>(kMMaxElements.size()));
+  }
+
+  // Should return empty vector when looking for less than 1 elements
+  {
+    const std::vector<int> kMMaxElements = ArrayAlgorithms::MaxMElements<int, std::greater_equal<int> >(std::vector<int>(1, 2), 0);
+    EXPECT_EQ(0, static_cast<int>(kMMaxElements.size()));
+  }
+}
+
+// Test MaxNElements to find the lowest values
+TEST(TestBasicSearch, MaxNElementsLowestValues)
+{
+  // Should return the min value [-18] for a unique element search
+  {
+    const std::vector<int> kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const std::vector<int> kMMaxElements = ArrayAlgorithms::MaxMElements<int, std::less_equal<int> >(kRandomElements, 1);
+    EXPECT_EQ(-18, kMMaxElements[0]);
+  }
+
+  // Should return [5,5,4]
+  {
+    const std::vector<int> kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const std::vector<int> kMMaxElements = ArrayAlgorithms::MaxMElements<int, std::less_equal<int> >(kRandomElements, 3);
+    EXPECT_EQ(-18, kMMaxElements[0]);
+    EXPECT_EQ(-5, kMMaxElements[1]);
+    EXPECT_EQ(2, kMMaxElements[2]);
+  }
+
+  // Should return the first elements on sorted vector
+  {
+    const std::vector<int> kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+    const std::vector<int> kMMaxElements = ArrayAlgorithms::MaxMElements<int, std::less_equal<int> >(kSortedArray, 4);
+    EXPECT_EQ(-3, kMMaxElements[0]);
+    EXPECT_EQ(-2, kMMaxElements[1]);
+    EXPECT_EQ(0, kMMaxElements[2]);
+    EXPECT_EQ(2, kMMaxElements[3]);
   }
 }
