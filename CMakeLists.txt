@@ -101,6 +101,12 @@ if(MSVC)
 	)
   
   set(SHA_CXX_FLAGS "${SHA_CXX_FLAGS} ${msvc_suppressed_warnings}")
+
+  # Add compiler flag for MSVC 2012
+  # VS2012 doesn't support correctly the tuples used by GTest
+  if(BUILD_TESTING AND MSVC_VERSION EQUAL 1700)
+    add_definitions(-D_VARIADIC_MAX=10)
+  endif()
 endif()
 
 add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE 
@@ -112,6 +118,16 @@ add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE
 #
 set(CMAKE_CXX_FLAGS ${SHA_CXX_FLAGS} CACHE STRING "CMake C Flags" FORCE)
 set(CMAKE_C_FLAGS ${SHA_C_FLAGS} CACHE STRING "CMake CXX Flags" FORCE)
+
+# Force static runtime libraries to build against gtest
+FOREACH(flag
+ CMAKE_C_FLAGS_RELEASE CMAKE_C_FLAGS_RELWITHDEBINFO
+ CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_DEBUG_INIT
+ CMAKE_CXX_FLAGS_RELEASE  CMAKE_CXX_FLAGS_RELWITHDEBINFO
+ CMAKE_CXX_FLAGS_DEBUG  CMAKE_CXX_FLAGS_DEBUG_INIT)
+ STRING(REPLACE "/MD"  "/MT" "${flag}" "${${flag}}")
+ SET("${flag}" "${${flag}} /EHsc")
+ENDFOREACH()
 
 #-----------------------------------------------------------------------------
 # Add the modules
