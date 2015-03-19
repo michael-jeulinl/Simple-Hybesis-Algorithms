@@ -116,7 +116,7 @@ namespace ArrayAlgorithms
     for (std::vector<int>::const_iterator it = elements.begin() + 1; it != elements.end(); ++it)
     {
       currSum += *it;
-      const int currentIdx = std::distance(elements.begin(), it);
+      int currentIdx = std::distance(elements.begin(), it);
 
       // keep track of the minimum sum and its first value index
       if (Compare()(minSum, currSum)) {

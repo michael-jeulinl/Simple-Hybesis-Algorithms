@@ -25,10 +25,11 @@ ExternalProject_Add(gtest_ext
 )
 
 set(GTEST_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/gtest-src/include")
-#set(GTEST_SRC_DIRS "${CMAKE_BINARY_DIR}/gtest-src")
+set(GTEST_SRC_DIRS "${CMAKE_BINARY_DIR}/gtest-src")
 message(${GTEST_INCLUDE_DIRS})
 enable_testing()
 function(cxx_gtest name sources sourcesDirectory)
+  message(${sources})
   add_executable(${name} ${sources})
   add_dependencies(${name} gtest_ext)
 

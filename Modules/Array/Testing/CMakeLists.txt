@@ -11,7 +11,12 @@
 
 set(SHA ${PROJECT_NAME})
 
+# Source files
+set(MODULE_ARRAY_SRCS TestBasicSearch.cxx
+                      TestBasicSort.cxx)
+
 # --------------------------------------------------------------------------
 # Build Testing executables
 # --------------------------------------------------------------------------
-cxx_gtest(TestBasicSearch TestBasicSearch.cpp ${SHA_SRCS})
+message("${MODULE_ARRAY_SRCS}")
+cxx_gtest(TestModuleArray "${MODULE_ARRAY_SRCS}" ${SHA_SRCS})

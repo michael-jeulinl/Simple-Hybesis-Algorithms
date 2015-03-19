@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <Search.hpp>
+#include <search.hxx>
 
 namespace {
   const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366}; // Simple sorted array of integers with negative values
