@@ -27,22 +27,22 @@ namespace ArrayAlgorithms
     if (std::distance(begin, end) < 2 || pivot == end)
       return;
 
-	  Iterator::value_type pivotValue = *pivot;		// Keep the pivot value;
-	  std::swap(*pivot, *(end - 1));				      // Put the pivot at the end for convenience
-	  Iterator store = begin;	                    // Put the store pointer at the beginning
-	
-    // Swap each smaller before the pivot item
-	  for(Iterator it = begin; it != end - 1; ++it) 
-	  {
-		  if(*it <= pivotValue) 
-		  {
-			  std::swap(*store, *it);
-			  ++store;
-		  }
-	  }
+    Iterator::value_type pivotValue = *pivot;  // Keep the pivot value;
+    std::swap(*pivot, *(end - 1));             // Put the pivot at the end for convenience
+    Iterator store = begin;                    // Put the store pointer at the beginning
 
-	  pivot = store;				         // Return the pointer on the pivot
-	  std::swap(*(end - 1), *pivot); // Replace the pivot at its good position
+    // Swap each smaller before the pivot item
+    for(Iterator it = begin; it != end - 1; ++it)
+    {
+      if(*it <= pivotValue)
+      {
+        std::swap(*store, *it);
+        ++store;
+      }
+    }
+
+    pivot = store;                 // Return the pointer on the pivot
+    std::swap(*(end - 1), *pivot); // Replace the pivot at its good position
   }
 
 
@@ -62,15 +62,15 @@ namespace ArrayAlgorithms
   template <typename Iterator>
   void QuickSort(Iterator& begin, Iterator& end)
   {
-	  int distance = std::distance(begin, end);
-	  if (distance < 2)
+    int distance = std::distance(begin, end);
+    if (distance < 2)
       return;
 
     Iterator pivot = begin + (rand() % (end - begin));  // Pick Random Pivot € [begin, end]
-	  Partition(begin, pivot, end);                       // Proceed partition
+    Partition(begin, pivot, end);                       // Proceed partition
 
-	  QuickSort(begin, pivot);   // Recurse on first partition
-	  QuickSort(pivot + 1, end); // Recurse on second partition
+    QuickSort(begin, pivot);   // Recurse on first partition
+    QuickSort(pivot + 1, end); // Recurse on second partition
   }
 };
 
