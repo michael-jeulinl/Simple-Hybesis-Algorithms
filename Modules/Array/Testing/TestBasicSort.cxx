@@ -112,3 +112,57 @@ TEST(TestBasicSort, PartitionXTremePivotVectorInt)
       EXPECT_EQ(randomdArraySrc[i], *it);
   }
 }
+
+// Basic Quick-Sort tests
+TEST(TestBasicSort, QuickSortBasicVectorInt)
+{
+  // Normal Run
+  {
+    std::vector<int> randomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+
+    // Run Quick-Sort
+    ArrayAlgorithms::QuickSort<std::vector<int>::iterator>(randomdArray.begin(), randomdArray.end());
+
+    // All elements are sorted
+    for (std::vector<int>::iterator it = randomdArray.begin(); it < randomdArray.end() - 1; ++it)
+      EXPECT_LE(*it, *(it + 1));
+  }
+
+  // Already sortedArray - Array should not be affected
+  {
+    std::vector<int> sortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+
+    ArrayAlgorithms::QuickSort<std::vector<int>::iterator>(sortedArray.begin(), sortedArray.end());
+
+    // All elements are still sorted
+    for (std::vector<int>::iterator it = sortedArray.begin(); it < sortedArray.end() - 1; ++it)
+      EXPECT_LE(*it, *(it + 1));
+  }
+
+  // Inverse iterator order - Array should not be affected
+  {
+    std::vector<int> randomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    std::vector<int> randomdArraySrc(randomdArray);
+
+    // Run Quick-Sort
+    ArrayAlgorithms::QuickSort<std::vector<int>::iterator>(randomdArray.end(), randomdArray.begin());
+
+    int i = 0;
+    for (std::vector<int>::iterator it = randomdArray.begin(); it < randomdArray.end(); ++it, ++i)
+      EXPECT_EQ(randomdArraySrc[i], *it);
+  }
+
+  // No error empty array
+  {
+    std::vector<int> emptyArray;
+    ArrayAlgorithms::QuickSort<std::vector<int>::iterator>(emptyArray.begin(), emptyArray.end());
+
+  }
+
+  // Unique value array - Array should not be affected
+  {
+    std::vector<int> uniqueValueArray(1, 511);
+    ArrayAlgorithms::QuickSort<std::vector<int>::iterator>(uniqueValueArray.begin(), uniqueValueArray.end());
+    EXPECT_EQ(511, uniqueValueArray[0]);
+  }
+}
