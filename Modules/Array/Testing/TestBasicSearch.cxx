@@ -188,22 +188,22 @@ TEST(TestBasicSearch, MaxNElementsLowestValues)
 }
 
 // Test kth smallest element
-TEST(TestBasicSearch, KthSmallestElement)
+TEST(TestBasicSearch, KthSmallesElement)
 {
   typedef std::vector<int>::iterator Iterator_type;
-  typedef std::less<Iterator_type::value_type> Comparator_type;
+  typedef std::less_equal<Iterator_type::value_type> Comparator_type;
 
   // Basic run on sorted array with unique element - Should the kth element
   {
     std::vector<int> ksortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
-    Iterator_type it = ArrayAlgorithms::KthSmallestElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.end(), 4);
+    Iterator_type it = ArrayAlgorithms::KthMaxElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.end(), 4);
     EXPECT_EQ(ksortedArray.begin() + 4, it);
   }
 
   // Basic run on random array - Should return 4
   {
     std::vector<int> krandomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    Iterator_type::value_type value = *ArrayAlgorithms::KthSmallestElement<Iterator_type, Comparator_type>(krandomdArray.begin(), krandomdArray.end(), 7);
+    Iterator_type::value_type value = *ArrayAlgorithms::KthMaxElement<Iterator_type, Comparator_type>(krandomdArray.begin(), krandomdArray.end(), 7);
     EXPECT_EQ(4, value);
   }
 
@@ -212,13 +212,27 @@ TEST(TestBasicSearch, KthSmallestElement)
     std::vector<int> ksortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
     Iterator_type it;
 
-    it = ArrayAlgorithms::KthSmallestElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.begin(), 0);
+    it = ArrayAlgorithms::KthMaxElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.begin(), 0);
     EXPECT_EQ(ksortedArray.begin(), it);     // Should return end on empty sequence
-    it = ArrayAlgorithms::KthSmallestElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.begin() + 1, 0);
+    it = ArrayAlgorithms::KthMaxElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.begin() + 1, 0);
     EXPECT_EQ(ksortedArray.begin(), it);     // Should return the unique element
-    it = ArrayAlgorithms::KthSmallestElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.end(), -1);
+    it = ArrayAlgorithms::KthMaxElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.end(), -1);
     EXPECT_EQ(ksortedArray.end(), it);       // Should end for out of scope k (-1)
-    it =  ArrayAlgorithms::KthSmallestElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.end(), 100);
+    it =  ArrayAlgorithms::KthMaxElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.end(), 100);
     EXPECT_EQ(ksortedArray.end(), it);       // Should end for out of scope k (100)
+  }
+}
+
+// Test kth biggest element
+TEST(TestBasicSearch, KthBiggestElement)
+{
+  typedef std::vector<int>::iterator Iterator_type;
+  typedef std::greater_equal<Iterator_type::value_type> Comparator_type;
+
+  // Basic run on random array - Should return 5 (second biggest value)
+  {
+    std::vector<int> krandomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    Iterator_type::value_type value = *ArrayAlgorithms::KthMaxElement<Iterator_type, Comparator_type>(krandomdArray.begin(), krandomdArray.end(), 1);
+    EXPECT_EQ(5, value);
   }
 }
