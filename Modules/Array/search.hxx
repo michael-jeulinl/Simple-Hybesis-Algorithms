@@ -187,21 +187,22 @@ namespace ArrayAlgorithms
   /// @complexity recursively look on the right partition: N + N/2 + N/4 + N/8 + ... = O(N)
   ///
   /// @templateparam Random-access iterator type
+  /// @templateparam Compare functor type
   /// @param begin,end Random-access iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   /// @param k, the zero-based kth element wanted to be find as.
   ///
   /// @return the kth smallest iterator element of the array, the end iterator in case of failure.
-  template <typename Iterator>
+  template <typename Iterator, typename Compare /*= std::less_equal*/>
   Iterator KthSmallestElement(Iterator& begin, Iterator& end, size_t k)
   {
     const size_t karraySize = std::distance(begin, end);
     if (k > karraySize || k < 0 || karraySize <= 0)
       return end;
 
-    Iterator pivot = begin + (rand() % (end - begin));  // Take random pivot
-    ArrayAlgorithms::Partition(begin, pivot, end);      // Partition
+    Iterator pivot = begin + (rand() % (end - begin));                // Take random pivot
+    ArrayAlgorithms::Partition<Iterator, Compare>(begin, pivot, end); // Partition
 
     // Get the index of the pivot (i'th smallest/biggest value)
     size_t indexElem = std::distance(begin, pivot);
@@ -210,8 +211,8 @@ namespace ArrayAlgorithms
     if (indexElem == k)
       return pivot;
 
-    return (indexElem > k) ? KthSmallestElement(begin, pivot, k)            // Recurse search on left part
-                           : KthSmallestElement(pivot, end, k - indexElem); // Recurse search on right part
+    return (indexElem > k) ? KthSmallestElement<Iterator, Compare>(begin, pivot, k)            // Recurse search on left part
+                           : KthSmallestElement<Iterator, Compare>(pivot, end, k - indexElem); // Recurse search on right part
   }
 
   template <class T>

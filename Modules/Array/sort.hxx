@@ -15,13 +15,15 @@ namespace ArrayAlgorithms
   /// @complexity O(N)
   ///
   /// @templateparam Random-access iterator type
+  /// @templateparam Compare functor type (std::less_equal for smaller elements in left partition,
+  /// std::greater_equal for greater elements in left partition)
   /// @param begin,end const Random-access iterators to the initial and final positions of 
   /// the sequence to be pivoted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   /// @param pivot Random-access iterators to position between begin and end.
   ///
   /// @return void.
-  template <typename Iterator>
+  template <typename Iterator, typename Compare /*= std::less_equal*/>
   void Partition(const Iterator& begin, Iterator& pivot, const Iterator& end)
   {
     if (std::distance(begin, end) < 2 || pivot == end)
@@ -32,9 +34,9 @@ namespace ArrayAlgorithms
     Iterator store = begin;                    // Put the store pointer at the beginning
 
     // Swap each smaller before the pivot item
-    for(Iterator it = begin; it != end - 1; ++it)
+    for (Iterator it = begin; it != end - 1; ++it)
     {
-      if(*it <= pivotValue)
+      if (Compare()(*it, pivotValue))
       {
         std::swap(*store, *it);
         ++store;
@@ -54,12 +56,13 @@ namespace ArrayAlgorithms
   /// Note: this algorithm is easily parallelizable.
   ///
   /// @templateparam Random-access iterator type
+  /// @templateparam Compare functor type (std::less_equal for in order, std::greater_equal for inverse order)
   /// @param begin,end Random-access iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return void.
-  template <typename Iterator>
+  template <typename Iterator, typename Compare /*= std::less_equal*/>
   void QuickSort(Iterator& begin, Iterator& end)
   {
     int distance = std::distance(begin, end);
@@ -67,10 +70,10 @@ namespace ArrayAlgorithms
       return;
 
     Iterator pivot = begin + (rand() % (end - begin));  // Pick Random Pivot € [begin, end]
-    Partition(begin, pivot, end);                       // Proceed partition
+    Partition<Iterator, Compare>(begin, pivot, end);    // Proceed partition
 
-    QuickSort(begin, pivot);   // Recurse on first partition
-    QuickSort(pivot + 1, end); // Recurse on second partition
+    QuickSort<Iterator, Compare>(begin, pivot);   // Recurse on first partition
+    QuickSort<Iterator, Compare>(pivot + 1, end); // Recurse on second partition
   }
 };
 

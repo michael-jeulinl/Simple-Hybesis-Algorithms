@@ -2,31 +2,35 @@
 #include <sort.hxx>
 
 namespace {
-  const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366};  // Simple sorted array of integers with negative values
-  const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5}; // Simple random array of integers with negative values
-  const double SortedDoubleArray[] = {-.3, 0.0, 0.12, 2.5, 8};       // Simple sorted array of floats with negative values
+  const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366};     // Simple sorted array of integers with negative values
+  const int InvSortedArrayInt[] = {366, 212, 36, 15, 8, 2, 0, -2, -3};  // Simple sorted array of integers with negative values
+  const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5};    // Simple random array of integers with negative values
+  const double SortedDoubleArray[] = {-.3, 0.0, 0.12, 2.5, 8};          // Simple sorted array of floats with negative values
 
 }
 
 // Basic Partition tests
-TEST(TestBasicSort, PartitionBasicVectorInt)
+TEST(TestBasicSort, PartitionBasicVectorInOrderInt)
 {
+  typedef std::vector<int>::iterator Iterator_type;
+  typedef std::less_equal<Iterator_type::value_type> Comparator_type;
+
   // Normal Run
   {
     std::vector<int> randomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    std::vector<int>::iterator pivot = randomdArray.begin() + 5;
+    Iterator_type pivot = randomdArray.begin() + 5;
     const int pivotValue = *pivot;
 
     // Run partition
-    ArrayAlgorithms::Partition<std::vector<int>::iterator>(randomdArray.begin(), pivot, randomdArray.end());
+    ArrayAlgorithms::Partition<Iterator_type, Comparator_type>(randomdArray.begin(), pivot, randomdArray.end());
 
     // Value of the pivot no changed
     EXPECT_EQ(pivotValue, *pivot);
     // All elements before the pivot are smaller or equal
-    for (std::vector<int>::iterator it = randomdArray.begin(); it < pivot; ++it)
+    for (Iterator_type it = randomdArray.begin(); it < pivot; ++it)
       EXPECT_GE(*pivot, *it);
     // All elements before the pivot are bigger or equal
-    for (std::vector<int>::iterator it = pivot; it < randomdArray.end(); ++it)
+    for (Iterator_type it = pivot; it < randomdArray.end(); ++it)
       EXPECT_LE(*pivot, *it);
   }
 
@@ -34,12 +38,12 @@ TEST(TestBasicSort, PartitionBasicVectorInt)
   {
     std::vector<int> sortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
     const std::vector<int> sortedArraySrc(sortedArray);
-    std::vector<int>::iterator pivot = sortedArray.begin() + 5;
+    Iterator_type pivot = sortedArray.begin() + 5;
 
-    ArrayAlgorithms::Partition<std::vector<int>::iterator>(sortedArray.begin(), pivot, sortedArray.end());
+    ArrayAlgorithms::Partition<Iterator_type, Comparator_type>(sortedArray.begin(), pivot, sortedArray.end());
 
     int i = 0;
-    for (std::vector<int>::iterator it = sortedArray.begin(); it < sortedArray.end(); ++it, ++i)
+    for (Iterator_type it = sortedArray.begin(); it < sortedArray.end(); ++it, ++i)
       EXPECT_EQ(sortedArraySrc[i], *it);
   }
 
@@ -47,54 +51,57 @@ TEST(TestBasicSort, PartitionBasicVectorInt)
   {
     std::vector<int> randomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
     const std::vector<int> randomdArraySrc(randomdArray);
-    std::vector<int>::iterator pivot = randomdArray.begin() + 5;
+    Iterator_type pivot = randomdArray.begin() + 5;
 
-    ArrayAlgorithms::Partition<std::vector<int>::iterator>(randomdArray.end(), pivot, randomdArray.begin());
+    ArrayAlgorithms::Partition<Iterator_type, Comparator_type>(randomdArray.end(), pivot, randomdArray.begin());
 
     int i = 0;
-    for (std::vector<int>::iterator it = randomdArray.begin(); it < randomdArray.end(); ++it, ++i)
+    for (Iterator_type it = randomdArray.begin(); it < randomdArray.end(); ++it, ++i)
       EXPECT_EQ(randomdArraySrc[i], *it);
   }
 }
 
 // Extreme Pivot Partition tests
-TEST(TestBasicSort, PartitionXTremePivotVectorInt)
+TEST(TestBasicSort, PartitionInOrderXTremePivotVectorInt)
 {
+  typedef std::vector<int>::iterator Iterator_type;
+  typedef std::less_equal<Iterator_type::value_type> Comparator_type;
+
   // Pivot choose as begin
   {
     std::vector<int> randomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    std::vector<int>::iterator pivot = randomdArray.begin();
+    Iterator_type pivot = randomdArray.begin();
     const int pivotValue = *pivot;
 
     // Run partition
-    ArrayAlgorithms::Partition<std::vector<int>::iterator>(randomdArray.begin(), pivot, randomdArray.end());
+    ArrayAlgorithms::Partition<Iterator_type, Comparator_type>(randomdArray.begin(), pivot, randomdArray.end());
 
     // Value of the pivot no changed
     EXPECT_EQ(pivotValue, *pivot);
     // All elements before the pivot are smaller or equal
-    for (std::vector<int>::iterator it = randomdArray.begin(); it < pivot; ++it)
+    for (Iterator_type it = randomdArray.begin(); it < pivot; ++it)
       EXPECT_GE(*pivot, *it);
     // All elements before the pivot are bigger or equal
-    for (std::vector<int>::iterator it = pivot; it < randomdArray.end(); ++it)
+    for (Iterator_type it = pivot; it < randomdArray.end(); ++it)
       EXPECT_LE(*pivot, *it);
   }
 
   // Pivot choose as last element
   {
     std::vector<int> randomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    std::vector<int>::iterator pivot = randomdArray.end() - 1;
+    Iterator_type pivot = randomdArray.end() - 1;
     const int pivotValue = *pivot;
 
     // Run partition
-    ArrayAlgorithms::Partition<std::vector<int>::iterator>(randomdArray.begin(), pivot, randomdArray.end());
+    ArrayAlgorithms::Partition<Iterator_type, Comparator_type>(randomdArray.begin(), pivot, randomdArray.end());
 
     // Value of the pivot no changed
     EXPECT_EQ(pivotValue, *pivot);
     // All elements before the pivot are smaller or equal
-    for (std::vector<int>::iterator it = randomdArray.begin(); it < pivot; ++it)
+    for (Iterator_type it = randomdArray.begin(); it < pivot; ++it)
       EXPECT_GE(*pivot, *it);
     // All elements before the pivot are bigger or equal
-    for (std::vector<int>::iterator it = pivot; it < randomdArray.end(); ++it)
+    for (Iterator_type it = pivot; it < randomdArray.end(); ++it)
       EXPECT_LE(*pivot, *it);
   }
 
@@ -102,29 +109,71 @@ TEST(TestBasicSort, PartitionXTremePivotVectorInt)
   {
     std::vector<int> randomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
     std::vector<int> randomdArraySrc(randomdArray);
-    std::vector<int>::iterator pivot = randomdArray.end();
+    Iterator_type pivot = randomdArray.end();
 
     // Run partition
-    ArrayAlgorithms::Partition<std::vector<int>::iterator>(randomdArray.begin(), pivot, randomdArray.end());
+    ArrayAlgorithms::Partition<Iterator_type, Comparator_type>(randomdArray.begin(), pivot, randomdArray.end());
 
     int i = 0;
-    for (std::vector<int>::iterator it = randomdArray.begin(); it < randomdArray.end(); ++it, ++i)
+    for (Iterator_type it = randomdArray.begin(); it < randomdArray.end(); ++it, ++i)
       EXPECT_EQ(randomdArraySrc[i], *it);
+  }
+}
+
+// Basic Partition tests - Greater element in the left partition
+TEST(TestBasicSort, PartitionBasicVectorInverseOrderInt)
+{
+  typedef std::vector<int>::iterator Iterator_type;
+  typedef std::greater_equal<Iterator_type::value_type> Comparator_type;
+
+  // Normal Run
+  {
+    std::vector<int> randomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    Iterator_type pivot = randomdArray.begin() + 5;
+    const int pivotValue = *pivot;
+
+    // Run partition
+    ArrayAlgorithms::Partition<Iterator_type, Comparator_type>(randomdArray.begin(), pivot, randomdArray.end());
+
+    // Value of the pivot no changed
+    EXPECT_EQ(pivotValue, *pivot);
+    // All elements before the pivot are greater or equal
+    for (Iterator_type it = randomdArray.begin(); it < pivot; ++it)
+      EXPECT_LE(*pivot, *it);
+    // All elements before the pivot are less or equal
+    for (Iterator_type it = pivot; it < randomdArray.end(); ++it)
+      EXPECT_GE(*pivot, *it);
+  }
+
+  // Already InverseSortedArray - Array should not be affected
+  {
+    std::vector<int> invSortedArray(InvSortedArrayInt, InvSortedArrayInt + sizeof(InvSortedArrayInt) / sizeof(int));
+    const std::vector<int> invSortedArraySrc(invSortedArray);
+    Iterator_type pivot = invSortedArray.begin() + 5;
+
+    ArrayAlgorithms::Partition<Iterator_type, Comparator_type>(invSortedArray.begin(), pivot, invSortedArray.end());
+
+    int i = 0;
+    for (Iterator_type it = invSortedArray.begin(); it < invSortedArray.end(); ++it, ++i)
+      EXPECT_EQ(invSortedArray[i], *it);
   }
 }
 
 // Basic Quick-Sort tests
 TEST(TestBasicSort, QuickSortBasicVectorInt)
 {
+  typedef std::vector<int>::iterator Iterator_type;
+  typedef std::less_equal<Iterator_type::value_type> Comparator_type;
+
   // Normal Run
   {
     std::vector<int> randomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
 
     // Run Quick-Sort
-    ArrayAlgorithms::QuickSort<std::vector<int>::iterator>(randomdArray.begin(), randomdArray.end());
+    ArrayAlgorithms::QuickSort<Iterator_type, Comparator_type>(randomdArray.begin(), randomdArray.end());
 
     // All elements are sorted
-    for (std::vector<int>::iterator it = randomdArray.begin(); it < randomdArray.end() - 1; ++it)
+    for (Iterator_type it = randomdArray.begin(); it < randomdArray.end() - 1; ++it)
       EXPECT_LE(*it, *(it + 1));
   }
 
@@ -132,10 +181,10 @@ TEST(TestBasicSort, QuickSortBasicVectorInt)
   {
     std::vector<int> sortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
 
-    ArrayAlgorithms::QuickSort<std::vector<int>::iterator>(sortedArray.begin(), sortedArray.end());
+    ArrayAlgorithms::QuickSort<Iterator_type, Comparator_type>(sortedArray.begin(), sortedArray.end());
 
     // All elements are still sorted
-    for (std::vector<int>::iterator it = sortedArray.begin(); it < sortedArray.end() - 1; ++it)
+    for (Iterator_type it = sortedArray.begin(); it < sortedArray.end() - 1; ++it)
       EXPECT_LE(*it, *(it + 1));
   }
 
@@ -145,24 +194,54 @@ TEST(TestBasicSort, QuickSortBasicVectorInt)
     std::vector<int> randomdArraySrc(randomdArray);
 
     // Run Quick-Sort
-    ArrayAlgorithms::QuickSort<std::vector<int>::iterator>(randomdArray.end(), randomdArray.begin());
+    ArrayAlgorithms::QuickSort<Iterator_type, Comparator_type>(randomdArray.end(), randomdArray.begin());
 
     int i = 0;
-    for (std::vector<int>::iterator it = randomdArray.begin(); it < randomdArray.end(); ++it, ++i)
+    for (Iterator_type it = randomdArray.begin(); it < randomdArray.end(); ++it, ++i)
       EXPECT_EQ(randomdArraySrc[i], *it);
   }
 
   // No error empty array
   {
     std::vector<int> emptyArray;
-    ArrayAlgorithms::QuickSort<std::vector<int>::iterator>(emptyArray.begin(), emptyArray.end());
+    ArrayAlgorithms::QuickSort<Iterator_type, Comparator_type>(emptyArray.begin(), emptyArray.end());
 
   }
 
   // Unique value array - Array should not be affected
   {
     std::vector<int> uniqueValueArray(1, 511);
-    ArrayAlgorithms::QuickSort<std::vector<int>::iterator>(uniqueValueArray.begin(), uniqueValueArray.end());
+    ArrayAlgorithms::QuickSort<Iterator_type, Comparator_type>(uniqueValueArray.begin(), uniqueValueArray.end());
     EXPECT_EQ(511, uniqueValueArray[0]);
+  }
+}
+
+// Basic Quick-Sort tests - Inverse Order
+TEST(TestBasicSort, QuickSortBasicInverseOrderVectorInt)
+{
+  typedef std::vector<int>::iterator Iterator_type;
+  typedef std::greater_equal<Iterator_type::value_type> Comparator_type;
+
+  // Normal Run
+  {
+    std::vector<int> randomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+
+    // Run Quick-Sort
+    ArrayAlgorithms::QuickSort<Iterator_type, Comparator_type>(randomdArray.begin(), randomdArray.end());
+
+    // All elements are sorted in inverse order
+    for (Iterator_type it = randomdArray.begin(); it < randomdArray.end() - 1; ++it)
+      EXPECT_GE(*it, *(it + 1));
+  }
+
+  // Already sorted Array in inverse order - Array should not be affected
+  {
+    std::vector<int> invSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+
+    ArrayAlgorithms::QuickSort<Iterator_type, Comparator_type>(invSortedArray.begin(), invSortedArray.end());
+
+    // All elements are still sorted in inverse order
+    for (Iterator_type it = invSortedArray.begin(); it < invSortedArray.end() - 1; ++it)
+      EXPECT_GE(*it, *(it + 1));
   }
 }
