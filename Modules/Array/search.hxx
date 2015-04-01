@@ -1,6 +1,8 @@
 #ifndef MODULE_ARRAY_SEARCH_HXX
 #define MODULE_ARRAY_SEARCH_HXX
 
+#include "sort.hxx"
+
 // STD includes
 #include <functional>
 #include <iostream>
@@ -173,6 +175,43 @@ namespace ArrayAlgorithms
     }
 
     return maxMElements;
+  }
+
+
+  /// Kth Smallest element - Order Statitstics
+  /// Find the kth smallest element contained within [begin, end].
+  ///
+  /// @warning this method is not stable (does not keep order with element of the same value).
+  /// @warning this method changes the elements order between your iterators.
+  ///
+  /// @complexity recursively look on the right partition: N + N/2 + N/4 + N/8 + ... = O(N)
+  ///
+  /// @templateparam Random-access iterator type
+  /// @param begin,end Random-access iterators to the initial and final positions of
+  /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
+  /// first and last, including the element pointed by first but not the element pointed by last.
+  /// @param k, the zero-based kth element wanted to be find as.
+  ///
+  /// @return the kth smallest iterator element of the array, the end iterator in case of failure.
+  template <typename Iterator>
+  Iterator KthSmallestElement(Iterator& begin, Iterator& end, size_t k)
+  {
+    const size_t karraySize = std::distance(begin, end);
+    if (k > karraySize || k < 0 || karraySize <= 0)
+      return end;
+
+    Iterator pivot = begin + (rand() % (end - begin));  // Take random pivot
+    ArrayAlgorithms::Partition(begin, pivot, end);      // Partition
+
+    // Get the index of the pivot (i'th smallest/biggest value)
+    size_t indexElem = std::distance(begin, pivot);
+
+    // Return if at the kth
+    if (indexElem == k)
+      return pivot;
+
+    return (indexElem > k) ? KthSmallestElement(begin, pivot, k)            // Recurse search on left part
+                           : KthSmallestElement(pivot, end, k - indexElem); // Recurse search on right part
   }
 
   template <class T>

@@ -186,3 +186,31 @@ TEST(TestBasicSearch, MaxNElementsLowestValues)
     EXPECT_EQ(2, kMMaxElements[3]);
   }
 }
+
+// Test kth smallest element
+TEST(TestBasicSearch, KthSmallestElement)
+{
+  typedef std::vector<int>::iterator Iterator_type;
+
+  // Basic run on sorted array with unique element
+  {
+    std::vector<int> ksortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+    EXPECT_EQ(ksortedArray.begin() + 4, ArrayAlgorithms::KthSmallestElement<Iterator_type>(ksortedArray.begin(), ksortedArray.end(), 4));   // Should the kth element
+  }
+
+  // Basic run on random array
+  {
+    std::vector<int> krandomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    EXPECT_EQ(4, *ArrayAlgorithms::KthSmallestElement<Iterator_type>(krandomdArray.begin(), krandomdArray.end(), 6));                       // Should return 4
+  }
+
+  // Basic run with extreme values
+  {
+    std::vector<int> ksortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+
+    EXPECT_EQ(ksortedArray.begin(), ArrayAlgorithms::KthSmallestElement<Iterator_type>(ksortedArray.begin(), ksortedArray.begin(), 0));     // Should return end on empty sequence
+    EXPECT_EQ(ksortedArray.begin(), ArrayAlgorithms::KthSmallestElement<Iterator_type>(ksortedArray.begin(), ksortedArray.begin() + 1, 0)); // Should return the unique element
+    EXPECT_EQ(ksortedArray.end(), ArrayAlgorithms::KthSmallestElement<Iterator_type>(ksortedArray.begin(), ksortedArray.end(), -1));        // Should end for out of scope k (-1)
+    EXPECT_EQ(ksortedArray.end(), ArrayAlgorithms::KthSmallestElement<Iterator_type>(ksortedArray.begin(), ksortedArray.end(), 100));       // Should end for out of scope k (100)
+  }
+}
