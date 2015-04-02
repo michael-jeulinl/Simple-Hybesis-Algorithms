@@ -11,8 +11,8 @@
 
 namespace ArrayAlgorithms
 {
-  /// Binary Search - Iterative
-  /// Proceed a dichotomic search within a sorted vector the first occurence
+  /// Binary Search
+  /// Iteratively proceed a dichotomic search within a sorted vector on the first occurence
   /// of the key passed as parameter
   ///
   /// @complexity O(log(N))
@@ -22,7 +22,7 @@ namespace ArrayAlgorithms
   ///
   /// @return The vector index of the first found key, -1 otherwise
   template <typename T>
-  int BinarySearchIterativeT(const std::vector<T>& sortedArray, const T& key)
+  int BinarySearch(const std::vector<T>& sortedArray, const T& key)
   {
     int index = -1;
     int mid;
@@ -139,7 +139,7 @@ namespace ArrayAlgorithms
   }
 
   /// Max M Elements
-  /// Identify the m maximal/minimal values sorted in decreasing order.
+  /// Identify the m maximal/minimal values sorted in decreasing/increasing order.
   ///
   /// @detail using this algorithm with the size of the vector as the number
   /// of elements to be found will give you a bubble sort algorithm in O(N²).

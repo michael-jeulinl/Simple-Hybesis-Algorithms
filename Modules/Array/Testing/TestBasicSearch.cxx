@@ -9,25 +9,25 @@ namespace {
 }
 
 // Basic BinarySearchIterative tests on a sorted array of ints
-TEST(TestBasicSearch, BinarySearchIterativeTBasicInt)
+TEST(TestBasicSearch, BinarySearchBasicInt)
 {
   const std::vector<int> sortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
 
-  EXPECT_EQ(-1, ArrayAlgorithms::BinarySearchIterativeT<int>(std::vector<int>(), 0)); // Should return -1 on empty array
-  EXPECT_EQ(0, ArrayAlgorithms::BinarySearchIterativeT<int>(sortedArray, -3));        // Find first value
-  EXPECT_EQ(4, ArrayAlgorithms::BinarySearchIterativeT<int>(sortedArray, 8));         // Find a random value owned by the vector
-  EXPECT_EQ(-1, ArrayAlgorithms::BinarySearchIterativeT<int>(sortedArray, 1));        // Try to find a non-existing value
+  EXPECT_EQ(-1, ArrayAlgorithms::BinarySearch<int>(std::vector<int>(), 0)); // Should return -1 on empty array
+  EXPECT_EQ(0, ArrayAlgorithms::BinarySearch<int>(sortedArray, -3));        // Find first value
+  EXPECT_EQ(4, ArrayAlgorithms::BinarySearch<int>(sortedArray, 8));         // Find a random value owned by the vector
+  EXPECT_EQ(-1, ArrayAlgorithms::BinarySearch<int>(sortedArray, 1));        // Try to find a non-existing value
 }
 
 // Basic BinarySearchIterative tests on a sorted array of doubles
-TEST(TestBasicSearch, BinarySearchIterativeTBasicDoubles)
+TEST(TestBasicSearch, BinarySearchBasicDoubles)
 {
   const std::vector<double> sortedDoubleArray(SortedDoubleArray, SortedDoubleArray + sizeof(SortedDoubleArray) / sizeof(double));
 
-  EXPECT_EQ(0, ArrayAlgorithms::BinarySearchIterativeT<double>(sortedDoubleArray, static_cast<const double>(-.3)));   // Find first value
-  EXPECT_EQ(2, ArrayAlgorithms::BinarySearchIterativeT<double>(sortedDoubleArray, static_cast<const double>(0.12)));  // Find a random value owned by the vector
-  EXPECT_EQ(-1, ArrayAlgorithms::BinarySearchIterativeT<double>(sortedDoubleArray, static_cast<const double>(8.1)));  // Try to find a non-existing value
-  EXPECT_EQ(4, ArrayAlgorithms::BinarySearchIterativeT<double>(std::vector<double>(10, 3.), 3.));                     // Find the value in the middle when identical values
+  EXPECT_EQ(0, ArrayAlgorithms::BinarySearch<double>(sortedDoubleArray, static_cast<const double>(-.3)));   // Find first value
+  EXPECT_EQ(2, ArrayAlgorithms::BinarySearch<double>(sortedDoubleArray, static_cast<const double>(0.12)));  // Find a random value owned by the vector
+  EXPECT_EQ(-1, ArrayAlgorithms::BinarySearch<double>(sortedDoubleArray, static_cast<const double>(8.1)));  // Try to find a non-existing value
+  EXPECT_EQ(4, ArrayAlgorithms::BinarySearch<double>(std::vector<double>(10, 3.), 3.));                     // Find the value in the middle when identical values
 }
 
 
