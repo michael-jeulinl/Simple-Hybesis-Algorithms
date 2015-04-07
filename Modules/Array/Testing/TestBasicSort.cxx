@@ -2,10 +2,12 @@
 #include <sort.hxx>
 
 namespace {
-  const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366};     // Simple sorted array of integers with negative values
-  const int InvSortedArrayInt[] = {366, 212, 36, 15, 8, 2, 0, -2, -3};  // Simple sorted array of integers with negative values
-  const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5};    // Simple random array of integers with negative values
-  const double SortedDoubleArray[] = {-.3, 0.0, 0.12, 2.5, 8};          // Simple sorted array of floats with negative values
+  const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366};       // Simple sorted array of integers with negative values
+  const int SortedArrayIntPos[] = {0, 2, 8, 15, 36, 212, 366, 15478};     // Simple sorted array of integers with positive values only
+  const int InvSortedArrayInt[] = {366, 212, 36, 15, 8, 2, 0, -2, -3};    // Simple sorted array of integers with negative values
+  const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5};      // Simple random array of integers with negative values
+  const int RandomArrayIntPos[] = {4520, 30, 500, 20, 3, 2, 3, 4, 5, 15}; // Simple random array of integers with positive values only
+  const double SortedDoubleArray[] = {-.3, 0.0, 0.12, 2.5, 8};            // Simple sorted array of floats with negative values
 
 }
 
@@ -243,5 +245,61 @@ TEST(TestBasicSort, QuickSortBasicInverseOrderVectorInt)
     // All elements are still sorted in inverse order
     for (Iterator_type it = invSortedArray.begin(); it < invSortedArray.end() - 1; ++it)
       EXPECT_GE(*it, *(it + 1));
+  }
+}
+
+// Basic Quick-Sort tests
+TEST(TestBasicSort, RaddixSortBasicVector)
+{
+  typedef std::vector<int>::iterator Iterator_type;
+
+  // Normal Run
+  {
+    std::vector<int> randomdArrayPos(RandomArrayIntPos, RandomArrayIntPos + sizeof(RandomArrayIntPos) / sizeof(int));
+
+    // Run Quick-Sort
+    ArrayAlgorithms::RaddixSort<Iterator_type>(randomdArrayPos.begin(), randomdArrayPos.end());
+
+    // All elements are sorted
+    for (Iterator_type it = randomdArrayPos.begin(); it < randomdArrayPos.end() - 1; ++it)
+      EXPECT_LE(*it, *(it + 1));
+  }
+
+  // Already sortedArray - Array should not be affected
+  {
+    std::vector<int> sortedArrayPos(SortedArrayIntPos, SortedArrayIntPos + sizeof(SortedArrayIntPos) / sizeof(int));
+
+    ArrayAlgorithms::RaddixSort<Iterator_type>(sortedArrayPos.begin(), sortedArrayPos.end());
+
+    // All elements are still sorted
+    for (Iterator_type it = sortedArrayPos.begin(); it < sortedArrayPos.end() - 1; ++it)
+      EXPECT_LE(*it, *(it + 1));
+  }
+
+  // Inverse iterator order - Array should not be affected
+  {
+    std::vector<int> randomArrayPos(RandomArrayIntPos, RandomArrayIntPos + sizeof(RandomArrayIntPos) / sizeof(int));
+    std::vector<int> randomdArraySrc(randomArrayPos);
+
+    // Run Quick-Sort
+    ArrayAlgorithms::RaddixSort<Iterator_type>(randomArrayPos.end(), randomArrayPos.begin());
+
+    int i = 0;
+    for (Iterator_type it = randomArrayPos.begin(); it < randomArrayPos.end(); ++it, ++i)
+      EXPECT_EQ(randomdArraySrc[i], *it);
+  }
+
+  // No error empty array
+  {
+    std::vector<int> emptyArray;
+    ArrayAlgorithms::RaddixSort<Iterator_type>(emptyArray.begin(), emptyArray.end());
+
+  }
+
+  // Unique value array - Array should not be affected
+  {
+    std::vector<int> uniqueValueArray(1, 511);
+    ArrayAlgorithms::RaddixSort<Iterator_type>(uniqueValueArray.begin(), uniqueValueArray.end());
+    EXPECT_EQ(511, uniqueValueArray[0]);
   }
 }

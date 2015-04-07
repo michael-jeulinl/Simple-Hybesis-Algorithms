@@ -179,7 +179,7 @@ namespace ArrayAlgorithms
 
 
   /// Kth Smallest / Biggest element - Order Statitstics
-  /// Find the kth smallest/biggest element contained within [begin, end].
+  /// Find the kth smallest/biggest element contained within [begin, end[.
   ///
   /// @warning this method is not stable (does not keep order with element of the same value).
   /// @warning this method changes the elements order between your iterators.
@@ -192,7 +192,7 @@ namespace ArrayAlgorithms
   /// @param begin,end Random-access iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
-  /// @param k, the zero-based kth element wanted to be find as.
+  /// @param k the zero-based kth element wanted to be find as.
   ///
   /// @return the kth smallest iterator element of the array, the end iterator in case of failure.
   template <typename Iterator, typename Compare /*= std::less_equal*/>

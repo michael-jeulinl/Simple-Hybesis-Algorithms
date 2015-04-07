@@ -58,3 +58,4 @@ Note: an automatical CMake doc generation will be soon available.
 #### Sorting
 - **Partition-Exchange:** Proceed an in-place patitionning on the elements.
 - **Quick Sort - Partition-Exchange Sort:** Proceed an in-place quick-sort on the elements.
+- **LSD Raddix Sort:** Proceed the Least Significant Digit Raddix sort, a non-comparative integer sorting algorithm.
