@@ -3,6 +3,7 @@
 
 namespace {
   const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366};       // Simple sorted array of integers with negative values
+  const int SortedArrayIntWithRot[] = {-3, 2, 7, 20, 0, 2, 8, 15, 36};    // Simple sorted array of integers with negative values
   const int SortedArrayIntPos[] = {0, 2, 8, 15, 36, 212, 366, 15478};     // Simple sorted array of integers with positive values only
   const int InvSortedArrayInt[] = {366, 212, 36, 15, 8, 2, 0, -2, -3};    // Simple sorted array of integers with negative values
   const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5};      // Simple random array of integers with negative values
@@ -301,5 +302,71 @@ TEST(TestBasicSort, RaddixSortBasicVector)
     std::vector<int> uniqueValueArray(1, 511);
     ArrayAlgorithms::RaddixSort<Iterator_type>(uniqueValueArray.begin(), uniqueValueArray.end());
     EXPECT_EQ(511, uniqueValueArray[0]);
+  }
+}
+
+// Basic MergeInPlace tests
+TEST(TestBasicSort, MergeInPlaceBasicVector)
+{
+  typedef std::vector<int>::iterator Iterator_type;
+
+  // Normal Run
+  {
+    std::vector<int> sortedArrayWithRot(SortedArrayIntWithRot, SortedArrayIntWithRot + sizeof(SortedArrayIntWithRot) / sizeof(int));
+
+    // Run Quick-Sort
+    ArrayAlgorithms::MergeInPlace<Iterator_type>(sortedArrayWithRot.begin(), sortedArrayWithRot.begin() + 4, sortedArrayWithRot.end());
+
+    // All elements of the final array are sorted
+    for (Iterator_type it = sortedArrayWithRot.begin(); it < sortedArrayWithRot.end() - 1; ++it)
+      EXPECT_LE(*it, *(it + 1));
+  }
+
+  // Already sortedArray - Array should not be affected
+  {
+    std::vector<int> sortedArrayPos(SortedArrayIntPos, SortedArrayIntPos + sizeof(SortedArrayIntPos) / sizeof(int));
+
+    ArrayAlgorithms::MergeInPlace<Iterator_type>(sortedArrayPos.begin(), sortedArrayPos.begin() + 5, sortedArrayPos.end());
+
+    // All elements are still sorted
+    for (Iterator_type it = sortedArrayPos.begin(); it < sortedArrayPos.end() - 1; ++it)
+      EXPECT_LE(*it, *(it + 1));
+  }
+
+  // Inverse iterator order - Array should not be affected
+  {
+    std::vector<int> randomArrayPos(RandomArrayIntPos, RandomArrayIntPos + sizeof(RandomArrayIntPos) / sizeof(int));
+    std::vector<int> randomdArraySrc(randomArrayPos);
+
+    // Run Quick-Sort
+    ArrayAlgorithms::MergeInPlace<Iterator_type>(randomArrayPos.end(), randomArrayPos.begin() + 3, randomArrayPos.begin());
+
+    int i = 0;
+    for (Iterator_type it = randomArrayPos.begin(); it < randomArrayPos.end(); ++it, ++i)
+      EXPECT_EQ(randomdArraySrc[i], *it);
+  }
+
+  // No error empty array
+  {
+    std::vector<int> emptyArray;
+    ArrayAlgorithms::MergeInPlace<Iterator_type>(emptyArray.begin(), emptyArray.begin(), emptyArray.end());
+  }
+
+  // Unique value array - Array should not be affected
+  {
+    std::vector<int> uniqueValueArray(1, 511);
+    ArrayAlgorithms::MergeInPlace<Iterator_type>(uniqueValueArray.begin(), uniqueValueArray.end(), uniqueValueArray.end());
+    EXPECT_EQ(511, uniqueValueArray[0]);
+  }
+
+  // Double values array - Order should be made
+  {
+    std::vector<int> doubleValuesArray(1, 511);
+    doubleValuesArray.push_back(66);
+
+    ArrayAlgorithms::MergeInPlace<Iterator_type>(doubleValuesArray.begin(), doubleValuesArray.begin() + 1, doubleValuesArray.end());
+
+    EXPECT_EQ(66, doubleValuesArray[0]);
+    EXPECT_EQ(511, doubleValuesArray[1]);
   }
 }

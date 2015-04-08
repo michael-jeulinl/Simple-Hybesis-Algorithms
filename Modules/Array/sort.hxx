@@ -78,6 +78,54 @@ namespace ArrayAlgorithms
   }
 
 
+  /// MergeInplace - Inplace merging of two ordered sequences of a collection
+  /// Proceed a in place merge of two sequences of elements contained in [begin, middle[ and [middle, end[.
+  ///
+  /// @warning Both sequence [bengin, middle[ and [middle, end[ need to be ordered.
+  ///
+  /// @note use MergeWithBuffer to proceed the merge using a buffer:
+  /// Takes higher memory consumption and lower computation consumption.
+  ///
+  /// @complexity O(N * M)
+  ///
+  /// @templateparam Random-access iterator type
+  /// @param begin,middle,end Random-access iterators to the initial and final positions of
+  /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
+  /// first and last, including the element pointed by first but not the element pointed by last.
+  ///
+  /// @return void.
+  template <typename Iterator>
+  void MergeInPlace(Iterator begin, Iterator middle, Iterator end)
+  {
+    if (std::distance(begin, middle) < 1 || std::distance(middle, end) < 1)
+      return;
+
+    // Use first half as receiver
+    for(; begin < middle; ++begin)
+    {
+      if (*middle >= *begin)
+        continue;
+
+      Iterator::value_type value;
+      std::swap(value, *begin);    // keep the higher value
+      std::swap(*begin, *middle);  // Place it at the beginning of the second list
+
+      // Displace the higher value in the right place of the second list by swapping
+      Iterator it = middle;
+      for (; it != end - 1; ++it)
+      {
+        if (*(it + 1) >= value)
+          break;
+
+        std::swap(*it, *(it + 1));
+      }
+
+      // Restore the value at his right place
+      std::swap(*it, value);
+    }
+  }
+
+
   /// LSD Raddix Sort - Non-comparative integer sorting algorithm
   /// Proceed a raddix-sort on the elements contained in [begin, end[
   ///
