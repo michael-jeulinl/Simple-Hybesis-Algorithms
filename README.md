@@ -49,13 +49,14 @@ Note: an automatical CMake doc generation will be soon available.
 ### Array
 #### Searching
 - **Binary Search:** Iteratively proceed a dichotomic search within a sorted vector on the first occurence of the key passed as parameter.
+- **Kth Smallest / Biggest element - Order Statitstics:** Find the kth smallest/biggest element contained within [begin, end].
 - **Maximal Distance:** Identify the two indexes of the array with the maximal distance.
+- **Maximal M Elements:** Identify the m maximal/minimal values sorted in respectively decreasing increasing order.
 - **Maximal Subarray:** Identify the subarray with the maximum/minimum sum. One of the problem resolved by this algorithm is:
 "Given an array of gains/losses over time, find the period that represents the best/worst cummulative gain."
-- **Maximal M Elements:** Identify the m maximal/minimal values sorted in respectively decreasing increasing order.
-- **Kth Smallest / Biggest element - Order Statitstics:** Find the kth smallest/biggest element contained within [begin, end].
 
 #### Sorting
+- **MergeInplace:** Proceed a in place merge of two sequences of elements contained in [begin, middle[ and [middle, end[.
 - **Partition-Exchange:** Proceed an in-place patitionning on the elements.
 - **Quick Sort - Partition-Exchange Sort:** Proceed an in-place quick-sort on the elements.
-- **LSD Raddix Sort:** Proceed the Least Significant Digit Raddix sort, a non-comparative integer sorting algorithm.
+- **Raddix Sort - LSD:** Proceed the Least Significant Digit Raddix sort, a non-comparative integer sorting algorithm.
