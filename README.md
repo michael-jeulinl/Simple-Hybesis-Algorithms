@@ -57,6 +57,7 @@ Note: an automatical CMake doc generation will be soon available.
 
 #### Sorting
 - **MergeInplace:** Proceed a in place merge of two sequences of elements contained in [begin, middle[ and [middle, end[.
+- **MergeWithBuffer:** Proceed a merge of two sequences of elements contained in [begin, middle[ and [middle, end[ using a buffer to improve computation.
 - **Partition-Exchange:** Proceed an in-place patitionning on the elements.
 - **Quick Sort - Partition-Exchange Sort:** Proceed an in-place quick-sort on the elements.
 - **Raddix Sort - LSD:** Proceed the Least Significant Digit Raddix sort, a non-comparative integer sorting algorithm.

@@ -126,6 +126,54 @@ namespace ArrayAlgorithms
   }
 
 
+  /// MergeWithBuffer - Merging of two ordered sequences of a collection using intermediate buffer
+  /// Proceed a merge of two sequences of elements contained in [begin, middle[ and [middle, end[.
+  ///
+  /// @warning Both sequence [bengin, middle[ and [middle, end[ need to be ordered.
+  ///
+  /// @note use MergeInPlace to proceed the merge in place:
+  /// Takes lower memory consumption and higher computation consumption.
+  ///
+  /// @complexity O(N)
+  ///
+  /// @templateparam Random-access iterator type
+  /// @param begin,middle,end Random-access iterators to the initial and final positions of
+  /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
+  /// first and last, including the element pointed by first but not the element pointed by last.
+  ///
+  /// @return void.
+  template <typename Iterator>
+  void MergeWithBuffer(Iterator begin, Iterator middle, Iterator end)
+  {
+    if (std::distance(begin, middle) < 1 || std::distance(middle, end) < 1)
+      return;
+
+    std::vector<Iterator::value_type> bufferArray(std::distance(begin, end));
+    Iterator buffIt = bufferArray.begin();
+    Iterator tmpBegin = begin;
+
+    // Do the merging into the buffer array taking one by one the lowest elements
+    const Iterator curMiddle(middle);
+    while (begin != curMiddle && middle != end)
+    {
+      if (*begin <= *middle)
+        *buffIt++ = *begin++;
+      else
+        *buffIt++ = *middle++;
+    }
+
+    // Finish both list into the buffer
+    for (; begin != curMiddle; ++buffIt, ++begin)
+      *buffIt = *begin;
+    for (; middle != end; ++buffIt, ++middle)
+      *buffIt = *middle;
+
+    // Refill array given the right position
+    for (buffIt = bufferArray.begin(); buffIt != bufferArray.end(); ++buffIt, ++tmpBegin)
+      *tmpBegin = *buffIt;
+  }
+
+
   /// LSD Raddix Sort - Non-comparative integer sorting algorithm
   /// Proceed a raddix-sort on the elements contained in [begin, end[
   ///
