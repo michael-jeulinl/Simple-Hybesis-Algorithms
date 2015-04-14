@@ -95,35 +95,39 @@ namespace ArrayAlgorithms
   ///
   /// @return void.
   template <typename Iterator>
-  void MergeInPlace(Iterator begin, Iterator middle, Iterator end)
+  class MergeInPlace
   {
-    if (std::distance(begin, middle) < 1 || std::distance(middle, end) < 1)
-      return;
-
-    // Use first half as receiver
-    for(; begin < middle; ++begin)
+  public:
+    void operator()(Iterator begin, Iterator middle, Iterator end)
     {
-      if (*middle >= *begin)
-        continue;
+      if (std::distance(begin, middle) < 1 || std::distance(middle, end) < 1)
+        return;
 
-      Iterator::value_type value;
-      std::swap(value, *begin);    // keep the higher value
-      std::swap(*begin, *middle);  // Place it at the beginning of the second list
-
-      // Displace the higher value in the right place of the second list by swapping
-      Iterator it = middle;
-      for (; it != end - 1; ++it)
+      // Use first half as receiver
+      for(; begin < middle; ++begin)
       {
-        if (*(it + 1) >= value)
-          break;
+        if (*middle >= *begin)
+          continue;
 
-        std::swap(*it, *(it + 1));
+        Iterator::value_type value;
+        std::swap(value, *begin);    // keep the higher value
+        std::swap(*begin, *middle);  // Place it at the beginning of the second list
+
+        // Displace the higher value in the right place of the second list by swapping
+        Iterator it = middle;
+        for (; it != end - 1; ++it)
+        {
+          if (*(it + 1) >= value)
+            break;
+
+          std::swap(*it, *(it + 1));
+        }
+
+        // Restore the value at his right place
+        std::swap(*it, value);
       }
-
-      // Restore the value at his right place
-      std::swap(*it, value);
     }
-  }
+  };
 
 
   /// MergeWithBuffer - Merging of two ordered sequences of a collection using intermediate buffer
@@ -143,34 +147,67 @@ namespace ArrayAlgorithms
   ///
   /// @return void.
   template <typename Iterator>
-  void MergeWithBuffer(Iterator begin, Iterator middle, Iterator end)
+  class MergeWithBuffer
   {
-    if (std::distance(begin, middle) < 1 || std::distance(middle, end) < 1)
+  public:
+    void operator()(Iterator begin, Iterator middle, Iterator end)
+    {
+      if (std::distance(begin, middle) < 1 || std::distance(middle, end) < 1)
+        return;
+
+      std::vector<Iterator::value_type> bufferArray(std::distance(begin, end));
+      Iterator buffIt = bufferArray.begin();
+      Iterator tmpBegin = begin;
+
+      // Merge into the buffer array taking one by one the lowest sequence element
+      const Iterator curMiddle(middle);
+      while (begin != curMiddle && middle != end)
+      {
+        if (*begin <= *middle)
+          *buffIt++ = *begin++;
+        else
+          *buffIt++ = *middle++;
+      }
+
+      // Finish both list into the buffer
+      for (; begin != curMiddle; ++buffIt, ++begin)
+        *buffIt = *begin;
+      for (; middle != end; ++buffIt, ++middle)
+        *buffIt = *middle;
+
+      // Refill array given the right position
+      for (buffIt = bufferArray.begin(); buffIt != bufferArray.end(); ++buffIt, ++tmpBegin)
+        *tmpBegin = *buffIt;
+    }
+  };
+
+
+  /// MergeSort - John von Neumann in 1945
+  /// Proceed merge-sort on the elements whether using an in-place strategy or using a buffer.
+  ///
+  /// @complexity O(N * log(N))
+  ///
+  /// @templateparam Random-access iterator type
+  /// @param begin,end Random-access iterators to the initial and final positions of
+  /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
+  /// first and last, including the element pointed by first but not the element pointed by last.
+  ///
+  /// @return void.
+  template <typename Iterator, typename Aggregator>
+  void MergeSort(Iterator& begin, Iterator& end)
+  {
+    const int ksize = std::distance(begin, end);
+    if (ksize < 2)
       return;
 
-    std::vector<Iterator::value_type> bufferArray(std::distance(begin, end));
-    Iterator buffIt = bufferArray.begin();
-    Iterator tmpBegin = begin;
+    Iterator middle = begin + ksize / 2;
 
-    // Do the merging into the buffer array taking one by one the lowest elements
-    const Iterator curMiddle(middle);
-    while (begin != curMiddle && middle != end)
-    {
-      if (*begin <= *middle)
-        *buffIt++ = *begin++;
-      else
-        *buffIt++ = *middle++;
-    }
+    // Recursively break the vector into two pieces
+    ArrayAlgorithms::MergeSort<Iterator, Aggregator>(begin, middle);
+    ArrayAlgorithms::MergeSort<Iterator, Aggregator>(middle, end);
 
-    // Finish both list into the buffer
-    for (; begin != curMiddle; ++buffIt, ++begin)
-      *buffIt = *begin;
-    for (; middle != end; ++buffIt, ++middle)
-      *buffIt = *middle;
-
-    // Refill array given the right position
-    for (buffIt = bufferArray.begin(); buffIt != bufferArray.end(); ++buffIt, ++tmpBegin)
-      *tmpBegin = *buffIt;
+    // Merge the two pieces
+    Aggregator()(begin, middle, end);
   }
 
 

@@ -56,8 +56,9 @@ Note: an automatical CMake doc generation will be soon available.
 "Given an array of gains/losses over time, find the period that represents the best/worst cummulative gain."
 
 #### Sorting
-- **MergeInplace:** Proceed a in place merge of two sequences of elements contained in [begin, middle[ and [middle, end[.
-- **MergeWithBuffer:** Proceed a merge of two sequences of elements contained in [begin, middle[ and [middle, end[ using a buffer to improve computation.
+- **MergeInplace:** Functor that proceeds a in place merge of two sequences of elements contained in [begin, middle[ and [middle, end[.
+- **MergeSort:** John von Neumann in 1945: Proceed merge-sort on the elements whether using an in-place strategy or using a buffer (template aggregator).
+- **MergeWithBuffer:** Functor that proceeds a merge of two sequences of elements contained in [begin, middle[ and [middle, end[ using a buffer to improve computation.
 - **Partition-Exchange:** Proceed an in-place patitionning on the elements.
 - **Quick Sort - Partition-Exchange Sort:** Proceed an in-place quick-sort on the elements.
 - **Raddix Sort - LSD:** Proceed the Least Significant Digit Raddix sort, a non-comparative integer sorting algorithm.
