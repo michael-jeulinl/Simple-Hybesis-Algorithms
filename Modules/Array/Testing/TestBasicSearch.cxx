@@ -4,6 +4,7 @@
 namespace {
   const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366}; // Simple sorted array of integers with negative values
   const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5};// Simple random array of integers with negative values
+  const int RandomArrayInterInt[] = {5 , 5, -5, 3, -18, 10, 15};    // Other  random array of integers with negative values
   const double SortedDoubleArray[] = {-.3, 0.0, 0.12, 2.5, 8};      // Simple sorted array of floats with negative values
 
 }
@@ -234,5 +235,57 @@ TEST(TestBasicSearch, KthBiggestElement)
     std::vector<int> krandomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
     Iterator_type::value_type value = *ArrayAlgorithms::KthMaxElement<Iterator_type, Comparator_type>(krandomdArray.begin(), krandomdArray.end(), 1);
     EXPECT_EQ(5, value);
+  }
+}
+
+// Test intersections
+TEST(TestBasicSearch, BasicIntersections)
+{
+  typedef std::vector<int> Vector_type;
+
+  EXPECT_EQ(0, ArrayAlgorithms::Intersection(Vector_type(), Vector_type()).size());    // Null intersection on empty vectors
+  EXPECT_EQ(0, ArrayAlgorithms::Intersection(Vector_type(1,1), Vector_type()).size()); // Null intersection with empty vector
+
+  // Basic run with same vector
+  {
+    const Vector_type sortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+
+    Vector_type intersectionVector = ArrayAlgorithms::Intersection<int>(sortedArray, sortedArray);
+    Vector_type::const_iterator intersectIt = intersectionVector.begin();
+
+    // The intersection of the same vector should return the same vector
+    ASSERT_EQ(sortedArray.size(), intersectionVector.size());
+    for (Vector_type::const_iterator it = sortedArray.begin(); it != sortedArray.end(); ++it, ++intersectIt)
+      EXPECT_EQ(*it, *intersectIt);
+  }
+
+  // Basic run with copy vector containning dupplicates
+  {
+    const Vector_type firstRandomVector(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const Vector_type secondRandomVector(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+
+    Vector_type intersectionVector = ArrayAlgorithms::Intersection<int>(firstRandomVector, secondRandomVector);
+    Vector_type::const_iterator intersectIt = intersectionVector.begin();
+
+    // The intersection with the copy vector should return the same vector
+    ASSERT_EQ(firstRandomVector.size(), intersectionVector.size());
+    for (Vector_type::const_iterator it = firstRandomVector.begin(); it != firstRandomVector.end(); ++it, ++intersectIt)
+      EXPECT_EQ(*it, *intersectIt);
+  }
+
+  // Basic run with normal values
+  {
+    const Vector_type firstRandomVector(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const Vector_type secondRandomVector(RandomArrayInterInt, RandomArrayInterInt + sizeof(RandomArrayInterInt) / sizeof(int));
+
+    Vector_type intersectionVector = ArrayAlgorithms::Intersection<int>(firstRandomVector, secondRandomVector);
+
+    // Should return [-18, -5, 3, 5, 5] after sorting
+    std::sort(intersectionVector.begin(), intersectionVector.end());
+    EXPECT_EQ(-18, intersectionVector[0]);
+    EXPECT_EQ(-5, intersectionVector[1]);
+    EXPECT_EQ(3, intersectionVector[2]);
+    EXPECT_EQ(5, intersectionVector[3]);
+    EXPECT_EQ(5, intersectionVector[4]);
   }
 }

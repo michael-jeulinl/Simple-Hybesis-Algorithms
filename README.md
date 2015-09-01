@@ -1,8 +1,8 @@
 # Simple-Hybesis-Algorithms
-Educational demonstration of building simple algorithms under good practices developpment (cross-building, unit testing, ...)
+Educational demonstration of building simple algorithms under good practices development (cross-building, unit testing, ...)
 
 # CMake - Cross-Building
-The building relies on CMake, an Open-Source system that allows to easily build cross-plateform applications by generating native makefiles (cf. http://www.cmake.org/cmake/resources/software.html).
+The building relies on CMake, an Open-Source system that allows to easily build cross-platform applications by generating native makefiles (cf. http://www.cmake.org/cmake/resources/software.html).
 
 The current compilation has been fully tested under Win 7 (VS 11 x86/x64) and gcc.
 
@@ -28,7 +28,7 @@ It allows to very quickly get set up with C++ and google test:
     mkdir Simple-Hybesis-Algorithms-Build (Create Build directory)
     cd Simple-Hybesis-Algorithms-Build    (Open build director)
     ccmake ../Simple-Hybesis-Algorithms   (Configure the make given Source repository)
-    make                                  (Make command, use -j parameter to use multicore)
+    make                                  (Make command, use -j parameter to use multi-core)
 
 ## Run the tests:
 
@@ -43,22 +43,23 @@ E.g. to manually run the 'TestBasicSearch' Unit Test (using GTest):
 Please find the documentation here:
 http://michaeljeulin-l.com/Projects/SHADocumentation/md__r_e_a_d_m_e.html
 
-Note: an automatical CMake doc generation will be soon available.
+Note: an automatic CMake doc generation will be soon available.
 
 # Current Available Algorithms
 ### Array
 #### Searching
-- **Binary Search:** Iteratively proceed a dichotomic search within a sorted vector on the first occurence of the key passed as parameter.
+- **Binary Search:** Iteratively proceed a dichotomous search within a sorted vector on the first occurrence of the key passed as parameter.
+- **Intersection:** Retrieve the intersection of two vectors keeping duplicate keys distinct
 - **Kth Smallest / Biggest element - Order Statitstics:** Find the kth smallest/biggest element contained within [begin, end].
 - **Maximal Distance:** Identify the two indexes of the array with the maximal distance.
 - **Maximal M Elements:** Identify the m maximal/minimal values sorted in respectively decreasing increasing order.
 - **Maximal Subarray:** Identify the subarray with the maximum/minimum sum. One of the problem resolved by this algorithm is:
-"Given an array of gains/losses over time, find the period that represents the best/worst cummulative gain."
+"Given an array of gains/losses over time, find the period that represents the best/worst cumulative gain."
 
 #### Sorting
 - **MergeInplace:** Functor that proceeds a in place merge of two sequences of elements contained in [begin, middle[ and [middle, end[.
 - **MergeSort:** John von Neumann in 1945: Proceed merge-sort on the elements whether using an in-place strategy or using a buffer (template aggregator).
 - **MergeWithBuffer:** Functor that proceeds a merge of two sequences of elements contained in [begin, middle[ and [middle, end[ using a buffer to improve computation.
-- **Partition-Exchange:** Proceed an in-place patitionning on the elements.
+- **Partition-Exchange:** Proceed an in-place partitioning on the elements.
 - **Quick Sort - Partition-Exchange Sort:** Proceed an in-place quick-sort on the elements.
 - **Raddix Sort - LSD:** Proceed the Least Significant Digit Raddix sort, a non-comparative integer sorting algorithm.

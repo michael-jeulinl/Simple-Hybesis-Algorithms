@@ -44,6 +44,7 @@ namespace ArrayAlgorithms
     return index;
   }
 
+
   /// MaxDistance
   /// Identifies the two indexes of the array with the maximal distance.
   ///
@@ -85,6 +86,7 @@ namespace ArrayAlgorithms
 
     return indexes;
   }
+
 
   /// Max Subarray
   /// Identify the subarray with the maximum/minimum sum.
@@ -137,6 +139,7 @@ namespace ArrayAlgorithms
 
     return indexes;
   }
+
 
   /// Max M Elements
   /// Identify the m maximal/minimal values sorted in decreasing/increasing order.
@@ -216,11 +219,53 @@ namespace ArrayAlgorithms
                            : KthMaxElement<Iterator, Compare>(pivot, end, k - indexElem); // Recurse search on right part
   }
 
+
+  /// Intersection - Return Intersection of the two vectors
+  /// Retrieve the intersection of two vectors keeping dupplicate keys distinct.
+  ///
+  /// @complexity O(N)
+  ///
+  /// @param firstArray the first.
+  /// @param secondArray the second.
+  ///
+  /// @return a vector containing the intersection of both vectors.
+  template <typename T>
+  std::vector<T> Intersection(const std::vector<T>& firstVector, const std::vector<T>& secondVector)
+  {
+    // Take the smallest vector for initial count
+    const std::vector<T>* smallerVectorPtr = (firstVector.size() >= secondVector.size()) ? &firstVector : &secondVector;
+    const std::vector<T>* biggerVectorPtr = (smallerVectorPtr != &firstVector) ? &firstVector : &secondVector;
+
+    std::vector<T> intersection;
+    intersection.reserve(smallerVectorPtr->size());
+
+    // Count each element of the smaller array
+    std::multiset<T> count;
+    for (std::vector<T>::const_iterator it = smallerVectorPtr->begin(); it != smallerVectorPtr->end(); ++it)
+        count.insert(*it);
+
+    // Push the element if find into the multiset and delete its instance from the counter
+    for (std::vector<T>::const_iterator it = biggerVectorPtr->begin(); it != biggerVectorPtr->end(); ++it)
+    {
+      std::multiset<T>::iterator itFind = count.find(*it);
+
+      if (itFind != count.end())
+      {
+        intersection.push_back(*it);
+        count.erase(itFind);
+      }
+    }
+
+    return intersection;
+  }
+
+
   template <class T>
   bool Equal(const T& a, const T& b)
   {
     return std::abs(a - b) < std::numeric_limits<T>::epsilon();
   }
+
 
   template <>
   bool Equal<>(const int& a, const int& b)
