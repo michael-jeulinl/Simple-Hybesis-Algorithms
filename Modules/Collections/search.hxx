@@ -9,7 +9,7 @@
 #include <limits>
 #include <vector>
 
-namespace ArrayAlgorithms
+namespace Collections
 {
   /// Binary Search
   /// Iteratively proceed a dichotomic search within a sorted vector on the first occurence
@@ -205,8 +205,8 @@ namespace ArrayAlgorithms
     if (k > karraySize || k < 0 || karraySize <= 0)
       return end;
 
-    Iterator pivot = begin + (rand() % (end - begin));                // Take random pivot
-    ArrayAlgorithms::Partition<Iterator, Compare>(begin, pivot, end); // Partition
+    Iterator pivot = begin + (rand() % (end - begin));            // Take random pivot
+    Collections::Partition<Iterator, Compare>(begin, pivot, end); // Partition
 
     // Get the index of the pivot (i'th smallest/biggest value)
     size_t indexElem = std::distance(begin, pivot);

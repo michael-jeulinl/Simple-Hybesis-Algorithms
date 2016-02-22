@@ -8,7 +8,7 @@
 #include <queue>
 #include <vector>
 
-namespace ArrayAlgorithms
+namespace Collections
 {
   /// Partition-Exchange
   /// Proceed an in-place patitionning on the elements 
@@ -146,7 +146,7 @@ namespace ArrayAlgorithms
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return void.
-  template <typename Iterator>
+  template <typename Container, typename Iterator>
   class MergeWithBuffer
   {
   public:
@@ -155,8 +155,9 @@ namespace ArrayAlgorithms
       if (std::distance(begin, middle) < 1 || std::distance(middle, end) < 1)
         return;
 
-      std::vector<Iterator::value_type> bufferArray(std::distance(begin, end));
-      Iterator buffIt = bufferArray.begin();
+      Container buffer;
+      buffer.resize(std::distance(begin, end)); // Reserve right space (method working with string container)
+      Iterator buffIt = buffer.begin();
       Iterator tmpBegin = begin;
 
       // Merge into the buffer array taking one by one the lowest sequence element
@@ -176,7 +177,7 @@ namespace ArrayAlgorithms
         *buffIt = *middle;
 
       // Refill array given the right position
-      for (buffIt = bufferArray.begin(); buffIt != bufferArray.end(); ++buffIt, ++tmpBegin)
+      for (buffIt = buffer.begin(); buffIt != buffer.end(); ++buffIt, ++tmpBegin)
         *tmpBegin = *buffIt;
     }
   };
@@ -193,7 +194,7 @@ namespace ArrayAlgorithms
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return void.
-  template <typename Iterator, typename Aggregator>
+  template <typename Container, typename Iterator, typename Aggregator>
   void MergeSort(Iterator& begin, Iterator& end)
   {
     const int ksize = std::distance(begin, end);
@@ -203,8 +204,8 @@ namespace ArrayAlgorithms
     Iterator middle = begin + ksize / 2;
 
     // Recursively break the vector into two pieces
-    ArrayAlgorithms::MergeSort<Iterator, Aggregator>(begin, middle);
-    ArrayAlgorithms::MergeSort<Iterator, Aggregator>(middle, end);
+    Collections::MergeSort<Container, Iterator, Aggregator>(begin, middle);
+    Collections::MergeSort<Container, Iterator, Aggregator>(middle, end);
 
     // Merge the two pieces
     Aggregator()(begin, middle, end);
