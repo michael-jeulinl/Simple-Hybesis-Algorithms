@@ -10,5 +10,5 @@
 ###########################################################################
 
 #if(SimpleHybesisAlgorithm_BUILD_ARRAYMODULE)
-  add_subdirectory(Array)
+  add_subdirectory(Collections)
 #endif()
