@@ -13,16 +13,16 @@ namespace SHA_Collections
 {
   /// Binary Search
   /// Iteratively proceed a dichotomic search within a sorted collection on the first occurence
-  /// of the key passed as parameter
+  /// of the key passed as parameter.
   ///
-  /// @complexity O(log(N))
+  /// @complexity O(log(N)).
   ///
   /// @param begin,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
-  /// @param key the key value to be searched
+  /// @param key the key value to be searched.
   ///
-  /// @return The vector index of the first found key, -1 otherwise
+  /// @return The vector index of the first found key, -1 otherwise.
   template <typename Iterator, typename T>
   int BinarySearch(const Iterator& begin, const Iterator& end, const T& key)
   {
@@ -58,14 +58,14 @@ namespace SHA_Collections
   /// It finds i and j that maximizes Aj – Ai, where i < j.
   /// In other words, maximizes the benefice of a resell given an array of prices varying over time.
   ///
-  /// @complexity O(N * O(f(a, b))), with f(a,b) the functor used (O(1) for the default std::minus)
+  /// @complexity O(N * O(f(a, b))), with f(a,b) the functor used; is O(1) for the default std::minus.
   ///
   /// @templateparam Distance functor type computing the distance between two elements
   /// @param begin,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
-  /// @return indexes of the array with the maximal distance, <-1,-1> in case of error
+  /// @return indexes of the array with the maximal distance, <-1,-1> in case of error.
   template <typename Iterator, typename Distance /*= std::minus*/>
   std::pair<int, int> MaxDistance(const Iterator& begin, const Iterator& end)
   {
@@ -106,29 +106,31 @@ namespace SHA_Collections
   /// The algorithm uses the fact that the sum operator is a transitive function.
   ///
   /// @complexity O(N * (O(f(a, b)) + O(g(a, b))) with:
-  /// - f(a, b) the distance functor used (O(1) for the default std::minus)
-  /// - g(a, b) the compare functor used (O(1) for the default std::greater)
+  /// - f(a, b) the distance functor used; is O(1) for the default std::minus.
+  /// - g(a, b) the compare functor used; is O(1) for the default std::greater.
   ///
   /// @templateparam Distance functor type computing the distance between two elements
   /// @templateparam Compare functor type
-  /// @param elements vector from within the search occurs
+  /// @param begin,end iterators to the initial and final positions of
+  /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
+  /// first and last, including the element pointed by first but not the element pointed by last.
   ///
-  /// @return indexes of the array with the maximum/minimum sum, <-1,-1> in case of error
-  template <typename T, typename Distance /*= std::minus*/, typename Compare /*= std::greater*/>
-  std::pair<int, int> MaxSubArray(const std::vector<T>& elements)
+  /// @return indexes of the array with the maximum/minimum sum, <-1,-1> in case of error.
+  template <typename Iterator, typename Distance /*= std::minus*/, typename Compare /*= std::greater*/>
+  std::pair<int, int> MaxSubArray(const Iterator& begin, const Iterator& end)
   {
-    if (elements.size() < 2)
+    if (std::distance(begin, end) < 2)
       return std::pair<int, int>(-1, -1);
 
     int minValIdx = 0;
     std::pair<int, int> indexes(minValIdx, minValIdx);
-    T currSum, maxSum;
-    currSum = maxSum = *elements.begin();
-    T minSum = static_cast<T>(0);
-    for (std::vector<int>::const_iterator it = elements.begin() + 1; it != elements.end(); ++it)
+    Iterator::value_type currSum, maxSum;
+    currSum = maxSum = *begin;
+    Iterator::value_type minSum = static_cast<Iterator::value_type>(0);
+    for (Iterator it = begin + 1; it != end; ++it)
     {
       currSum += *it;
-      int currentIdx = std::distance(elements.begin(), it);
+      int currentIdx = std::distance(begin, it);
 
       // keep track of the minimum sum and its first value index
       if (Compare()(minSum, currSum)) {
@@ -137,9 +139,9 @@ namespace SHA_Collections
       }
 
       // Keeps track of the maximal sub array and its end value index
-      T curMax = Distance()(currSum, minSum);
+      Iterator::value_type curMax = Distance()(currSum, minSum);
       if (Compare()(curMax, maxSum)) {
-        indexes.first = minValIdx + ((elements[minValIdx] < 0) ? 1 : 0);
+        indexes.first = minValIdx + ((*(begin + minValIdx) < 0) ? 1 : 0);
         indexes.second = currentIdx;
         maxSum = Distance()(currSum, minSum);
       }

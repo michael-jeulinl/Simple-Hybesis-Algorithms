@@ -75,7 +75,7 @@ TEST(TestBasicSearch, BinarySearchBasicDoubles)
 
   // Value in the middle when identical values
   {
-    std::vector<double> identicalArray = std::vector<double>(10, 3.);
+    const std::vector<double> identicalArray = std::vector<double>(10, 3.);
     const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double>(identicalArray.begin(), identicalArray.end(), static_cast<const double>(3.));
     EXPECT_EQ(5, index);
   }
@@ -87,7 +87,7 @@ TEST(TestBasicSearch, MaxDistanceBasics)
 {
   // Should return <4,9> (largest benefice of 6)
   {
-    const std::vector<int> marketPrices(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const Conainer_Type marketPrices(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
     const std::pair<int, int> maxBeneficeIndexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int> >(marketPrices.begin(), marketPrices.end());
     EXPECT_EQ(4, maxBeneficeIndexes.first);
     EXPECT_EQ(9, maxBeneficeIndexes.second);
@@ -95,7 +95,7 @@ TEST(TestBasicSearch, MaxDistanceBasics)
 
   // Should return <0, idxEnd> on sorted array
   {
-    const std::vector<int> sortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+    const Conainer_Type sortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
     const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int> >(sortedArray.begin(), sortedArray.end());
     EXPECT_EQ(0, indexes.first);
     EXPECT_EQ(static_cast<int>(sortedArray.size()) - 1, indexes.second);
@@ -103,7 +103,7 @@ TEST(TestBasicSearch, MaxDistanceBasics)
 
   // Should return <-1,-1> on insufficient array
   {
-    const std::vector<int> insufficientArray = std::vector<int>(1, 2);
+    const Conainer_Type insufficientArray = std::vector<int>(1, 2);
     const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int> >(insufficientArray.begin(), insufficientArray.end());
     EXPECT_EQ(-1, indexes.first);
     EXPECT_EQ(-1, indexes.second);
@@ -111,7 +111,7 @@ TEST(TestBasicSearch, MaxDistanceBasics)
 
   // Should return <0,1> on array containing only two elements
   {
-    const std::vector<int> twoElementArray = std::vector<int>(2, 2);
+    const Conainer_Type twoElementArray = std::vector<int>(2, 2);
     const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int> >(twoElementArray.begin(), twoElementArray.end());
     EXPECT_EQ(0, indexes.first);
     EXPECT_EQ(1, indexes.second);
@@ -119,7 +119,7 @@ TEST(TestBasicSearch, MaxDistanceBasics)
 
   // Should return <0,1> on array containing the same value
   {
-    const std::vector<int> sameElementArray = std::vector<int>(10, 2);
+    const Conainer_Type sameElementArray = std::vector<int>(10, 2);
     const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int> >(sameElementArray.begin(), sameElementArray.end());
     EXPECT_EQ(0, indexes.first);
     EXPECT_EQ(1, indexes.second);
@@ -132,30 +132,32 @@ TEST(TestBasicSearch, MaxSubArray)
 {
   // Should return <5,9> (maximal sum of 17)
   {
-    const std::vector<int> kMarketPrices(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    const std::pair<int, int> kMaxBeneficeIndexes = SHA_Collections::MaxSubArray<int, std::minus<int>, std::greater<int> >(kMarketPrices);
+    const Conainer_Type kMarketPrices(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const std::pair<int, int> kMaxBeneficeIndexes = SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int> >(kMarketPrices.begin(), kMarketPrices.end());
     EXPECT_EQ(5, kMaxBeneficeIndexes.first);
     EXPECT_EQ(9, kMaxBeneficeIndexes.second);
   }
 
   // Should return <FirstPositiveIdx, idxEnd> on sorted array
   {
-    const std::vector<int> kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
-    const std::pair<int, int> kIndexes = SHA_Collections::MaxSubArray<int, std::minus<int>, std::greater<int> >(kSortedArray);
+    const Conainer_Type kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+    const std::pair<int, int> kIndexes = SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int> >(kSortedArray.begin(), kSortedArray.end());
     EXPECT_EQ(2, kIndexes.first);
     EXPECT_EQ(static_cast<int>(kSortedArray.size()) - 1, kIndexes.second);
   }
 
   // Should return <-1,-1> on insufficient array
   {
-    const std::pair<int, int> kIndexes = SHA_Collections::MaxSubArray<int, std::minus<int>, std::greater<int> >(std::vector<int>(1, 2));
+    const Conainer_Type insufficientArray = std::vector<int>(1, 2);
+    const std::pair<int, int> kIndexes = SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int> >(insufficientArray.begin(), insufficientArray.end());
     EXPECT_EQ(-1, kIndexes.first);
     EXPECT_EQ(-1, kIndexes.second);
   }
 
   // Should return <0,1> on array containing only two positive elements
   {
-    const std::pair<int, int> kIndexes = SHA_Collections::MaxSubArray<int, std::minus<int>, std::greater<int> >(std::vector<int>(2, 2));
+    const Conainer_Type twoElementArray = std::vector<int>(2, 2);
+    const std::pair<int, int> kIndexes = SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int> >(twoElementArray.begin(), twoElementArray.end());
     EXPECT_EQ(0, kIndexes.first);
     EXPECT_EQ(1, kIndexes.second);
   }
@@ -163,7 +165,8 @@ TEST(TestBasicSearch, MaxSubArray)
   // Should return <0, idxEnd> on array containing the same positive value
   {
     const int kSize = 10;
-    const std::pair<int, int> indexes = SHA_Collections::MaxSubArray<int, std::minus<int>, std::greater<int> >(std::vector<int>(kSize, 2));
+    std::vector<int> sameElementArray = std::vector<int>(kSize, 2);
+    const std::pair<int, int> indexes = SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int> >(sameElementArray.begin(), sameElementArray.end());
     EXPECT_EQ(0, indexes.first);
     EXPECT_EQ(kSize - 1, indexes.second);
   }
