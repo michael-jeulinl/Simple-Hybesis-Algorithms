@@ -6,18 +6,48 @@ namespace {
   const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5};// Simple random array of integers with negative values
   const int RandomArrayInterInt[] = {5 , 5, -5, 3, -18, 10, 15};    // Other  random array of integers with negative values
   const double SortedDoubleArray[] = {-.3, 0.0, 0.12, 2.5, 8};      // Simple sorted array of floats with negative values
+  const std::string OrderedStr = "acegmnoop";
 
+  typedef std::vector<int> Conainer_Type;
+  typedef Conainer_Type::const_iterator Const_Iterator_Type;
+  typedef std::vector<double>::const_iterator Const_Double_Iterator_Type;
 }
 
 // Basic BinarySearchIterative tests on a sorted array of ints
-TEST(TestBasicSearch, BinarySearchBasicInt)
+TEST(TestBasicSearch, BinarySearchBasics)
 {
-  const std::vector<int> sortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+  const Conainer_Type sortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
 
-  EXPECT_EQ(-1, Collections::BinarySearch<int>(std::vector<int>(), 0)); // Should return -1 on empty array
-  EXPECT_EQ(0, Collections::BinarySearch<int>(sortedArray, -3));        // Find first value
-  EXPECT_EQ(4, Collections::BinarySearch<int>(sortedArray, 8));         // Find a random value owned by the vector
-  EXPECT_EQ(-1, Collections::BinarySearch<int>(sortedArray, 1));        // Try to find a non-existing value
+  // Empty array
+  {
+    Conainer_Type emptyArray = std::vector<int>();
+    const int index = Collections::BinarySearch<Const_Iterator_Type, int>(emptyArray.begin(), emptyArray.end(), 0);
+    EXPECT_EQ(-1, index); // Should return -1 on empty array
+  }
+
+  // First element
+  {
+    const int index = Collections::BinarySearch<Const_Iterator_Type, int>(sortedArray.begin(), sortedArray.end(), -3);
+    EXPECT_EQ(0, index);
+  }
+
+  // Existing random value
+  {
+    const int index = Collections::BinarySearch<Const_Iterator_Type, int>(sortedArray.begin(), sortedArray.end(), 8);
+    EXPECT_EQ(4, index);
+  }
+
+  // Non-existing element
+  {
+    const int index = Collections::BinarySearch<Const_Iterator_Type, int>(sortedArray.begin(), sortedArray.end(), 1);
+    EXPECT_EQ(-1, index);
+  }
+
+  // String collection - Find letter
+  {
+    const int index = Collections::BinarySearch<std::string::const_iterator, char>(OrderedStr.begin(), OrderedStr.end(), 'm');
+    EXPECT_EQ(4, index);
+  }
 }
 
 // Basic BinarySearchIterative tests on a sorted array of doubles
@@ -25,10 +55,30 @@ TEST(TestBasicSearch, BinarySearchBasicDoubles)
 {
   const std::vector<double> sortedDoubleArray(SortedDoubleArray, SortedDoubleArray + sizeof(SortedDoubleArray) / sizeof(double));
 
-  EXPECT_EQ(0, Collections::BinarySearch<double>(sortedDoubleArray, static_cast<const double>(-.3)));   // Find first value
-  EXPECT_EQ(2, Collections::BinarySearch<double>(sortedDoubleArray, static_cast<const double>(0.12)));  // Find a random value owned by the vector
-  EXPECT_EQ(-1, Collections::BinarySearch<double>(sortedDoubleArray, static_cast<const double>(8.1)));  // Try to find a non-existing value
-  EXPECT_EQ(4, Collections::BinarySearch<double>(std::vector<double>(10, 3.), 3.));                     // Find the value in the middle when identical values
+  // First element
+  {
+    const int index = Collections::BinarySearch<Const_Double_Iterator_Type, double>(sortedDoubleArray.begin(), sortedDoubleArray.end(), static_cast<const double>(-.3));
+    EXPECT_EQ(0, index);
+  }
+
+  // Existing element
+  {
+    const int index = Collections::BinarySearch<Const_Double_Iterator_Type, double>(sortedDoubleArray.begin(), sortedDoubleArray.end(), static_cast<const double>(0.12));
+    EXPECT_EQ(2, index);
+  }
+
+  // Non Existing element
+  {
+    const int index = Collections::BinarySearch<Const_Double_Iterator_Type, double>(sortedDoubleArray.begin(), sortedDoubleArray.end(), static_cast<const double>(8.1));
+    EXPECT_EQ(-1, index);
+  }
+
+  // Value in the middle when identical values
+  {
+    std::vector<double> identicalArray = std::vector<double>(10, 3.);
+    const int index = Collections::BinarySearch<Const_Double_Iterator_Type, double>(identicalArray.begin(), identicalArray.end(), static_cast<const double>(3.));
+    EXPECT_EQ(5, index);
+  }
 }
 
 

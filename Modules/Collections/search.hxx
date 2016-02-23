@@ -12,33 +12,42 @@
 namespace Collections
 {
   /// Binary Search
-  /// Iteratively proceed a dichotomic search within a sorted vector on the first occurence
+  /// Iteratively proceed a dichotomic search within a sorted collection on the first occurence
   /// of the key passed as parameter
   ///
   /// @complexity O(log(N))
   ///
-  /// @param sortedArray a sorted vector from within the search occurs
+  /// @param begin,end iterators to the initial and final positions of
+  /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
+  /// first and last, including the element pointed by first but not the element pointed by last.
   /// @param key the key value to be searched
   ///
   /// @return The vector index of the first found key, -1 otherwise
-  template <typename T>
-  int BinarySearch(const std::vector<T>& sortedArray, const T& key)
+  template <typename Iterator, typename T>
+  int BinarySearch(const Iterator& begin, const Iterator& end, const T& key)
   {
     int index = -1;
-    int mid;
-    int lowInd = 0;
-    int highInd = static_cast<int>(sortedArray.size() - 1);
+    Iterator lowIt = begin;
+    Iterator middleIt;
+    Iterator highIt = end;
 
-    while(lowInd <= highInd && index < 0)
+    // While there is still objects between the two iterators and no object has been foud yet
+    int middleIdx = std::distance(lowIt, highIt) / 2;
+    while(lowIt < highIt && index < 0)
     {
-      mid = (lowInd + highInd) / 2;
+      middleIt = lowIt + middleIdx;
 
-      if (Equal(key, sortedArray[mid]))
-        index = mid;
-      else if (key > sortedArray[mid])
-        lowInd = mid + 1;
+      if (Equal(key, *middleIt))
+        // Found object - Set index computed from initial begin iterator
+        index = std::distance(begin, middleIt);
+      else if (key > *middleIt)
+        // Try to find key within upper collection
+        lowIt = middleIt + 1;
       else
-        highInd = mid - 1;
+        // Try to find key within lower collection
+        highIt = middleIt;
+
+      middleIdx = std::distance(lowIt, highIt) / 2;
     }
 
     return index;
@@ -269,6 +278,12 @@ namespace Collections
 
   template <>
   bool Equal<>(const int& a, const int& b)
+  {
+    return a == b;
+  }
+
+  template <>
+  bool Equal<>(const char& a, const char& b)
   {
     return a == b;
   }

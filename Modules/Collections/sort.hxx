@@ -15,13 +15,13 @@ namespace Collections
   ///
   /// @complexity O(N)
   ///
-  /// @templateparam Random-access iterator type
+  /// @templateparam iterator type
   /// @templateparam Compare functor type (std::less_equal for smaller elements in left partition,
   /// std::greater_equal for greater elements in left partition)
-  /// @param begin,end const Random-access iterators to the initial and final positions of 
+  /// @param begin,end const iterators to the initial and final positions of
   /// the sequence to be pivoted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
-  /// @param pivot Random-access iterators to position between begin and end.
+  /// @param pivot iterators to position between begin and end.
   ///
   /// @return void.
   template <typename Iterator, typename Compare /*= std::less_equal*/>
@@ -56,9 +56,9 @@ namespace Collections
   /// Note: this algorithm performs in general 2 to 3 time faster than a classic merge sort.
   /// Note: this algorithm is easily parallelizable.
   ///
-  /// @templateparam Random-access iterator type
+  /// @templateparam iterator type
   /// @templateparam Compare functor type (std::less_equal for in order, std::greater_equal for inverse order)
-  /// @param begin,end Random-access iterators to the initial and final positions of
+  /// @param begin,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
@@ -88,8 +88,8 @@ namespace Collections
   ///
   /// @complexity O(N * M)
   ///
-  /// @templateparam Random-access iterator type
-  /// @param begin,middle,end Random-access iterators to the initial and final positions of
+  /// @templateparam iterator type
+  /// @param begin,middle,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
@@ -140,8 +140,8 @@ namespace Collections
   ///
   /// @complexity O(N)
   ///
-  /// @templateparam Random-access iterator type
-  /// @param begin,middle,end Random-access iterators to the initial and final positions of
+  /// @templateparam iterator type
+  /// @param begin,middle,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
@@ -188,8 +188,8 @@ namespace Collections
   ///
   /// @complexity O(N * log(N))
   ///
-  /// @templateparam Random-access iterator type
-  /// @param begin,end Random-access iterators to the initial and final positions of
+  /// @templateparam iterator type
+  /// @param begin,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
@@ -219,8 +219,8 @@ namespace Collections
   ///
   /// @complexity O(d * N) with d max number of digits.
   ///
-  /// @templateparam Random-access iterator type
-  /// @param begin,end Random-access iterators to the initial and final positions of
+  /// @templateparam iterator type
+  /// @param begin,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   /// @param base base in which the numbers are represented
