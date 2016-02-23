@@ -1,5 +1,5 @@
-#ifndef MODULE_ARRAY_SORT_HXX
-#define MODULE_ARRAY_SORT_HXX
+#ifndef MODULE_COLLECTIONS_SORT_HXX
+#define MODULE_COLLECTIONS_SORT_HXX
 
 // STD includes
 #include <functional>
@@ -8,7 +8,7 @@
 #include <queue>
 #include <vector>
 
-namespace Collections
+namespace SHA_Collections
 {
   /// Partition-Exchange
   /// Proceed an in-place patitionning on the elements 
@@ -204,8 +204,8 @@ namespace Collections
     Iterator middle = begin + ksize / 2;
 
     // Recursively break the vector into two pieces
-    Collections::MergeSort<Container, Iterator, Aggregator>(begin, middle);
-    Collections::MergeSort<Container, Iterator, Aggregator>(middle, end);
+    SHA_Collections::MergeSort<Container, Iterator, Aggregator>(begin, middle);
+    SHA_Collections::MergeSort<Container, Iterator, Aggregator>(middle, end);
 
     // Merge the two pieces
     Aggregator()(begin, middle, end);
@@ -254,4 +254,4 @@ namespace Collections
 }
 };
 
-#endif() // MODULE_ARRAY_SORT_HXX
+#endif() // MODULE_COLLECTIONS_SORT_HXX

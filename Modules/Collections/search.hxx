@@ -1,5 +1,5 @@
-#ifndef MODULE_ARRAY_SEARCH_HXX
-#define MODULE_ARRAY_SEARCH_HXX
+#ifndef MODULE_COLLECTIONS_SEARCH_HXX
+#define MODULE_COLLECTIONS_SEARCH_HXX
 
 #include "sort.hxx"
 
@@ -9,7 +9,7 @@
 #include <limits>
 #include <vector>
 
-namespace Collections
+namespace SHA_Collections
 {
   /// Binary Search
   /// Iteratively proceed a dichotomic search within a sorted collection on the first occurence
@@ -28,15 +28,12 @@ namespace Collections
   {
     int index = -1;
     Iterator lowIt = begin;
-    Iterator middleIt;
     Iterator highIt = end;
+    Iterator middleIt = lowIt + std::distance(lowIt, highIt) / 2;
 
     // While there is still objects between the two iterators and no object has been foud yet
-    int middleIdx = std::distance(lowIt, highIt) / 2;
     while(lowIt < highIt && index < 0)
     {
-      middleIt = lowIt + middleIdx;
-
       if (Equal(key, *middleIt))
         // Found object - Set index computed from initial begin iterator
         index = std::distance(begin, middleIt);
@@ -47,7 +44,7 @@ namespace Collections
         // Try to find key within lower collection
         highIt = middleIt;
 
-      middleIdx = std::distance(lowIt, highIt) / 2;
+      middleIt = lowIt + std::distance(lowIt, highIt) / 2;
     }
 
     return index;
@@ -64,28 +61,30 @@ namespace Collections
   /// @complexity O(N * O(f(a, b))), with f(a,b) the functor used (O(1) for the default std::minus)
   ///
   /// @templateparam Distance functor type computing the distance between two elements
-  /// @param elements vector from within the search occurs
+  /// @param begin,end iterators to the initial and final positions of
+  /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
+  /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return indexes of the array with the maximal distance, <-1,-1> in case of error
-  template <typename T, typename Distance /*= std::minus*/>
-  std::pair<int, int> MaxDistance(const std::vector<T>& elements)
+  template <typename Iterator, typename Distance /*= std::minus*/>
+  std::pair<int, int> MaxDistance(const Iterator& begin, const Iterator& end)
   {
-    if (elements.size() < 2)
+    if (std::distance(begin, end) < 2)
       return std::pair<int, int>(-1, -1);
 
     int minValIdx = 0;
     std::pair<int, int> indexes(minValIdx, 1);
-    T maxDist = Distance()(*elements.begin(), *(elements.begin() + 1));
-    for (std::vector<T>::const_iterator it = elements.begin() + 1; it != elements.end(); ++it)
+    Iterator::value_type maxDist = Distance()(*begin, *(begin + 1));
+    for (Iterator it = begin + 1; it != end; ++it)
     {
-      const int currentIdx = std::distance(elements.begin(), it);
+      const int currentIdx = std::distance(begin, it);
 
       // Keeps track of the minimum value index
-      if (*it < elements[minValIdx])
+      if (*it < *(begin + minValIdx))
         minValIdx = currentIdx;
 
       // Keeps track of the largest distance and the indexes
-      const T distance = Distance()(*it, elements[minValIdx]);
+      const Iterator::value_type distance = Distance()(*it, *(begin + minValIdx));
       if (distance > maxDist) {
         maxDist = distance;
         indexes.first = minValIdx;
@@ -215,7 +214,7 @@ namespace Collections
       return end;
 
     Iterator pivot = begin + (rand() % (end - begin));            // Take random pivot
-    Collections::Partition<Iterator, Compare>(begin, pivot, end); // Partition
+    SHA_Collections::Partition<Iterator, Compare>(begin, pivot, end); // Partition
 
     // Get the index of the pivot (i'th smallest/biggest value)
     size_t indexElem = std::distance(begin, pivot);
@@ -289,4 +288,4 @@ namespace Collections
   }
 };
 
-#endif() // MODULE_ARRAY_SEARCH_HXX
+#endif() // MODULE_COLLECTIONS_SEARCH_HXX
