@@ -36,7 +36,7 @@ namespace SHA_Collections
     {
       if (Equal(key, *middleIt))
         // Found object - Set index computed from initial begin iterator
-        index = std::distance(begin, middleIt);
+        index = static_cast<int>(std::distance(begin, middleIt));
       else if (key > *middleIt)
         // Try to find key within upper collection
         lowIt = middleIt + 1;
@@ -77,7 +77,7 @@ namespace SHA_Collections
     Iterator::value_type maxDist = Distance()(*begin, *(begin + 1));
     for (Iterator it = begin + 1; it != end; ++it)
     {
-      const int currentIdx = std::distance(begin, it);
+      const int currentIdx = static_cast<const int>(std::distance(begin, it));
 
       // Keeps track of the minimum value index
       if (*it < *(begin + minValIdx))
@@ -130,7 +130,7 @@ namespace SHA_Collections
     for (Iterator it = begin + 1; it != end; ++it)
     {
       currSum += *it;
-      int currentIdx = std::distance(begin, it);
+      int currentIdx = static_cast<int>(std::distance(begin, it));
 
       // keep track of the minimum sum and its first value index
       if (Compare()(minSum, currSum)) {
@@ -162,29 +162,34 @@ namespace SHA_Collections
   /// - f(a, b) the compare functor used (O(1) for the default std::greater_equal)
   ///
   /// @templateparam Compare functor type
-  /// @param elements a vector from within the search occurs.
+  /// @param begin,end iterators to the initial and final positions of
+  /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
+  /// first and last, including the element pointed by first but not the element pointed by last.
   /// @param m the numbers of max elements value to be found.
   ///
   /// @return a vector of sorted in decreasing/increasing order of the m maximum/minimum
   /// elements, an empty array in case of failure.
-  template <typename T, typename Compare /*= std::greater_equal*/>
-  std::vector<T> MaxMElements(const std::vector<T>& elements, const int m)
+  template <typename Container, typename Iterator, typename Compare /*= std::greater_equal*/>
+  Container MaxMElements(const Iterator& begin, const Iterator& end, const int m)
   {
-    if (m < 1 || m > elements.size())
-      return std::vector<T>();
+    if (m < 1 || m > std::distance(begin, end))
+      return Container();
 
     // Initiale values depends on the comparator functor
-    const T limitValue = Compare()(0, std::numeric_limits<T>::lowest()) ?
-      std::numeric_limits<T>::lowest() : std::numeric_limits<T>::max();
+    const Iterator::value_type limitValue = Compare()(0, std::numeric_limits<Iterator::value_type>::lowest()) ?
+      std::numeric_limits<Iterator::value_type>::lowest() : std::numeric_limits<Iterator::value_type>::max();
 
-    std::vector<T> maxMElements(m, limitValue);
-    for (std::vector<T>::const_iterator it = elements.begin(); it != elements.end(); ++it)
+    // Allocate the container final size
+    Container maxMElements;
+    maxMElements.resize(m, limitValue);
+    for (Iterator it = begin; it != end; ++it)
     {
       // Insert the value at the right place and bubble down replacement value
-      T tmpVal = *it;
-      for (int i = 0; i < m; ++i)
-        if (Compare()(tmpVal, maxMElements[i]))
-          std::swap(maxMElements[i], tmpVal);
+      int index = 0;
+      Iterator::value_type tmpVal = *it;
+      for (Container::iterator subIt = maxMElements.begin(); index < m; ++subIt, ++index)
+        if (Compare()(tmpVal, *subIt))
+          std::swap(*subIt, tmpVal);
     }
 
     return maxMElements;

@@ -6,7 +6,9 @@ namespace {
   const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5};// Simple random array of integers with negative values
   const int RandomArrayInterInt[] = {5 , 5, -5, 3, -18, 10, 15};    // Other  random array of integers with negative values
   const double SortedDoubleArray[] = {-.3, 0.0, 0.12, 2.5, 8};      // Simple sorted array of floats with negative values
-  const std::string OrderedStr = "acegmnoop";
+  const std::string OrderedStr = "acegmnoop";                       // Ordered string
+  const std::string RandomStr = "xacvgeze";                         // Random string
+
 
   typedef std::vector<int> Conainer_Type;
   typedef Conainer_Type::const_iterator Const_Iterator_Type;
@@ -88,7 +90,7 @@ TEST(TestBasicSearch, MaxDistanceBasics)
   // Should return <4,9> (largest benefice of 6)
   {
     const Conainer_Type marketPrices(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    const std::pair<int, int> maxBeneficeIndexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int> >(marketPrices.begin(), marketPrices.end());
+    const std::pair<int, int> maxBeneficeIndexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int>>(marketPrices.begin(), marketPrices.end());
     EXPECT_EQ(4, maxBeneficeIndexes.first);
     EXPECT_EQ(9, maxBeneficeIndexes.second);
   }
@@ -96,7 +98,7 @@ TEST(TestBasicSearch, MaxDistanceBasics)
   // Should return <0, idxEnd> on sorted array
   {
     const Conainer_Type sortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
-    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int> >(sortedArray.begin(), sortedArray.end());
+    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int>>(sortedArray.begin(), sortedArray.end());
     EXPECT_EQ(0, indexes.first);
     EXPECT_EQ(static_cast<int>(sortedArray.size()) - 1, indexes.second);
   }
@@ -104,7 +106,7 @@ TEST(TestBasicSearch, MaxDistanceBasics)
   // Should return <-1,-1> on insufficient array
   {
     const Conainer_Type insufficientArray = std::vector<int>(1, 2);
-    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int> >(insufficientArray.begin(), insufficientArray.end());
+    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int>>(insufficientArray.begin(), insufficientArray.end());
     EXPECT_EQ(-1, indexes.first);
     EXPECT_EQ(-1, indexes.second);
   }
@@ -112,7 +114,7 @@ TEST(TestBasicSearch, MaxDistanceBasics)
   // Should return <0,1> on array containing only two elements
   {
     const Conainer_Type twoElementArray = std::vector<int>(2, 2);
-    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int> >(twoElementArray.begin(), twoElementArray.end());
+    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int>>(twoElementArray.begin(), twoElementArray.end());
     EXPECT_EQ(0, indexes.first);
     EXPECT_EQ(1, indexes.second);
   }
@@ -120,15 +122,22 @@ TEST(TestBasicSearch, MaxDistanceBasics)
   // Should return <0,1> on array containing the same value
   {
     const Conainer_Type sameElementArray = std::vector<int>(10, 2);
-    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int> >(sameElementArray.begin(), sameElementArray.end());
+    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int>>(sameElementArray.begin(), sameElementArray.end());
     EXPECT_EQ(0, indexes.first);
     EXPECT_EQ(1, indexes.second);
+  }
+
+  // String - should return <1,0> as 'a', 'z' are the most distanced letter
+  {
+    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<std::string::const_iterator, std::minus<char>>(RandomStr.begin(), RandomStr.end());
+    EXPECT_EQ(1, indexes.first);
+    EXPECT_EQ(6, indexes.second);
   }
 }
 
 
 // Test MaxSubArray
-TEST(TestBasicSearch, MaxSubArray)
+TEST(TestBasicSearch, MaxSubArrayBasics)
 {
   // Should return <5,9> (maximal sum of 17)
   {
@@ -157,7 +166,7 @@ TEST(TestBasicSearch, MaxSubArray)
   // Should return <0,1> on array containing only two positive elements
   {
     const Conainer_Type twoElementArray = std::vector<int>(2, 2);
-    const std::pair<int, int> kIndexes = SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int> >(twoElementArray.begin(), twoElementArray.end());
+    const std::pair<int, int> kIndexes = SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int>>(twoElementArray.begin(), twoElementArray.end());
     EXPECT_EQ(0, kIndexes.first);
     EXPECT_EQ(1, kIndexes.second);
   }
@@ -166,26 +175,26 @@ TEST(TestBasicSearch, MaxSubArray)
   {
     const int kSize = 10;
     std::vector<int> sameElementArray = std::vector<int>(kSize, 2);
-    const std::pair<int, int> indexes = SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int> >(sameElementArray.begin(), sameElementArray.end());
+    const std::pair<int, int> indexes = SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int>>(sameElementArray.begin(), sameElementArray.end());
     EXPECT_EQ(0, indexes.first);
     EXPECT_EQ(kSize - 1, indexes.second);
   }
 }
 
 // Test MaxNElements
-TEST(TestBasicSearch, MaxNElements)
+TEST(TestBasicSearch, MaxNElementsBasics)
 {
   // Should return the max value [5] for a unique element search
   {
-    const std::vector<int> kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    const std::vector<int> kMMaxElements = SHA_Collections::MaxMElements<int, std::greater_equal<int> >(kRandomElements, 1);
+    const Conainer_Type kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::greater_equal<int>>(kRandomElements.begin(), kRandomElements.end(), 1);
     EXPECT_EQ(5, kMMaxElements[0]);
   }
 
   // Should return [5,5,4]
   {
-    const std::vector<int> kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    const std::vector<int> kMMaxElements = SHA_Collections::MaxMElements<int, std::greater_equal<int> >(kRandomElements, 3);
+    const Conainer_Type kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::greater_equal<int>>(kRandomElements.begin(), kRandomElements.end(), 3);
     EXPECT_EQ(5, kMMaxElements[0]);
     EXPECT_EQ(5, kMMaxElements[1]);
     EXPECT_EQ(4, kMMaxElements[2]);
@@ -193,8 +202,8 @@ TEST(TestBasicSearch, MaxNElements)
 
   // Should return the last elements on sorted vector
   {
-    const std::vector<int> kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
-    const std::vector<int> kMMaxElements = SHA_Collections::MaxMElements<int, std::greater_equal<int> >(kSortedArray, 4);
+    const Conainer_Type kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+    Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::greater_equal<int>>(kSortedArray.begin(), kSortedArray.end(), 4);
     EXPECT_EQ(366, kMMaxElements[0]);
     EXPECT_EQ(212, kMMaxElements[1]);
     EXPECT_EQ(36, kMMaxElements[2]);
@@ -203,13 +212,15 @@ TEST(TestBasicSearch, MaxNElements)
 
   // Should return empty vector on insufficient vector
   {
-    const std::vector<int> kMMaxElements = SHA_Collections::MaxMElements<int, std::greater_equal<int> >(std::vector<int>(1, 2), 2);
+    const Conainer_Type oneElementCollection = std::vector<int>(1, 2);
+    const Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::greater_equal<int>>(oneElementCollection.begin(), oneElementCollection.end(), 2);
     EXPECT_EQ(0, static_cast<int>(kMMaxElements.size()));
   }
 
   // Should return empty vector when looking for less than 1 elements
   {
-    const std::vector<int> kMMaxElements = SHA_Collections::MaxMElements<int, std::greater_equal<int> >(std::vector<int>(1, 2), 0);
+    const Conainer_Type oneElementCollection = std::vector<int>(1, 2);
+    const Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::greater_equal<int>>(oneElementCollection.begin(), oneElementCollection.end(), 0);
     EXPECT_EQ(0, static_cast<int>(kMMaxElements.size()));
   }
 }
@@ -219,15 +230,15 @@ TEST(TestBasicSearch, MaxNElementsLowestValues)
 {
   // Should return the min value [-18] for a unique element search
   {
-    const std::vector<int> kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    const std::vector<int> kMMaxElements = SHA_Collections::MaxMElements<int, std::less_equal<int> >(kRandomElements, 1);
+    const Conainer_Type kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::less_equal<int> >(kRandomElements.begin(), kRandomElements.end(), 1);
     EXPECT_EQ(-18, kMMaxElements[0]);
   }
 
   // Should return [5,5,4]
   {
-    const std::vector<int> kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    const std::vector<int> kMMaxElements = SHA_Collections::MaxMElements<int, std::less_equal<int> >(kRandomElements, 3);
+    const Conainer_Type kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::less_equal<int> >(kRandomElements.begin(), kRandomElements.end(), 3);
     EXPECT_EQ(-18, kMMaxElements[0]);
     EXPECT_EQ(-5, kMMaxElements[1]);
     EXPECT_EQ(2, kMMaxElements[2]);
@@ -235,8 +246,8 @@ TEST(TestBasicSearch, MaxNElementsLowestValues)
 
   // Should return the first elements on sorted vector
   {
-    const std::vector<int> kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
-    const std::vector<int> kMMaxElements = SHA_Collections::MaxMElements<int, std::less_equal<int> >(kSortedArray, 4);
+    const Conainer_Type kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+    const Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::less_equal<int> >(kSortedArray.begin(), kSortedArray.end(), 4);
     EXPECT_EQ(-3, kMMaxElements[0]);
     EXPECT_EQ(-2, kMMaxElements[1]);
     EXPECT_EQ(0, kMMaxElements[2]);
