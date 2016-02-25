@@ -2,17 +2,25 @@
 #include <search.hxx>
 
 namespace {
-  const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366}; // Simple sorted array of integers with negative values
-  const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5};// Simple random array of integers with negative values
-  const int RandomArrayInterInt[] = {5 , 5, -5, 3, -18, 10, 15};    // Other  random array of integers with negative values
-  const double SortedDoubleArray[] = {-.3, 0.0, 0.12, 2.5, 8};      // Simple sorted array of floats with negative values
-  const std::string OrderedStr = "acegmnoop";                       // Ordered string
-  const std::string RandomStr = "xacvgeze";                         // Random string
+  const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366};  // Simple sorted array of integers with negative values
+  const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5}; // Simple random array of integers with negative values
+  const int RandomArrayInterInt[] = {5 , 5, -5, 3, -18, 10, 15};     // Other  random array of integers with negative values
+  const double SortedDoubleArray[] = {-.3, 0.0, 0.12, 2.5, 8};       // Simple sorted array of floats with negative values
+  const std::string OrderedStr = "acegmnoop";                        // Ordered string
+  const std::string RandomStr = "xacvgeze";                          // Random string
 
 
   typedef std::vector<int> Conainer_Type;
   typedef Conainer_Type::const_iterator Const_Iterator_Type;
   typedef std::vector<double>::const_iterator Const_Double_Iterator_Type;
+
+  template <typename T>
+  struct EQUIVALENT
+  { bool operator()(const T& a, const T& b) const { return std::abs(a - b) < std::numeric_limits<T>::epsilon(); } };
+
+  template <typename T>
+  struct EQUAL
+  { bool operator()(const T& a, const T& b) const { return a == b; } };
 }
 
 // Basic BinarySearchIterative tests on a sorted array of ints
@@ -23,31 +31,31 @@ TEST(TestBasicSearch, BinarySearchBasics)
   // Empty array
   {
     Conainer_Type emptyArray = std::vector<int>();
-    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int>(emptyArray.begin(), emptyArray.end(), 0);
+    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int, EQUAL<int>>(emptyArray.begin(), emptyArray.end(), 0);
     EXPECT_EQ(-1, index); // Should return -1 on empty array
   }
 
   // First element
   {
-    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int>(sortedArray.begin(), sortedArray.end(), -3);
+    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int, EQUAL<int>>(sortedArray.begin(), sortedArray.end(), -3);
     EXPECT_EQ(0, index);
   }
 
   // Existing random value
   {
-    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int>(sortedArray.begin(), sortedArray.end(), 8);
+    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int, EQUAL<int>>(sortedArray.begin(), sortedArray.end(), 8);
     EXPECT_EQ(4, index);
   }
 
   // Non-existing element
   {
-    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int>(sortedArray.begin(), sortedArray.end(), 1);
+    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int, EQUAL<int>>(sortedArray.begin(), sortedArray.end(), 1);
     EXPECT_EQ(-1, index);
   }
 
   // String collection - Find letter
   {
-    const int index = SHA_Collections::BinarySearch<std::string::const_iterator, char>(OrderedStr.begin(), OrderedStr.end(), 'm');
+    const int index = SHA_Collections::BinarySearch<std::string::const_iterator, char, EQUAL<char>>(OrderedStr.begin(), OrderedStr.end(), 'm');
     EXPECT_EQ(4, index);
   }
 }
@@ -59,26 +67,26 @@ TEST(TestBasicSearch, BinarySearchBasicDoubles)
 
   // First element
   {
-    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double>(sortedDoubleArray.begin(), sortedDoubleArray.end(), static_cast<const double>(-.3));
+    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double, EQUIVALENT<double>>(sortedDoubleArray.begin(), sortedDoubleArray.end(), static_cast<const double>(-.3));
     EXPECT_EQ(0, index);
   }
 
   // Existing element
   {
-    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double>(sortedDoubleArray.begin(), sortedDoubleArray.end(), static_cast<const double>(0.12));
+    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double, EQUIVALENT<double>>(sortedDoubleArray.begin(), sortedDoubleArray.end(), static_cast<const double>(0.12));
     EXPECT_EQ(2, index);
   }
 
   // Non Existing element
   {
-    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double>(sortedDoubleArray.begin(), sortedDoubleArray.end(), static_cast<const double>(8.1));
+    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double, EQUIVALENT<double>>(sortedDoubleArray.begin(), sortedDoubleArray.end(), static_cast<const double>(8.1));
     EXPECT_EQ(-1, index);
   }
 
   // Value in the middle when identical values
   {
     const std::vector<double> identicalArray = std::vector<double>(10, 3.);
-    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double>(identicalArray.begin(), identicalArray.end(), static_cast<const double>(3.));
+    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double, EQUIVALENT<double>>(identicalArray.begin(), identicalArray.end(), static_cast<const double>(3.));
     EXPECT_EQ(5, index);
   }
 }

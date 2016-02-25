@@ -23,7 +23,7 @@ namespace SHA_Collections
   /// @param key the key value to be searched.
   ///
   /// @return The vector index of the first found key, -1 otherwise.
-  template <typename Iterator, typename T>
+  template <typename Iterator, typename T, typename IsEqual>
   int BinarySearch(const Iterator& begin, const Iterator& end, const T& key)
   {
     int index = -1;
@@ -34,7 +34,7 @@ namespace SHA_Collections
     // While there is still objects between the two iterators and no object has been foud yet
     while(lowIt < highIt && index < 0)
     {
-      if (Equal(key, *middleIt))
+      if (IsEqual()(key, *middleIt))
         // Found object - Set index computed from initial begin iterator
         index = static_cast<int>(std::distance(begin, middleIt));
       else if (key > *middleIt)
@@ -207,7 +207,7 @@ namespace SHA_Collections
   /// @templateparam Random-access iterator type
   /// @templateparam Compare functor type (std::less_equal to find kth smallest element,
   /// std::greater_equal to find the kth biggest one)
-  /// @param begin,end Random-access iterators to the initial and final positions of
+  /// @param begin,end - iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   /// @param k the zero-based kth element - 0 for the biggest/smallest.
@@ -243,7 +243,7 @@ namespace SHA_Collections
   /// @param firstArray the first.
   /// @param secondArray the second.
   ///
-  /// @return a vector containing the intersection of both vectors.
+  /// @return a vector containing the intersection of both sequences.
   template <typename T>
   std::vector<T> Intersection(const std::vector<T>& firstVector, const std::vector<T>& secondVector)
   {
@@ -272,26 +272,6 @@ namespace SHA_Collections
     }
 
     return intersection;
-  }
-
-
-  template <class T>
-  bool Equal(const T& a, const T& b)
-  {
-    return std::abs(a - b) < std::numeric_limits<T>::epsilon();
-  }
-
-
-  template <>
-  bool Equal<>(const int& a, const int& b)
-  {
-    return a == b;
-  }
-
-  template <>
-  bool Equal<>(const char& a, const char& b)
-  {
-    return a == b;
   }
 };
 
