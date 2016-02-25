@@ -210,35 +210,35 @@ namespace SHA_Collections
   /// @param begin,end Random-access iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
-  /// @param k the zero-based kth element wanted to be find as.
+  /// @param k the zero-based kth element - 0 for the biggest/smallest.
   ///
   /// @return the kth smallest iterator element of the array, the end iterator in case of failure.
   template <typename Iterator, typename Compare /*= std::less_equal*/>
   Iterator KthMaxElement(Iterator& begin, Iterator& end, size_t k)
   {
-    const size_t karraySize = std::distance(begin, end);
-    if (k > karraySize || k < 0 || karraySize <= 0)
+    const size_t kSize = std::distance(begin, end);
+    if (k > kSize || k < 0 || kSize <= 0)
       return end;
 
-    Iterator pivot = begin + (rand() % (end - begin));            // Take random pivot
+    Iterator pivot = begin + (rand() % (end - begin));                // Take random pivot
     SHA_Collections::Partition<Iterator, Compare>(begin, pivot, end); // Partition
 
     // Get the index of the pivot (i'th smallest/biggest value)
-    size_t indexElem = std::distance(begin, pivot);
+    const size_t kPivotIndex = std::distance(begin, pivot);
 
     // Return if at the kth position
-    if (indexElem == k)
+    if (kPivotIndex == k)
       return pivot;
 
-    return (indexElem > k) ? KthMaxElement<Iterator, Compare>(begin, pivot, k)            // Recurse search on left part
-                           : KthMaxElement<Iterator, Compare>(pivot, end, k - indexElem); // Recurse search on right part
+    return (kPivotIndex > k) ? KthMaxElement<Iterator, Compare>(begin, pivot, k)              // Recurse search on left part
+                             : KthMaxElement<Iterator, Compare>(pivot, end, k - kPivotIndex); // Recurse search on right part
   }
 
 
   /// Intersection - Return Intersection of the two vectors
   /// Retrieve the intersection of two vectors keeping dupplicate keys distinct.
   ///
-  /// @complexity O(N)
+  /// @complexity O(N + M)
   ///
   /// @param firstArray the first.
   /// @param secondArray the second.

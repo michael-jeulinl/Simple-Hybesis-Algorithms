@@ -255,8 +255,8 @@ TEST(TestBasicSearch, MaxNElementsLowestValues)
   }
 }
 
-// Test kth smallest element
-TEST(TestBasicSearch, KthSmallesElement)
+// Test kth smallest elements
+TEST(TestBasicSearch, KthSmallestBasics)
 {
   typedef std::vector<int>::iterator Iterator_type;
   typedef std::less_equal<Iterator_type::value_type> Comparator_type;
@@ -289,10 +289,17 @@ TEST(TestBasicSearch, KthSmallesElement)
     it =  SHA_Collections::KthMaxElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.end(), 100);
     EXPECT_EQ(ksortedArray.end(), it);       // Should end for out of scope k (100)
   }
+
+  // String
+  {
+    std::string randomStr = RandomStr;
+    const char secondSmallestLetter = *SHA_Collections::KthMaxElement<std::string::iterator, std::less_equal<char>>(randomStr.begin(), randomStr.end(), 1);
+    EXPECT_EQ('c', secondSmallestLetter);
+  }
 }
 
 // Test kth biggest element
-TEST(TestBasicSearch, KthBiggestElement)
+TEST(TestBasicSearch, KthBiggestBasics)
 {
   typedef std::vector<int>::iterator Iterator_type;
   typedef std::greater_equal<Iterator_type::value_type> Comparator_type;
