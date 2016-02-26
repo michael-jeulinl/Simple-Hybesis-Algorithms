@@ -57,7 +57,7 @@ namespace SHA_Collections
   /// Note: this algorithm is easily parallelizable.
   ///
   /// @templateparam iterator type
-  /// @templateparam Compare functor type (std::less_equal for in order, std::greater_equal for inverse order)
+  /// @templateparam Compare functor type (std::less_equal in order, std::greater_equal for inverse order)
   /// @param begin,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
@@ -66,7 +66,7 @@ namespace SHA_Collections
   template <typename Iterator, typename Compare /*= std::less_equal*/>
   void QuickSort(Iterator& begin, Iterator& end)
   {
-    int distance = std::distance(begin, end);
+    const int distance = static_cast<const int>(std::distance(begin, end));
     if (distance < 2)
       return;
 
@@ -197,7 +197,7 @@ namespace SHA_Collections
   template <typename Container, typename Iterator, typename Aggregator>
   void MergeSort(Iterator& begin, Iterator& end)
   {
-    const int ksize = std::distance(begin, end);
+    const int ksize = static_cast<const int>(std::distance(begin, end));
     if (ksize < 2)
       return;
 
@@ -236,11 +236,11 @@ namespace SHA_Collections
     std::vector<std::queue<Iterator::value_type> > buckets(base);
 
     // For all possible digit
-    for(size_t powerBase = 1; powerBase < std::numeric_limits<Iterator::value_type>::max(); powerBase *= base)
+    for (size_t powBase = 1; powBase < std::numeric_limits<Iterator::value_type>::max(); powBase *= base)
     {
       // Push each number into the bucket of its digit value
       for (Iterator it = begin; it != end; ++it)
-        buckets[static_cast<int>(*it / powerBase) % base].push(*it);
+        buckets[static_cast<int>(*it / powBase) % base].push(*it);
 
       // Dequeu back all the values
       Iterator itSrc = begin;

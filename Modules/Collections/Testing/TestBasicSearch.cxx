@@ -9,53 +9,65 @@ namespace {
   const std::string OrderedStr = "acegmnoop";                        // Ordered string
   const std::string RandomStr = "xacvgeze";                          // Random string
 
-
-  typedef std::vector<int> Conainer_Type;
-  typedef Conainer_Type::const_iterator Const_Iterator_Type;
+  typedef std::vector<int> Container_Type;
+  typedef Container_Type::iterator Iterator_Type;
+  typedef Container_Type::const_iterator Const_Iterator_Type;
   typedef std::vector<double>::const_iterator Const_Double_Iterator_Type;
+  typedef std::less_equal<Container_Type::value_type> Comparator_type;
+  typedef std::greater_equal<Container_Type::value_type> Greater_Comparator_type;
 
   template <typename T>
   struct EQUIVALENT
-  { bool operator()(const T& a, const T& b) const { return std::abs(a - b) < std::numeric_limits<T>::epsilon(); } };
+  {
+    bool operator()(const T& a, const T& b) const
+    { return std::abs(a - b) < std::numeric_limits<T>::epsilon(); }
+  };
 
   template <typename T>
   struct EQUAL
-  { bool operator()(const T& a, const T& b) const { return a == b; } };
+  {
+    bool operator()(const T& a, const T& b) const { return a == b; }
+  };
 }
 
 // Basic BinarySearchIterative tests on a sorted array of ints
 TEST(TestBasicSearch, BinarySearchBasics)
 {
-  const Conainer_Type sortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+  const Container_Type sortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
 
   // Empty array
   {
-    Conainer_Type emptyArray = std::vector<int>();
-    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int, EQUAL<int>>(emptyArray.begin(), emptyArray.end(), 0);
+    Container_Type emptyArray = Container_Type();
+    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int, EQUAL<int>>
+      (emptyArray.begin(), emptyArray.end(), 0);
     EXPECT_EQ(-1, index); // Should return -1 on empty array
   }
 
   // First element
   {
-    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int, EQUAL<int>>(sortedArray.begin(), sortedArray.end(), -3);
+    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int, EQUAL<int>>
+      (sortedArray.begin(), sortedArray.end(), -3);
     EXPECT_EQ(0, index);
   }
 
   // Existing random value
   {
-    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int, EQUAL<int>>(sortedArray.begin(), sortedArray.end(), 8);
+    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int, EQUAL<int>>
+      (sortedArray.begin(), sortedArray.end(), 8);
     EXPECT_EQ(4, index);
   }
 
   // Non-existing element
   {
-    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int, EQUAL<int>>(sortedArray.begin(), sortedArray.end(), 1);
+    const int index = SHA_Collections::BinarySearch<Const_Iterator_Type, int, EQUAL<int>>
+      (sortedArray.begin(), sortedArray.end(), 1);
     EXPECT_EQ(-1, index);
   }
 
   // String collection - Find letter
   {
-    const int index = SHA_Collections::BinarySearch<std::string::const_iterator, char, EQUAL<char>>(OrderedStr.begin(), OrderedStr.end(), 'm');
+    const int index = SHA_Collections::BinarySearch<std::string::const_iterator, char, EQUAL<char>>
+      (OrderedStr.begin(), OrderedStr.end(), 'm');
     EXPECT_EQ(4, index);
   }
 }
@@ -63,30 +75,35 @@ TEST(TestBasicSearch, BinarySearchBasics)
 // Basic BinarySearchIterative tests on a sorted array of doubles
 TEST(TestBasicSearch, BinarySearchBasicDoubles)
 {
-  const std::vector<double> sortedDoubleArray(SortedDoubleArray, SortedDoubleArray + sizeof(SortedDoubleArray) / sizeof(double));
+  const std::vector<double> sortedDoubleArray
+    (SortedDoubleArray, SortedDoubleArray + sizeof(SortedDoubleArray) / sizeof(double));
 
   // First element
   {
-    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double, EQUIVALENT<double>>(sortedDoubleArray.begin(), sortedDoubleArray.end(), static_cast<const double>(-.3));
+    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double, EQUIVALENT<double>>
+      (sortedDoubleArray.begin(), sortedDoubleArray.end(), static_cast<const double>(-.3));
     EXPECT_EQ(0, index);
   }
 
   // Existing element
   {
-    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double, EQUIVALENT<double>>(sortedDoubleArray.begin(), sortedDoubleArray.end(), static_cast<const double>(0.12));
+    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double, EQUIVALENT<double>>
+      (sortedDoubleArray.begin(), sortedDoubleArray.end(), static_cast<const double>(0.12));
     EXPECT_EQ(2, index);
   }
 
   // Non Existing element
   {
-    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double, EQUIVALENT<double>>(sortedDoubleArray.begin(), sortedDoubleArray.end(), static_cast<const double>(8.1));
+    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double, EQUIVALENT<double>>
+      (sortedDoubleArray.begin(), sortedDoubleArray.end(), static_cast<const double>(8.1));
     EXPECT_EQ(-1, index);
   }
 
   // Value in the middle when identical values
   {
     const std::vector<double> identicalArray = std::vector<double>(10, 3.);
-    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double, EQUIVALENT<double>>(identicalArray.begin(), identicalArray.end(), static_cast<const double>(3.));
+    const int index = SHA_Collections::BinarySearch<Const_Double_Iterator_Type, double, EQUIVALENT<double>>
+      (identicalArray.begin(), identicalArray.end(), static_cast<const double>(3.));
     EXPECT_EQ(5, index);
   }
 }
@@ -97,47 +114,55 @@ TEST(TestBasicSearch, MaxDistanceBasics)
 {
   // Should return <4,9> (largest benefice of 6)
   {
-    const Conainer_Type marketPrices(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    const std::pair<int, int> maxBeneficeIndexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int>>(marketPrices.begin(), marketPrices.end());
+    const Container_Type marketPrices(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const std::pair<int, int> maxBeneficeIndexes =
+      SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int>>
+      (marketPrices.begin(), marketPrices.end());
     EXPECT_EQ(4, maxBeneficeIndexes.first);
     EXPECT_EQ(9, maxBeneficeIndexes.second);
   }
 
   // Should return <0, idxEnd> on sorted array
   {
-    const Conainer_Type sortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
-    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int>>(sortedArray.begin(), sortedArray.end());
+    const Container_Type sortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int>>
+      (sortedArray.begin(), sortedArray.end());
     EXPECT_EQ(0, indexes.first);
     EXPECT_EQ(static_cast<int>(sortedArray.size()) - 1, indexes.second);
   }
 
   // Should return <-1,-1> on insufficient array
   {
-    const Conainer_Type insufficientArray = std::vector<int>(1, 2);
-    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int>>(insufficientArray.begin(), insufficientArray.end());
+    const Container_Type insufficientArray = Container_Type(1, 2);
+    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int>>
+      (insufficientArray.begin(), insufficientArray.end());
     EXPECT_EQ(-1, indexes.first);
     EXPECT_EQ(-1, indexes.second);
   }
 
   // Should return <0,1> on array containing only two elements
   {
-    const Conainer_Type twoElementArray = std::vector<int>(2, 2);
-    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int>>(twoElementArray.begin(), twoElementArray.end());
+    const Container_Type twoElementArray = Container_Type(2, 2);
+    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int>>
+      (twoElementArray.begin(), twoElementArray.end());
     EXPECT_EQ(0, indexes.first);
     EXPECT_EQ(1, indexes.second);
   }
 
   // Should return <0,1> on array containing the same value
   {
-    const Conainer_Type sameElementArray = std::vector<int>(10, 2);
-    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int>>(sameElementArray.begin(), sameElementArray.end());
+    const Container_Type sameElementArray = Container_Type(10, 2);
+    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<Const_Iterator_Type, std::minus<int>>
+      (sameElementArray.begin(), sameElementArray.end());
     EXPECT_EQ(0, indexes.first);
     EXPECT_EQ(1, indexes.second);
   }
 
   // String - should return <1,0> as 'a', 'z' are the most distanced letter
   {
-    const std::pair<int, int> indexes = SHA_Collections::MaxDistance<std::string::const_iterator, std::minus<char>>(RandomStr.begin(), RandomStr.end());
+    const std::pair<int, int> indexes =
+      SHA_Collections::MaxDistance<std::string::const_iterator, std::minus<char>>
+      (RandomStr.begin(), RandomStr.end());
     EXPECT_EQ(1, indexes.first);
     EXPECT_EQ(6, indexes.second);
   }
@@ -149,32 +174,40 @@ TEST(TestBasicSearch, MaxSubArrayBasics)
 {
   // Should return <5,9> (maximal sum of 17)
   {
-    const Conainer_Type kMarketPrices(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    const std::pair<int, int> kMaxBeneficeIndexes = SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int> >(kMarketPrices.begin(), kMarketPrices.end());
+    const Container_Type kMarketPrices(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const std::pair<int, int> kMaxBeneficeIndexes =
+      SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int>>
+      (kMarketPrices.begin(), kMarketPrices.end());
     EXPECT_EQ(5, kMaxBeneficeIndexes.first);
     EXPECT_EQ(9, kMaxBeneficeIndexes.second);
   }
 
   // Should return <FirstPositiveIdx, idxEnd> on sorted array
   {
-    const Conainer_Type kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
-    const std::pair<int, int> kIndexes = SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int> >(kSortedArray.begin(), kSortedArray.end());
+    const Container_Type kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+    const std::pair<int, int> kIndexes =
+      SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int>>
+      (kSortedArray.begin(), kSortedArray.end());
     EXPECT_EQ(2, kIndexes.first);
     EXPECT_EQ(static_cast<int>(kSortedArray.size()) - 1, kIndexes.second);
   }
 
   // Should return <-1,-1> on insufficient array
   {
-    const Conainer_Type insufficientArray = std::vector<int>(1, 2);
-    const std::pair<int, int> kIndexes = SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int> >(insufficientArray.begin(), insufficientArray.end());
+    const Container_Type insufficientArray = Container_Type(1, 2);
+    const std::pair<int, int> kIndexes =
+      SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int>>
+      (insufficientArray.begin(), insufficientArray.end());
     EXPECT_EQ(-1, kIndexes.first);
     EXPECT_EQ(-1, kIndexes.second);
   }
 
   // Should return <0,1> on array containing only two positive elements
   {
-    const Conainer_Type twoElementArray = std::vector<int>(2, 2);
-    const std::pair<int, int> kIndexes = SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int>>(twoElementArray.begin(), twoElementArray.end());
+    const Container_Type twoElementArray = Container_Type(2, 2);
+    const std::pair<int, int> kIndexes =
+      SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int>>
+      (twoElementArray.begin(), twoElementArray.end());
     EXPECT_EQ(0, kIndexes.first);
     EXPECT_EQ(1, kIndexes.second);
   }
@@ -182,8 +215,10 @@ TEST(TestBasicSearch, MaxSubArrayBasics)
   // Should return <0, idxEnd> on array containing the same positive value
   {
     const int kSize = 10;
-    std::vector<int> sameElementArray = std::vector<int>(kSize, 2);
-    const std::pair<int, int> indexes = SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int>>(sameElementArray.begin(), sameElementArray.end());
+    Container_Type sameElementArray = Container_Type(kSize, 2);
+    const std::pair<int, int> indexes =
+      SHA_Collections::MaxSubArray<Const_Iterator_Type, std::minus<int>, std::greater<int>>
+      (sameElementArray.begin(), sameElementArray.end());
     EXPECT_EQ(0, indexes.first);
     EXPECT_EQ(kSize - 1, indexes.second);
   }
@@ -194,15 +229,21 @@ TEST(TestBasicSearch, MaxNElementsBasics)
 {
   // Should return the max value [5] for a unique element search
   {
-    const Conainer_Type kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::greater_equal<int>>(kRandomElements.begin(), kRandomElements.end(), 1);
+    const Container_Type kRandomElements
+      (RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    Container_Type kMMaxElements =
+      SHA_Collections::MaxMElements<Container_Type, Const_Iterator_Type, std::greater_equal<int>>
+      (kRandomElements.begin(), kRandomElements.end(), 1);
     EXPECT_EQ(5, kMMaxElements[0]);
   }
 
   // Should return [5,5,4]
   {
-    const Conainer_Type kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::greater_equal<int>>(kRandomElements.begin(), kRandomElements.end(), 3);
+    const Container_Type kRandomElements
+      (RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    Container_Type kMMaxElements =
+      SHA_Collections::MaxMElements<Container_Type, Const_Iterator_Type, std::greater_equal<int>>
+      (kRandomElements.begin(), kRandomElements.end(), 3);
     EXPECT_EQ(5, kMMaxElements[0]);
     EXPECT_EQ(5, kMMaxElements[1]);
     EXPECT_EQ(4, kMMaxElements[2]);
@@ -210,8 +251,10 @@ TEST(TestBasicSearch, MaxNElementsBasics)
 
   // Should return the last elements on sorted vector
   {
-    const Conainer_Type kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
-    Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::greater_equal<int>>(kSortedArray.begin(), kSortedArray.end(), 4);
+    const Container_Type kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+    Container_Type kMMaxElements =
+      SHA_Collections::MaxMElements<Container_Type, Const_Iterator_Type, std::greater_equal<int>>
+      (kSortedArray.begin(), kSortedArray.end(), 4);
     EXPECT_EQ(366, kMMaxElements[0]);
     EXPECT_EQ(212, kMMaxElements[1]);
     EXPECT_EQ(36, kMMaxElements[2]);
@@ -220,15 +263,19 @@ TEST(TestBasicSearch, MaxNElementsBasics)
 
   // Should return empty vector on insufficient vector
   {
-    const Conainer_Type oneElementCollection = std::vector<int>(1, 2);
-    const Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::greater_equal<int>>(oneElementCollection.begin(), oneElementCollection.end(), 2);
+    const Container_Type oneElementCollection = Container_Type(1, 2);
+    const Container_Type kMMaxElements =
+      SHA_Collections::MaxMElements<Container_Type, Const_Iterator_Type, std::greater_equal<int>>
+      (oneElementCollection.begin(), oneElementCollection.end(), 2);
     EXPECT_EQ(0, static_cast<int>(kMMaxElements.size()));
   }
 
   // Should return empty vector when looking for less than 1 elements
   {
-    const Conainer_Type oneElementCollection = std::vector<int>(1, 2);
-    const Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::greater_equal<int>>(oneElementCollection.begin(), oneElementCollection.end(), 0);
+    const Container_Type oneElementCollection = Container_Type(1, 2);
+    const Container_Type kMMaxElements =
+      SHA_Collections::MaxMElements<Container_Type, Const_Iterator_Type, std::greater_equal<int>>
+      (oneElementCollection.begin(), oneElementCollection.end(), 0);
     EXPECT_EQ(0, static_cast<int>(kMMaxElements.size()));
   }
 }
@@ -238,15 +285,21 @@ TEST(TestBasicSearch, MaxNElementsLowestValues)
 {
   // Should return the min value [-18] for a unique element search
   {
-    const Conainer_Type kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    const Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::less_equal<int> >(kRandomElements.begin(), kRandomElements.end(), 1);
+    const Container_Type kRandomElements
+      (RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const Container_Type kMMaxElements =
+      SHA_Collections::MaxMElements<Container_Type, Const_Iterator_Type, std::less_equal<int>>
+      (kRandomElements.begin(), kRandomElements.end(), 1);
     EXPECT_EQ(-18, kMMaxElements[0]);
   }
 
   // Should return [5,5,4]
   {
-    const Conainer_Type kRandomElements(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    const Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::less_equal<int> >(kRandomElements.begin(), kRandomElements.end(), 3);
+    const Container_Type kRandomElements
+      (RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const Container_Type kMMaxElements =
+      SHA_Collections::MaxMElements<Container_Type, Const_Iterator_Type, std::less_equal<int>>
+      (kRandomElements.begin(), kRandomElements.end(), 3);
     EXPECT_EQ(-18, kMMaxElements[0]);
     EXPECT_EQ(-5, kMMaxElements[1]);
     EXPECT_EQ(2, kMMaxElements[2]);
@@ -254,8 +307,10 @@ TEST(TestBasicSearch, MaxNElementsLowestValues)
 
   // Should return the first elements on sorted vector
   {
-    const Conainer_Type kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
-    const Conainer_Type kMMaxElements = SHA_Collections::MaxMElements<Conainer_Type, Const_Iterator_Type, std::less_equal<int> >(kSortedArray.begin(), kSortedArray.end(), 4);
+    const Container_Type kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+    const Container_Type kMMaxElements =
+      SHA_Collections::MaxMElements<Container_Type, Const_Iterator_Type, std::less_equal<int>>
+      (kSortedArray.begin(), kSortedArray.end(), 4);
     EXPECT_EQ(-3, kMMaxElements[0]);
     EXPECT_EQ(-2, kMMaxElements[1]);
     EXPECT_EQ(0, kMMaxElements[2]);
@@ -266,42 +321,46 @@ TEST(TestBasicSearch, MaxNElementsLowestValues)
 // Test kth smallest elements
 TEST(TestBasicSearch, KthSmallestBasics)
 {
-  typedef std::vector<int>::iterator Iterator_type;
-  typedef std::less_equal<Iterator_type::value_type> Comparator_type;
-
   // Basic run on sorted array with unique element - Should the kth element
   {
-    std::vector<int> ksortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
-    Iterator_type it = SHA_Collections::KthMaxElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.end(), 4);
+    Container_Type ksortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+    Iterator_Type it = SHA_Collections::KthMaxElement<Iterator_Type, Comparator_type>
+      (ksortedArray.begin(), ksortedArray.end(), 4);
     EXPECT_EQ(ksortedArray.begin() + 4, it);
   }
 
   // Basic run on random array - Should return 4
   {
-    std::vector<int> krandomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    Iterator_type::value_type value = *SHA_Collections::KthMaxElement<Iterator_type, Comparator_type>(krandomdArray.begin(), krandomdArray.end(), 7);
+    Container_Type krandomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    Iterator_Type::value_type value = *SHA_Collections::KthMaxElement<Iterator_Type, Comparator_type>
+      (krandomdArray.begin(), krandomdArray.end(), 7);
     EXPECT_EQ(4, value);
   }
 
   // Basic run with extreme values
   {
-    std::vector<int> ksortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
-    Iterator_type it;
+    Container_Type ksortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+    Iterator_Type it;
 
-    it = SHA_Collections::KthMaxElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.begin(), 0);
+    it = SHA_Collections::KthMaxElement<Iterator_Type, Comparator_type>
+      (ksortedArray.begin(), ksortedArray.begin(), 0);
     EXPECT_EQ(ksortedArray.begin(), it);     // Should return end on empty sequence
-    it = SHA_Collections::KthMaxElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.begin() + 1, 0);
+    it = SHA_Collections::KthMaxElement<Iterator_Type, Comparator_type>
+      (ksortedArray.begin(), ksortedArray.begin() + 1, 0);
     EXPECT_EQ(ksortedArray.begin(), it);     // Should return the unique element
-    it = SHA_Collections::KthMaxElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.end(), -1);
+    it = SHA_Collections::KthMaxElement<Iterator_Type, Comparator_type>
+      (ksortedArray.begin(), ksortedArray.end(), -1);
     EXPECT_EQ(ksortedArray.end(), it);       // Should end for out of scope k (-1)
-    it =  SHA_Collections::KthMaxElement<Iterator_type, Comparator_type>(ksortedArray.begin(), ksortedArray.end(), 100);
+    it =  SHA_Collections::KthMaxElement<Iterator_Type, Comparator_type>
+      (ksortedArray.begin(), ksortedArray.end(), 100);
     EXPECT_EQ(ksortedArray.end(), it);       // Should end for out of scope k (100)
   }
 
   // String
   {
     std::string randomStr = RandomStr;
-    const char secondSmallestLetter = *SHA_Collections::KthMaxElement<std::string::iterator, std::less_equal<char>>(randomStr.begin(), randomStr.end(), 1);
+    const char secondSmallestLetter = *SHA_Collections::KthMaxElement
+      <std::string::iterator, std::less_equal<char>>(randomStr.begin(), randomStr.end(), 1);
     EXPECT_EQ('c', secondSmallestLetter);
   }
 }
@@ -309,65 +368,90 @@ TEST(TestBasicSearch, KthSmallestBasics)
 // Test kth biggest element
 TEST(TestBasicSearch, KthBiggestBasics)
 {
-  typedef std::vector<int>::iterator Iterator_type;
-  typedef std::greater_equal<Iterator_type::value_type> Comparator_type;
-
   // Basic run on random array - Should return 5 (second biggest value)
   {
-    std::vector<int> krandomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    Iterator_type::value_type value = *SHA_Collections::KthMaxElement<Iterator_type, Comparator_type>(krandomdArray.begin(), krandomdArray.end(), 1);
+    Container_Type krandomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    Iterator_Type::value_type value = *SHA_Collections::KthMaxElement<Iterator_Type, Greater_Comparator_type>
+      (krandomdArray.begin(), krandomdArray.end(), 1);
     EXPECT_EQ(5, value);
   }
 }
 
 // Test intersections
-TEST(TestBasicSearch, BasicIntersections)
+TEST(TestBasicSearch, IntersectionBasics)
 {
-  typedef std::vector<int> Vector_type;
-
-  EXPECT_EQ(0, SHA_Collections::Intersection(Vector_type(), Vector_type()).size());    // Null intersection on empty vectors
-  EXPECT_EQ(0, SHA_Collections::Intersection(Vector_type(1,1), Vector_type()).size()); // Null intersection with empty vector
-
-  // Basic run with same vector
+  // Null intersection on empty vectors - empty intersection expected
   {
-    const Vector_type sortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
-
-    Vector_type intersectionVector = SHA_Collections::Intersection<int>(sortedArray, sortedArray);
-    Vector_type::const_iterator intersectIt = intersectionVector.begin();
-
-    // The intersection of the same vector should return the same vector
-    ASSERT_EQ(sortedArray.size(), intersectionVector.size());
-    for (Vector_type::const_iterator it = sortedArray.begin(); it != sortedArray.end(); ++it, ++intersectIt)
-      EXPECT_EQ(*it, *intersectIt);
+    const Container_Type kEmptyCollection = Container_Type();
+    Container_Type intersection = SHA_Collections::Intersection<Container_Type, Const_Iterator_Type>
+      (kEmptyCollection.begin(), kEmptyCollection.end(), kEmptyCollection.begin(), kEmptyCollection.end());
+    EXPECT_EQ(0, intersection.size());
   }
 
-  // Basic run with copy vector containning dupplicates
+  // Null intersection with one empty vector - empty intersection expected
   {
-    const Vector_type firstRandomVector(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    const Vector_type secondRandomVector(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const Container_Type kEmptyCollection = Container_Type();
+    const Container_Type kCollection = Container_Type(10,1);
+    Container_Type intersection = SHA_Collections::Intersection<Container_Type, Const_Iterator_Type>
+      (kEmptyCollection.begin(), kEmptyCollection.end(), kCollection.begin(), kCollection.end());
+    EXPECT_EQ(0, intersection.size());
+  }
 
-    Vector_type intersectionVector = SHA_Collections::Intersection<int>(firstRandomVector, secondRandomVector);
-    Vector_type::const_iterator intersectIt = intersectionVector.begin();
+  // Basic run with same collection - intersection as the collection itself expected
+  {
+    const Container_Type kSortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
+    Container_Type intersection = SHA_Collections::Intersection<Container_Type, Const_Iterator_Type>
+      (kSortedArray.begin(), kSortedArray.end(), kSortedArray.begin(), kSortedArray.end());
+
+    // The intersection of the same vector should return the same vector
+    Const_Iterator_Type kIntersectIt = intersection.begin();
+    for (Const_Iterator_Type it = kSortedArray.begin(); it != kSortedArray.end(); ++it, ++kIntersectIt)
+      EXPECT_EQ(*it, *kIntersectIt);
+  }
+
+  // Basic run with same collection containing duplicates- intersection as the collection itself expected
+  {
+    const Container_Type kFirstRandom(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const Container_Type kSecondRandom(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+
+    Container_Type intersection = SHA_Collections::Intersection<Container_Type, Const_Iterator_Type>
+      (kFirstRandom.begin(), kFirstRandom.end(), kSecondRandom.begin(), kSecondRandom.end());
 
     // The intersection with the copy vector should return the same vector
-    ASSERT_EQ(firstRandomVector.size(), intersectionVector.size());
-    for (Vector_type::const_iterator it = firstRandomVector.begin(); it != firstRandomVector.end(); ++it, ++intersectIt)
-      EXPECT_EQ(*it, *intersectIt);
+    Const_Iterator_Type kIntersectIt = intersection.begin();
+    for (Const_Iterator_Type it = kFirstRandom.begin(); it != kFirstRandom.end(); ++it, ++kIntersectIt)
+      EXPECT_EQ(*it, *kIntersectIt);
   }
 
   // Basic run with normal values
   {
-    const Vector_type firstRandomVector(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    const Vector_type secondRandomVector(RandomArrayInterInt, RandomArrayInterInt + sizeof(RandomArrayInterInt) / sizeof(int));
+    const Container_Type kFirstRandom
+      (RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
+    const Container_Type kSecondRandom
+      (RandomArrayInterInt, RandomArrayInterInt + sizeof(RandomArrayInterInt) / sizeof(int));
 
-    Vector_type intersectionVector = SHA_Collections::Intersection<int>(firstRandomVector, secondRandomVector);
+    Container_Type intersection = SHA_Collections::Intersection<Container_Type, Const_Iterator_Type>
+      (kFirstRandom.begin(), kFirstRandom.end(), kSecondRandom.begin(), kSecondRandom.end());
 
     // Should return [-18, -5, 3, 5, 5] after sorting
-    std::sort(intersectionVector.begin(), intersectionVector.end());
-    EXPECT_EQ(-18, intersectionVector[0]);
-    EXPECT_EQ(-5, intersectionVector[1]);
-    EXPECT_EQ(3, intersectionVector[2]);
-    EXPECT_EQ(5, intersectionVector[3]);
-    EXPECT_EQ(5, intersectionVector[4]);
+    std::sort(intersection.begin(), intersection.end());
+    EXPECT_EQ(-18, intersection[0]);
+    EXPECT_EQ(-5, intersection[1]);
+    EXPECT_EQ(3, intersection[2]);
+    EXPECT_EQ(5, intersection[3]);
+    EXPECT_EQ(5, intersection[4]);
+  }
+
+  // String run
+  {
+    std::string intersection = SHA_Collections::Intersection<std::string, std::string::const_iterator>
+      (OrderedStr.begin(), OrderedStr.end(), RandomStr.begin(), RandomStr.end());
+
+    // Should return ['a', 'c', 'e', 'g'] after sorting
+    std::sort(intersection.begin(), intersection.end());
+    EXPECT_EQ('a', intersection[0]);
+    EXPECT_EQ('c', intersection[1]);
+    EXPECT_EQ('e', intersection[2]);
+    EXPECT_EQ('g', intersection[3]);
   }
 }

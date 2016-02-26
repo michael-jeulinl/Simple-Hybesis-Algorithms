@@ -176,8 +176,10 @@ namespace SHA_Collections
       return Container();
 
     // Initiale values depends on the comparator functor
-    const Iterator::value_type limitValue = Compare()(0, std::numeric_limits<Iterator::value_type>::lowest()) ?
-      std::numeric_limits<Iterator::value_type>::lowest() : std::numeric_limits<Iterator::value_type>::max();
+    const Iterator::value_type limitValue =
+      Compare()(0, std::numeric_limits<Iterator::value_type>::lowest()) ?
+        std::numeric_limits<Iterator::value_type>::lowest() :
+        std::numeric_limits<Iterator::value_type>::max();
 
     // Allocate the container final size
     Container maxMElements;
@@ -216,7 +218,7 @@ namespace SHA_Collections
   template <typename Iterator, typename Compare /*= std::less_equal*/>
   Iterator KthMaxElement(Iterator& begin, Iterator& end, size_t k)
   {
-    const size_t kSize = std::distance(begin, end);
+    const int kSize = static_cast<const int>(std::distance(begin, end));
     if (k > kSize || k < 0 || kSize <= 0)
       return end;
 
@@ -230,8 +232,10 @@ namespace SHA_Collections
     if (kPivotIndex == k)
       return pivot;
 
-    return (kPivotIndex > k) ? KthMaxElement<Iterator, Compare>(begin, pivot, k)              // Recurse search on left part
-                             : KthMaxElement<Iterator, Compare>(pivot, end, k - kPivotIndex); // Recurse search on right part
+    // Recurse search on left part if there is more than k elements within the left sequence
+    // Recurse search on right otherwise
+    return (kPivotIndex > k) ? KthMaxElement<Iterator, Compare>(begin, pivot, k)
+                             : KthMaxElement<Iterator, Compare>(pivot, end, k - kPivotIndex);
   }
 
 
@@ -240,34 +244,45 @@ namespace SHA_Collections
   ///
   /// @complexity O(N + M)
   ///
-  /// @param firstArray the first.
-  /// @param secondArray the second.
+  /// @param beginFirst,endFisrt,beginSecond,endSecond - iterators to the initial and final positions of
+  /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
+  /// first and last, including the element pointed by first but not the element pointed by last..
   ///
   /// @return a vector containing the intersection of both sequences.
-  template <typename T>
-  std::vector<T> Intersection(const std::vector<T>& firstVector, const std::vector<T>& secondVector)
+  template <typename Container, typename Iterator>
+  Container Intersection(const Iterator& beginFirst, const Iterator& endFirst,
+                         const Iterator& beginSecond, const Iterator& endSecond)
   {
-    // Take the smallest vector for initial count
-    const std::vector<T>* smallerVectorPtr = (firstVector.size() >= secondVector.size()) ? &firstVector : &secondVector;
-    const std::vector<T>* biggerVectorPtr = (smallerVectorPtr != &firstVector) ? &firstVector : &secondVector;
+    // Take the smallest sequence for initial count
+    const size_t kFirstSize = std::distance(beginFirst, endFirst);
+    const size_t kSecondSize = std::distance(beginSecond, endSecond);
+    const bool kIsFirstSmaller = (kFirstSize <= kSecondSize);
 
-    std::vector<T> intersection;
-    intersection.reserve(smallerVectorPtr->size());
+    // Create and set enough capacity for the intersection
+    Container intersection;
+    intersection.reserve((kIsFirstSmaller) ? kFirstSize : kSecondSize);
 
     // Count each element of the smaller array
-    std::multiset<T> count;
-    for (std::vector<T>::const_iterator it = smallerVectorPtr->begin(); it != smallerVectorPtr->end(); ++it)
+    std::multiset<Iterator::value_type> count;
+    const Iterator kCountEndIt = (kIsFirstSmaller) ? endFirst : endSecond;
+    for (Container::const_iterator
+      it = (kIsFirstSmaller) ? beginFirst : beginSecond;
+      it != kCountEndIt; ++it)
         count.insert(*it);
 
     // Push the element if find into the multiset and delete its instance from the counter
-    for (std::vector<T>::const_iterator it = biggerVectorPtr->begin(); it != biggerVectorPtr->end(); ++it)
+    const Iterator kIntersectionEndIt = (kIsFirstSmaller) ? endSecond : endFirst;
+    for (Container::const_iterator
+      it = (kIsFirstSmaller) ? beginSecond : beginFirst;
+      it != kIntersectionEndIt; ++it)
     {
-      std::multiset<T>::iterator itFind = count.find(*it);
+      std::multiset<Container::value_type>::iterator foundIt = count.find(*it);
 
-      if (itFind != count.end())
+      // Move element from count to intersection if found
+      if (foundIt != count.end())
       {
         intersection.push_back(*it);
-        count.erase(itFind);
+        count.erase(foundIt);
       }
     }
 
