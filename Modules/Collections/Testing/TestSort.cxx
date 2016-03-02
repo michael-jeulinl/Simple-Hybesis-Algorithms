@@ -22,7 +22,7 @@ namespace {
 }
 
 // Basic Partition tests
-TEST(TestBasicSort, PartitionBasics)
+TEST(TestSort, Partitions)
 {
   // Normal Run - Random Array
   {
@@ -92,7 +92,7 @@ TEST(TestBasicSort, PartitionBasics)
 }
 
 // Extreme Pivot Partition tests
-TEST(TestBasicSort, PartitionBoudaryPivots)
+TEST(TestSort, PartitionBoudaryPivots)
 {
   // Pivot choose as begin
   {
@@ -150,7 +150,7 @@ TEST(TestBasicSort, PartitionBoudaryPivots)
 }
 
 // Basic Partition tests - Greater element in the left partition
-TEST(TestBasicSort, PartitionGreaterComparator)
+TEST(TestSort, PartitionGreaterComparator)
 {
   // Normal Run - Should result in: min[begin, pivot[ >= pivot >= max]pivot, end]
   {
@@ -208,7 +208,7 @@ TEST(TestBasicSort, PartitionGreaterComparator)
 }
 
 // Basic Quick-Sort tests
-TEST(TestBasicSort, QuickSortBasics)
+TEST(TestSort, QuickSorts)
 {
   // Normal Run
   {
@@ -271,7 +271,7 @@ TEST(TestBasicSort, QuickSortBasics)
 }
 
 // Basic Quick-Sort tests - Inverse Order
-TEST(TestBasicSort, QuickSortGreaterComparator)
+TEST(TestSort, QuickSortGreaterComparator)
 {
   // Normal Run - Elements should be sorted in inverse order
   {
@@ -308,7 +308,7 @@ TEST(TestBasicSort, QuickSortGreaterComparator)
 }
 
 // Basic Quick-Sort tests
-TEST(TestBasicSort, RaddixSortBasics)
+TEST(TestSort, RaddixSorts)
 {
   // Normal Run - array should be sorted in order
   {
@@ -358,7 +358,7 @@ TEST(TestBasicSort, RaddixSortBasics)
 }
 
 // Basic MergeInPlace tests
-TEST(TestBasicSort, MergeInPlaceBasics)
+TEST(TestSort, MergeInPlaces)
 {
   // Normal Run - All elements should be sorted in order
   {
@@ -436,7 +436,7 @@ TEST(TestBasicSort, MergeInPlaceBasics)
 
 
 // Basic MergeWithBuffer tests
-TEST(TestBasicSort, MergeWithBufferBasics)
+TEST(TestSort, MergeWithBuffers)
 {
   // Normal Run - All elements should be sorted in order
   {
@@ -514,7 +514,7 @@ TEST(TestBasicSort, MergeWithBufferBasics)
 }
 
 // Basic Merge-Sort tests - Uses the merge with buffer (computation optimized)
-TEST(TestBasicSort, MergeSortBasics)
+TEST(TestSort, MergeSorts)
 {
   // Normal Run - all elements should be sorter in order
   {

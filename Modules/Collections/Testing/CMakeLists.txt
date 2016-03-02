@@ -12,11 +12,11 @@
 set(SHA ${PROJECT_NAME})
 
 # Source files
-set(MODULE_ARRAY_SRCS TestBasicSearch.cxx
-                      TestBasicSort.cxx)
+set(MODULE_COLLECTIONS_SRCS TestCore.cxx
+                            TestSearch.cxx
+                            TestSort.cxx)
 
 # --------------------------------------------------------------------------
 # Build Testing executables
 # --------------------------------------------------------------------------
-message("${MODULE_ARRAY_SRCS}")
-cxx_gtest(TestModuleArray "${MODULE_ARRAY_SRCS}" ${SHA_SRCS})
+cxx_gtest(TestModuleCollections "${MODULE_COLLECTIONS_SRCS}" ${SHA_SRCS})
