@@ -1,6 +1,10 @@
 #ifndef MODULE_COLLECTIONS_CORE_HXX
 #define MODULE_COLLECTIONS_CORE_HXX
 
+#include <list>
+#include <map>
+#include <set>
+
 namespace SHA_Collections
 {
   /// Intersection - Return Intersection of the two vectors
@@ -50,6 +54,56 @@ namespace SHA_Collections
 
     return intersection;
   }
+
+
+/// Permutations - Return all possible permutations of the sequence elements.
+///
+/// @complexity O(N!)
+/// @Note a vector is not recommended as type for the Output_Container to avoid stack overflow as well
+/// as extra complexity due to frequent resizing (use instead structure such as list or a another with
+/// your own allocator).
+///
+/// @param beginFirst,endFisrt - iterators to the initial and final positions of
+/// the sequence to be sorted. The range used is [first,last), which contains all the elements between
+/// first and last, including the element pointed by first but not the element pointed by last..
+///
+/// @return a collection containing all possible permuted sequences.
+template <typename Container, typename Iterator>
+std::list<Container> Permutations(const Iterator& begin, const Iterator& end)
+{
+  std::list<Container> permutations; // Contains the output permutations
+
+  // Recusion termination
+  const int kSeqSize = static_cast<const int>(std::distance(begin, end));
+  if (kSeqSize <= 0)
+  {
+    return permutations;
+  }
+  else if (kSeqSize == 1)
+  {
+    Container elementContainer;
+    elementContainer.push_back(*begin);
+    permutations.push_back(elementContainer);
+    return permutations;
+  }
+
+  // Build all permutations of the suffix - Recursion
+  Iterator::value_type movingEl = *begin;
+  std::list<Container> subPermutations = Permutations<Container, Iterator>(begin + 1, end);
+
+  // Put the letter into every possible position of the existing permutations.
+  Container currentPermutation;
+  for (std::list<Container>::iterator it = subPermutations.begin(); it != subPermutations.end(); ++it)
+    for (int i = 0; i < kSeqSize; ++i)
+    {
+      currentPermutation = *it;
+      currentPermutation.insert(currentPermutation.begin() + i, movingEl);
+      permutations.push_back(currentPermutation);
+    }
+
+  return permutations;
+}
+
 };
 
 #endif() // MODULE_COLLECTIONS_CORE_HXX
