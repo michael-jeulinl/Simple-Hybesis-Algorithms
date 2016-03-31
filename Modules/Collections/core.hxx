@@ -103,9 +103,10 @@ std::list<Container> Permutations(const Iterator& begin, const Iterator& end)
   return permutations;
 }
 
+
 /// Combinations - Return all possible combinations of the sequence.
 ///
-/// @complexity O((n,n-k) k=1;n)
+/// @complexity O(2^n)
 /// @Note a vector is not recommended as type for the Output_Container to avoid stack overflow as well
 /// as extra complexity due to frequent resizing (use instead structure such as list or a another with
 /// your own allocator).
@@ -114,16 +115,16 @@ std::list<Container> Permutations(const Iterator& begin, const Iterator& end)
 /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
 /// first and last, including the element pointed by first but not the element pointed by last..
 ///
-/// @return a collection containing all possible combined sequences.
+/// @return a collection containing all possible combined subsets.
 template <typename Container, typename Iterator>
 std::list<Container> Combinations(const Iterator& begin, const Iterator& end)
 {
-	std::list<Container> combinations;
+  std::list<Container> combinations;
 
-	// Recusion termination
-	const int kSeqSize = static_cast<const int>(std::distance(begin, end));
-	if (kSeqSize <= 0)
-		return combinations;
+  // Recusion termination
+  const int kSeqSize = static_cast<const int>(std::distance(begin, end));
+  if (kSeqSize <= 0)
+    return combinations;
 
   // Keep first element
   Container elementContainer;
@@ -131,22 +132,22 @@ std::list<Container> Combinations(const Iterator& begin, const Iterator& end)
   combinations.push_back(elementContainer);
 
   // Recursion termination
-	if (kSeqSize == 1)
-		return combinations;
+  if (kSeqSize == 1)
+    return combinations;
 
-	// Build all permutations of the suffix - Recursion
-	std::list<Container> subCombinations = Combinations<Container, Iterator>(begin + 1, end);
+  // Build all permutations of the suffix - Recursion
+  std::list<Container> subCombinations = Combinations<Container, Iterator>(begin + 1, end);
 
-	// Put the letter into every possible position of the existing permutations.
-	Container currentPermutation;
-	for (std::list<Container>::iterator it = subCombinations.begin(); it != subCombinations.end(); ++it)
-	{
+  // Put the letter into every possible position of the existing permutations.
+  Container currentPermutation;
+  for (std::list<Container>::iterator it = subCombinations.begin(); it != subCombinations.end(); ++it)
+  {
     combinations.push_back(*it);
     it->push_back(*begin);
     combinations.push_back(*it);
-	}
+  }
 
-	return combinations;
+  return combinations;
 }
 
 };
