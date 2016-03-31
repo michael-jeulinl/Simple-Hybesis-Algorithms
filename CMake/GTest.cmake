@@ -16,7 +16,7 @@ find_package(Threads)
 include(ExternalProject)
 
 ExternalProject_Add(gtest_ext
-  GIT_REPOSITORY "https://git.chromium.org/git/external/googletest.git"
+  GIT_REPOSITORY "https://chromium.googlesource.com/external/github.com/google/googletest/"
   BINARY_DIR "${CMAKE_BINARY_DIR}/gtest-build"
   SOURCE_DIR "${CMAKE_BINARY_DIR}/gtest-src"
   INSTALL_COMMAND ""
