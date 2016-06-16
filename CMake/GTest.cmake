@@ -17,6 +17,7 @@ include(ExternalProject)
 
 ExternalProject_Add(gtest_ext
   GIT_REPOSITORY "https://chromium.googlesource.com/external/github.com/google/googletest/"
+  GIT_TAG "d8df1fb4884c07b032ff080d95bc6506d2a33509"
   BINARY_DIR "${CMAKE_BINARY_DIR}/gtest-build"
   SOURCE_DIR "${CMAKE_BINARY_DIR}/gtest-src"
   INSTALL_COMMAND ""
@@ -24,8 +25,8 @@ ExternalProject_Add(gtest_ext
              "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
 )
 
-set(GTEST_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/gtest-src/include")
-set(GTEST_SRC_DIRS "${CMAKE_BINARY_DIR}/gtest-src")
+set(GTEST_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/gtest-src/googletest/include")
+set(GTEST_SRC_DIRS "${CMAKE_BINARY_DIR}/gtest-src/googletest")
 message(${GTEST_INCLUDE_DIRS})
 enable_testing()
 function(cxx_gtest name sources sourcesDirectory)
