@@ -119,46 +119,39 @@ TEST(TestBST, buildFromSorted)
 // Test BST Validity checker
 TEST(TestBST, isValid)
 {
-  // Empty Array - No BST should be built
-  {
-    const Container_Type kEmptyCollection = Container_Type();
-    Const_BST_Owner_Type tree =  Const_BST_type::Build(kEmptyCollection.begin(), kEmptyCollection.end());
-    EXPECT_TRUE(Const_BST_type::IsValid(tree.get()));
-  }
-
   // Unique element - Root should be created
   {
     const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
     Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.begin() + 1);
-    EXPECT_TRUE(Const_BST_type::IsValid(tree.get()));
+    EXPECT_TRUE(tree->IsValid());
   }
 
   // Basic construction
   {
     const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
     Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.end());
-    EXPECT_TRUE(Const_BST_type::IsValid(tree.get()));
+    EXPECT_TRUE(tree->IsValid());
   }
 
   // Basic construction on sorted array
   {
     const Container_Type kSmallSorted(SmallIntArraySorted, SmallIntArraySorted + sizeof(SmallIntArraySorted) / sizeof(Value_type));
     Const_BST_Owner_Type tree =  Const_BST_type::BuildFromSorted(kSmallSorted.begin(), kSmallSorted.end());
-    EXPECT_TRUE(Const_BST_type::IsValid(tree.get()));
+    EXPECT_TRUE(tree->IsValid());
   }
 
   // Wrong construction on unsorted array
   {
     const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
     Const_BST_Owner_Type tree =  Const_BST_type::BuildFromSorted(kSmallIntArray.begin(), kSmallIntArray.end());
-    EXPECT_FALSE(Const_BST_type::IsValid(tree.get()));
+    EXPECT_FALSE(tree->IsValid());
   }
 
   // Basic construction with negative values and dupplicates
   {
     const Container_Type kRandIntArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(Value_type));
     Const_BST_Owner_Type tree =  Const_BST_type::Build(kRandIntArray.begin(), kRandIntArray.end());
-    EXPECT_TRUE(Const_BST_type::IsValid(tree.get()));
+    EXPECT_TRUE(tree->IsValid());
   }
 }
 
@@ -178,5 +171,37 @@ TEST(TestBST, AppendTree)
     EXPECT_EQ(-10, tree->GetLeftChild()->GetData());
     tree->Insert(0);
     EXPECT_EQ(0, tree->GetLeftChild()->GetRightChild()->GetData());
+  }
+}
+
+// Test BST Size computation
+TEST(TestBST, Size)
+{
+  // Unique element - Root should be created
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.begin() + 1);
+    EXPECT_EQ(1, tree->Size());
+  }
+
+  // Basic construction - 3
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.end());
+    EXPECT_EQ(kSmallIntArray.size(), tree->Size());
+  }
+
+  // Basic construction on sorted array
+  {
+    const Container_Type kSmallSorted(SmallIntArraySorted, SmallIntArraySorted + sizeof(SmallIntArraySorted) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::BuildFromSorted(kSmallSorted.begin(), kSmallSorted.end());
+    EXPECT_EQ(kSmallSorted.size(), tree->Size());
+  }
+
+  // Basic construction with negative values and dupplicates
+  {
+    const Container_Type kRandIntArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kRandIntArray.begin(), kRandIntArray.end());
+    EXPECT_EQ(kRandIntArray.size(), tree->Size());
   }
 }

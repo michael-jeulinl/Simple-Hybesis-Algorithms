@@ -90,25 +90,31 @@ namespace SHA_Trees
       /// Check validity of the Binary Search Tree.
       /// Recursively check if subtrees do not violate any of the rules defined by a BST.
       ///
-      /// @param bst, the binary search tree to be checked.
-      /// Cf. Sutter Guru Of the Week (GOTW) 91 for more information about using raw pointer here.
-      ///
       /// @return wheter or not the tree is a valid Binary Search Tree (true) or not (false).
-      static bool IsValid(const BST* bst)
+      bool IsValid() const
       {
-        if (!bst)
-          return true;
-
         // Left child exists and has bigger value than its parent - Does not respect BST rules
-        if (bst->GetLeftChild() && bst->GetLeftChild()->GetData() > bst->GetData())
+        if (this->GetLeftChild() && this->GetLeftChild()->GetData() > this->GetData())
           return false;
 
         // Right child exists and has smaller or equal value of its parent - Does not respect BST rules
-        if (bst->GetRightChild() && bst->GetRightChild()->GetData() <= bst->GetData())
+        if (this->GetRightChild() && this->GetRightChild()->GetData() <= this->GetData())
           return false;
 
         // Recursively check subtrees
-        return (IsValid(bst->GetLeftChild()) && IsValid(bst->GetRightChild()));
+        return ((!this->GetLeftChild() || this->GetLeftChild()->IsValid()) &&
+                (!this->GetRightChild() || this->GetRightChild()->IsValid()));
+      }
+
+      /// Returns the number of nodes composing the BST.
+      ///
+      /// Complexity O(n)
+      ///
+      /// @return number of nodes composing the tree.
+      int Size() const
+      {
+        return 1 + ((this->GetLeftChild()) ? this->GetLeftChild()->Size() : 0)
+                 + ((this->GetRightChild()) ? this->GetRightChild()->Size() : 0);
       }
 
       Value_Type GetData() const { return this->data; }
