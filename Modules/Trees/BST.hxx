@@ -29,7 +29,7 @@ namespace SHA_Trees
 
         // Insert all remaining elements within the tree
         for (Iterator it = begin + 1; it != end; ++it)
-          root->Append(std::move(std::unique_ptr<BST>(new BST(*it))));
+          root->Insert(*it);
 
         return root;
       }
@@ -64,30 +64,51 @@ namespace SHA_Trees
 
       /// Append Binary Search Tree at the right position.
       ///
-      /// @param bst, the binary search tree unique_ptr to be owned and appened as a subtree.
+      /// @complexity O(n).
       ///
-      /// @Note Takes the ownership of the unique_ptr<BST> passed as argument.
-      void Append(std::unique_ptr<BST> bst)
+      /// @param data, data value to be added to the current BST.
+      void Insert(const Value_Type& data)
       {
-        if (!bst)
-          return;
-
         // Key is lower or equal than current root - Insert on the left side
-        if (this->data >= bst->GetData())
+        if (this->data >= data)
         {
           if (this->leftChild == nullptr)
-            this->SetLeftChild(std::move(bst));
+            this->SetLeftChild(std::move(std::unique_ptr<BST>(new BST(data))));
           else
-            this->leftChild->Append(std::move(bst));
+            this->leftChild->Insert(data);
         }
         // Key is greater than current root - Insert on the right side
         else
         {
           if (this->rightChild == nullptr)
-            this->SetRightChild(std::move(bst));
+            this->SetRightChild(std::move(std::unique_ptr<BST>(new BST(data))));
           else
-            this->rightChild->Append(std::move(bst));
+            this->rightChild->Insert(data);
         }
+      }
+
+      /// Check validity of the Binary Search Tree.
+      /// Recursively check if subtrees do not violate any of the rules defined by a BST.
+      ///
+      /// @param bst, the binary search tree to be checked.
+      /// Cf. Sutter Guru Of the Week (GOTW) 91 for more information about using raw pointer here.
+      ///
+      /// @return wheter or not the tree is a valid Binary Search Tree (true) or not (false).
+      static bool IsValid(const BST* bst)
+      {
+        if (!bst)
+          return true;
+
+        // Left child exists and has bigger value than its parent - Does not respect BST rules
+        if (bst->GetLeftChild() && bst->GetLeftChild()->GetData() > bst->GetData())
+          return false;
+
+        // Right child exists and has smaller or equal value of its parent - Does not respect BST rules
+        if (bst->GetRightChild() && bst->GetRightChild()->GetData() <= bst->GetData())
+          return false;
+
+        // Recursively check subtrees
+        return (IsValid(bst->GetLeftChild()) && IsValid(bst->GetRightChild()));
       }
 
       Value_Type GetData() const { return this->data; }
@@ -95,7 +116,7 @@ namespace SHA_Trees
       const BST* GetRightChild() const { return this->rightChild.get(); }
 
     private:
-      BST(Value_Type data) : data(data) {}
+      BST(const Value_Type& data) : data(data) {}
       BST(BST&) {}           // Not Implemented
       BST operator=(BST&) {} // Not Implemented
 
