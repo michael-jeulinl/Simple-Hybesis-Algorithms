@@ -10,12 +10,14 @@ namespace SHA_Trees
   {
     typedef typename Iterator::value_type Value_Type;
     public:
-      /// Build - Construct in a naïve way a Binary Search Tree an unordered sequence of elements.
+      /// Build - Construct in a naïve way a Binary Search Tree given an unordered sequence of elements.
       ///
       /// @param beginFirst,endFisrt,beginSecond,endSecond - iterators to the initial and final positions of
       /// the sequence used to build the tree. The range used is [first,last), which contains
       /// all the elements between first and last, including the element pointed by first but
       /// not the element pointed by last.
+      ///
+      /// @complexity O(n * m).
       ///
       /// @return Binary Search Tree pointer to be owned, nullptr if construction failed.
       static std::unique_ptr<BST> Build(const Iterator& begin, const Iterator& end)
@@ -28,6 +30,34 @@ namespace SHA_Trees
         // Insert all remaining elements within the tree
         for (Iterator it = begin + 1; it != end; ++it)
           root->Append(std::move(std::unique_ptr<BST>(new BST(*it))));
+
+        return root;
+      }
+
+      /// BuildFromSorted - Construct a Balanced Binary Search Tree given an ordered sequence of elements.
+      ///
+      /// @param beginFirst,endFisrt,beginSecond,endSecond - iterators to the initial and final positions of
+      /// the sequence used to build the tree. The range used is [first,last), which contains
+      /// all the elements between first and last, including the element pointed by first but
+      /// not the element pointed by last.
+      ///
+      /// @complexity O(n).
+      ///
+      /// @Warning the algorithm does not check the validity on data order; using this algorithm with
+      /// unordored data will most likely result in an invalid BST. (Can be checked using IsValid method).
+      ///
+      /// @return Binary Search Tree pointer to be owned, nullptr if construction failed.
+      static std::unique_ptr<BST> BuildFromSorted(const Iterator& begin, const Iterator& end)
+      {
+        if (begin >= end)
+          return  nullptr;
+
+        const Iterator middle = begin + (std::distance(begin,end) / 2);
+        std::unique_ptr<BST> root = std::unique_ptr<BST>(new BST(*middle));
+
+        // Recursively insert both children
+        root->SetLeftChild(std::move(BuildFromSorted(begin, middle)));
+        root->SetRightChild(std::move(BuildFromSorted(middle + 1, end)));
 
         return root;
       }
