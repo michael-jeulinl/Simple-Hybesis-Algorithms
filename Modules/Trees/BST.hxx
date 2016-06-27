@@ -87,6 +87,12 @@ namespace SHA_Trees
         }
       }
 
+      /// Check if the Binary Search Tree is balanced.
+      /// Compare the smallest branch to the biggest one to determine the balancement.
+      ///
+      /// @return wheter or not the tree is balanced (true) or not (false).
+      bool IsBlanced() const { return this->MaxHeight() - this->MinHeight() <= 1; }
+
       /// Check validity of the Binary Search Tree.
       /// Recursively check if subtrees do not violate any of the rules defined by a BST.
       ///
@@ -111,10 +117,32 @@ namespace SHA_Trees
       /// Complexity O(n)
       ///
       /// @return number of nodes composing the tree.
-      int Size() const
+      std::size_t Size() const
       {
         return 1 + ((this->GetLeftChild()) ? this->GetLeftChild()->Size() : 0)
                  + ((this->GetRightChild()) ? this->GetRightChild()->Size() : 0);
+      }
+
+      /// Returns the smallest branch height.
+      ///
+      /// Complexity O(n)
+      ///
+      /// @return smallest branch height composing the tree.
+      std::size_t MinHeight() const
+      {
+        return 1 + std::min(((this->GetLeftChild()) ? this->GetLeftChild()->MinHeight() : 0),
+                            ((this->GetRightChild()) ? this->GetRightChild()->MinHeight() : 0));
+      }
+
+      /// Returns the biggest branch height.
+      ///
+      /// Complexity O(n)
+      ///
+      /// @return biggest branch height composing the tree.
+      std::size_t MaxHeight() const
+      {
+        return 1 + std::max(((this->GetLeftChild()) ? this->GetLeftChild()->MaxHeight() : 0),
+                            ((this->GetRightChild()) ? this->GetRightChild()->MaxHeight() : 0));
       }
 
       Value_Type GetData() const { return this->data; }

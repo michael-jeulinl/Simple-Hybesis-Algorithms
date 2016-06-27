@@ -205,3 +205,99 @@ TEST(TestBST, Size)
     EXPECT_EQ(kRandIntArray.size(), tree->Size());
   }
 }
+
+// Test Minimal Height computation
+TEST(TestBST, MinHeight)
+{
+  // Unique element - Root should be created
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.begin() + 1);
+    EXPECT_EQ(1, tree->MinHeight());
+  }
+
+  // Basic construction
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.end());
+    EXPECT_EQ(2, tree->MinHeight());
+  }
+
+  // Basic construction on sorted array
+  {
+    const Container_Type kSmallSorted(SmallIntArraySorted, SmallIntArraySorted + sizeof(SmallIntArraySorted) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::BuildFromSorted(kSmallSorted.begin(), kSmallSorted.end());
+    EXPECT_EQ(2, tree->MinHeight());
+  }
+
+  // Basic construction with negative values and dupplicates
+  {
+    const Container_Type kRandIntArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kRandIntArray.begin(), kRandIntArray.end());
+    EXPECT_EQ(2, tree->MinHeight());
+  }
+}
+
+// Test Minimal Height computation
+TEST(TestBST, MaxHeight)
+{
+  // Unique element - Root should be created
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.begin() + 1);
+    EXPECT_EQ(1, tree->MaxHeight());
+  }
+
+  // Basic construction
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.end());
+    EXPECT_EQ(2, tree->MaxHeight());
+  }
+
+  // Basic construction on sorted array
+  {
+    const Container_Type kSmallSorted(SmallIntArraySorted, SmallIntArraySorted + sizeof(SmallIntArraySorted) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::BuildFromSorted(kSmallSorted.begin(), kSmallSorted.end());
+    EXPECT_EQ(2, tree->MaxHeight());
+  }
+
+  // Basic construction with negative values and dupplicates
+  {
+    const Container_Type kRandIntArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kRandIntArray.begin(), kRandIntArray.end());
+    EXPECT_EQ(6, tree->MaxHeight());
+  }
+}
+
+// Test tree balancement
+TEST(TestBST, IsBalanced)
+{
+  // Unique element - Root should be created
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.begin() + 1);
+    EXPECT_TRUE(tree->IsBlanced());
+  }
+
+  // Basic construction
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.end());
+    EXPECT_TRUE(tree->IsBlanced());
+  }
+
+  // Basic construction on sorted array
+  {
+    const Container_Type kSmallSorted(SmallIntArraySorted, SmallIntArraySorted + sizeof(SmallIntArraySorted) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::BuildFromSorted(kSmallSorted.begin(), kSmallSorted.end());
+    EXPECT_TRUE(tree->IsBlanced());
+  }
+
+  // Basic construction with negative values and dupplicates
+  {
+    const Container_Type kSortedArrayInt(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSortedArrayInt.begin(), kSortedArrayInt.end());
+    EXPECT_FALSE(tree->IsBlanced());
+  }
+}
