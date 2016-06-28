@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <BST.hxx>
 
+#include <functional>
 #include <list>
 
 using namespace SHA_Trees;
@@ -12,11 +13,24 @@ namespace {
   const int SmallIntArray[] = {2, 1, 3};                             // Small array containing 2, 1, 3 values
   const int SmallIntArraySorted[] = {1, 2, 3};                       // Small array ordered containing 1, 2, 3 values
 
+  template <typename T>
+  struct EQUIVALENT
+  {
+    bool operator() (const T& a, const T& b) const
+      { return std::abs(a - b) < std::numeric_limits<T>::epsilon(); }
+  };
+
+  template <typename T>
+  struct EQUAL
+  {
+    bool operator() (const T& a, const T& b) const { return a == b; }
+  };
+
   typedef std::vector<int> Container_Type;
   typedef Container_Type::value_type Value_type;
   typedef Container_Type::iterator Iterator_Type;
   typedef Container_Type::const_iterator Const_Iterator_Type;
-  typedef BST<Const_Iterator_Type> Const_BST_type;
+  typedef BST<Const_Iterator_Type, std::less_equal<int>, EQUAL<int>> Const_BST_type;
   typedef std::unique_ptr<Const_BST_type> Const_BST_Owner_Type;
 }
 
@@ -299,5 +313,51 @@ TEST(TestBST, IsBalanced)
     const Container_Type kSortedArrayInt(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(Value_type));
     Const_BST_Owner_Type tree =  Const_BST_type::Build(kSortedArrayInt.begin(), kSortedArrayInt.end());
     EXPECT_FALSE(tree->IsBlanced());
+  }
+}
+
+// Test Finding key
+TEST(TestBST, Find)
+{
+  // Unique element - Unique element should be found - not others
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.begin() + 1);
+    EXPECT_EQ(2, tree->Find(2)->GetData());
+    EXPECT_FALSE(tree->Find(0));
+    EXPECT_FALSE(tree->Find(5));
+  }
+
+  // Basic construction - Elements should be found - not others
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.end());
+    EXPECT_EQ(1, tree->Find(1)->GetData());
+    EXPECT_EQ(2, tree->Find(2)->GetData());
+    EXPECT_EQ(3, tree->Find(3)->GetData());
+    EXPECT_FALSE(tree->Find(0));
+    EXPECT_FALSE(tree->Find(5));
+  }
+
+  // Basic construction on sorted array
+  {
+    const Container_Type kSmallSorted(SmallIntArraySorted, SmallIntArraySorted + sizeof(SmallIntArraySorted) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::BuildFromSorted(kSmallSorted.begin(), kSmallSorted.end());
+    EXPECT_EQ(1, tree->Find(1)->GetData());
+    EXPECT_EQ(2, tree->Find(2)->GetData());
+    EXPECT_EQ(3, tree->Find(3)->GetData());
+    EXPECT_FALSE(tree->Find(0));
+    EXPECT_FALSE(tree->Find(5));
+  }
+
+  // Basic construction with negative values and dupplicates - should be found
+  {
+    const Container_Type kRandIntArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kRandIntArray.begin(), kRandIntArray.end());
+    EXPECT_EQ(-18, tree->Find(-18)->GetData());
+    EXPECT_EQ(-5, tree->Find(-5)->GetData());
+    EXPECT_EQ(5, tree->Find(5)->GetData());
+    EXPECT_FALSE(tree->Find(1));
+    EXPECT_FALSE(tree->Find(6));
   }
 }

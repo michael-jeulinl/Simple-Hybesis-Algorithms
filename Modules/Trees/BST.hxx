@@ -5,7 +5,7 @@
 
 namespace SHA_Trees
 {
-  template <class Iterator>
+  template <typename Iterator, typename Compare, typename IsEqual>
   class BST
   {
     typedef typename Iterator::value_type Value_Type;
@@ -50,7 +50,7 @@ namespace SHA_Trees
       static std::unique_ptr<BST> BuildFromSorted(const Iterator& begin, const Iterator& end)
       {
         if (begin >= end)
-          return  nullptr;
+          return nullptr;
 
         const Iterator middle = begin + (std::distance(begin,end) / 2);
         std::unique_ptr<BST> root = std::unique_ptr<BST>(new BST(*middle));
@@ -62,7 +62,28 @@ namespace SHA_Trees
         return root;
       }
 
-      /// Append Binary Search Tree at the right position.
+      /// Find the first a binary search tree for a specific key.
+      ///
+      /// @complexity O(h), where h may be n in worst case balancement. Equal to log(n) with a balanced tree.
+      ///
+      /// @param data, data value to be found within the current BST.
+      ///
+      /// @return first BST node matching the data.
+      const BST* Find(const Value_Type& data)
+      {
+        // Key found returns node
+        if (IsEqual()(this->data, data))
+          return this;
+
+        // Key is less than current node - search in left subtree
+        if (Compare()(data, this->data))
+          return this->leftChild ? this->leftChild->Find(data) : nullptr;
+
+        // Search in right subtree
+        return this->rightChild ? this->rightChild->Find(data) : nullptr;
+      }
+
+      /// Append a new Binary Search Tree node at the right position with current value.
       ///
       /// @complexity O(n).
       ///
@@ -70,9 +91,9 @@ namespace SHA_Trees
       void Insert(const Value_Type& data)
       {
         // Key is lower or equal than current root - Insert on the left side
-        if (this->data >= data)
+        if (Compare()(data, this->data))
         {
-          if (this->leftChild == nullptr)
+          if (!this->leftChild)
             this->SetLeftChild(std::move(std::unique_ptr<BST>(new BST(data))));
           else
             this->leftChild->Insert(data);
@@ -80,7 +101,7 @@ namespace SHA_Trees
         // Key is greater than current root - Insert on the right side
         else
         {
-          if (this->rightChild == nullptr)
+          if (!this->rightChild)
             this->SetRightChild(std::move(std::unique_ptr<BST>(new BST(data))));
           else
             this->rightChild->Insert(data);
@@ -100,11 +121,11 @@ namespace SHA_Trees
       bool IsValid() const
       {
         // Left child exists and has bigger value than its parent - Does not respect BST rules
-        if (this->GetLeftChild() && this->GetLeftChild()->GetData() > this->GetData())
+        if (this->GetLeftChild() && !Compare()(this->GetLeftChild()->GetData(), this->GetData()))
           return false;
 
         // Right child exists and has smaller or equal value of its parent - Does not respect BST rules
-        if (this->GetRightChild() && this->GetRightChild()->GetData() <= this->GetData())
+        if (this->GetRightChild() && Compare()(this->GetRightChild()->GetData(), this->GetData()))
           return false;
 
         // Recursively check subtrees
