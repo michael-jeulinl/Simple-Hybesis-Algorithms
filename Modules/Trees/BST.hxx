@@ -25,6 +25,7 @@ namespace SHA_Trees
         if (begin >= end)
           return  nullptr;
 
+        // Create root node
         std::unique_ptr<BST> root = std::unique_ptr<BST>(new BST(*begin));
 
         // Insert all remaining elements within the tree
@@ -45,6 +46,9 @@ namespace SHA_Trees
       ///
       /// @Warning the algorithm does not check the validity on data order; using this algorithm with
       /// unordored data will most likely result in an invalid BST. (Can be checked using IsValid method).
+      ///
+      /// @Warning if the compare template argument is inverting the BST (e.g greater_equal), the sequence
+      /// should be sorted given the same paradigme (e.g. greater value first).
       ///
       /// @return Binary Search Tree pointer to be owned, nullptr if construction failed.
       static std::unique_ptr<BST> BuildFromSorted(const Iterator& begin, const Iterator& end)
@@ -117,42 +121,20 @@ namespace SHA_Trees
       /// Check validity of the Binary Search Tree.
       /// Recursively check if subtrees do not violate any of the rules defined by a BST.
       ///
+      /// @note Using a preordering traversal, it makes sure that:
+      /// - If the node is the left child of its parent, then it must be smaller than (or equal to)
+      ///   the parent and it must pass down the value from its parent to its right subtree to make sure none
+      ///   of the nodes in that subtree is greater than the parent.
+      /// - If the node is the right child of its parent, then it must be larger than the parent and it must
+      ///   pass down the value from its parent to its left subtree to make sure none of the nodes in that
+      ///   subtree is lesser than the parent.
+      ///
       /// @return wheter or not the tree is a valid Binary Search Tree (true) or not (false).
       bool IsValid() const
       {
-        // Left child exists and has bigger value than its parent - Does not respect BST rules
-        if (this->GetLeftChild() && !Compare()(this->GetLeftChild()->GetData(), this->GetData()))
-          return false;
-
-        // Right child exists and has smaller or equal value of its parent - Does not respect BST rules
-        if (this->GetRightChild() && Compare()(this->GetRightChild()->GetData(), this->GetData()))
-          return false;
-
-        // Recursively check subtrees
-        return ((!this->GetLeftChild() || this->GetLeftChild()->IsValid()) &&
-                (!this->GetRightChild() || this->GetRightChild()->IsValid()));
-      }
-
-      /// Returns the number of nodes composing the BST.
-      ///
-      /// Complexity O(n)
-      ///
-      /// @return number of nodes composing the tree.
-      std::size_t Size() const
-      {
-        return 1 + ((this->GetLeftChild()) ? this->GetLeftChild()->Size() : 0)
-                 + ((this->GetRightChild()) ? this->GetRightChild()->Size() : 0);
-      }
-
-      /// Returns the smallest branch height.
-      ///
-      /// Complexity O(n)
-      ///
-      /// @return smallest branch height composing the tree.
-      std::size_t MinHeight() const
-      {
-        return 1 + std::min(((this->GetLeftChild()) ? this->GetLeftChild()->MinHeight() : 0),
-                            ((this->GetRightChild()) ? this->GetRightChild()->MinHeight() : 0));
+        const BST** previousNode = new const BST*;
+        *previousNode = nullptr;
+        return this->IsValid(previousNode);
       }
 
       /// Returns the biggest branch height.
@@ -166,6 +148,28 @@ namespace SHA_Trees
                             ((this->GetRightChild()) ? this->GetRightChild()->MaxHeight() : 0));
       }
 
+      /// Returns the smallest branch height.
+      ///
+      /// Complexity O(n)
+      ///
+      /// @return smallest branch height composing the tree.
+      std::size_t MinHeight() const
+      {
+        return 1 + std::min(((this->GetLeftChild()) ? this->GetLeftChild()->MinHeight() : 0),
+                            ((this->GetRightChild()) ? this->GetRightChild()->MinHeight() : 0));
+      }
+
+      /// Returns the number of nodes composing the BST.
+      ///
+      /// Complexity O(n)
+      ///
+      /// @return number of nodes composing the tree.
+      std::size_t Size() const
+      {
+        return 1 + ((this->GetLeftChild()) ? this->GetLeftChild()->Size() : 0)
+                 + ((this->GetRightChild()) ? this->GetRightChild()->Size() : 0);
+      }
+
       Value_Type GetData() const { return this->data; }
       const BST* GetLeftChild() const { return this->leftChild.get(); }
       const BST* GetRightChild() const { return this->rightChild.get(); }
@@ -174,6 +178,29 @@ namespace SHA_Trees
       BST(const Value_Type& data) : data(data) {}
       BST(BST&) {}           // Not Implemented
       BST operator=(BST&) {} // Not Implemented
+
+      bool IsValid(const BST** previousNode) const
+      {
+        // Recurse on left child without breaking if not failing
+        if (this->leftChild &&!this->leftChild->IsValid(previousNode))
+          return false;
+
+        // First node retrieve - assign
+        if (!*previousNode)
+          *previousNode = this;
+        // Previous data does not compare well to the current one - BST not valid
+        else if (!Compare()((*previousNode)->data, this->data))
+          return false;
+
+        // Set current node
+        *previousNode = this;
+
+        // Recurse on right child
+        if (this->rightChild && !this->rightChild->IsValid(previousNode))
+          return false;
+
+        return true;
+      }
 
       void SetLeftChild(std::unique_ptr<BST> bst) { this->leftChild = std::move(bst); }
       void SetRightChild(std::unique_ptr<BST> bst) { this->rightChild = std::move(bst); }
