@@ -132,7 +132,7 @@ namespace SHA_Trees
       /// @return wheter or not the tree is a valid Binary Search Tree (true) or not (false).
       bool IsValid() const
       {
-        const BST** previousNode = new const BST*;
+        std::unique_ptr<const BST*> previousNode = std::unique_ptr<const BST*>(new const BST*);
         *previousNode = nullptr;
         return this->IsValid(previousNode);
       }
@@ -179,7 +179,7 @@ namespace SHA_Trees
       BST(BST&) {}           // Not Implemented
       BST operator=(BST&) {} // Not Implemented
 
-      bool IsValid(const BST** previousNode) const
+      bool IsValid(std::unique_ptr<const BST*>& previousNode) const
       {
         // Recurse on left child without breaking if not failing
         if (this->leftChild &&!this->leftChild->IsValid(previousNode))
