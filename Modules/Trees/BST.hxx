@@ -72,6 +72,8 @@ namespace SHA_Trees
       ///
       /// @param data, data value to be found within the current BST.
       ///
+      /// @note this method may not find the data within an invalid binary search tree (cf. IsValid).
+      ///
       /// @return first BST node matching the data.
       const BST* Find(const Value_Type& data)
       {
@@ -91,7 +93,11 @@ namespace SHA_Trees
       ///
       /// @complexity O(n).
       ///
-      /// @param data, data value to be added to the current BST.
+      /// @param data data value to be added to the current BST. Member type Value_Type is the type of the
+      /// elements in the BST, defined as an alias of its first template parameter value_type
+      /// (Iterator::value_type).
+      ///
+      /// @return void.
       void Insert(const Value_Type& data)
       {
         // Key is lower or equal than current root - Insert on the left side
@@ -144,8 +150,8 @@ namespace SHA_Trees
       /// @return biggest branch height composing the tree.
       std::size_t MaxHeight() const
       {
-        return 1 + std::max(((this->GetLeftChild()) ? this->GetLeftChild()->MaxHeight() : 0),
-                            ((this->GetRightChild()) ? this->GetRightChild()->MaxHeight() : 0));
+        return 1 + std::max(((this->leftChild) ? this->leftChild->MaxHeight() : 0),
+                            ((this->rightChild) ? this->rightChild->MaxHeight() : 0));
       }
 
       /// Returns the smallest branch height.
@@ -155,8 +161,67 @@ namespace SHA_Trees
       /// @return smallest branch height composing the tree.
       std::size_t MinHeight() const
       {
-        return 1 + std::min(((this->GetLeftChild()) ? this->GetLeftChild()->MinHeight() : 0),
-                            ((this->GetRightChild()) ? this->GetRightChild()->MinHeight() : 0));
+        return 1 + std::min(((this->leftChild) ? this->leftChild->MinHeight() : 0),
+                            ((this->rightChild) ? this->rightChild->MinHeight() : 0));
+      }
+
+      /// Removes all elements equal [IsEqual() template parameter] to the value from the BST.
+      ///
+      /// @param bst the unique_ptr owning the bst on which the removal occurs.
+      /// @param data to be removed from the BST. All elements with a value equivalent (IsEqual template
+      /// parameter) to this are removed from the container.
+      /// Member type Value_Type is the type of the elements in the BST, defined as an alias of its first
+      /// template parameter value_type (Iterator::value_type).
+      ///
+      /// @warning this method is destructive and may delete the bst owned by the unique_ptr. Return value
+      /// may be used for inline checking as:
+      /// (!Remove(bst, data)) ? tree no longer exist : tree still contains node
+      ///
+      /// @return the pointer handler by the bst passed as argument, nullptr if bst has been erased (empty).
+      static const BST* Remove(std::unique_ptr<BST>& bst, const Value_Type& data)
+      {
+        // Break on empty unique_ptr
+        if (!bst)
+          return nullptr;
+
+        // Reach node matching the value
+        if (!IsEqual()(bst->data, data))
+        {
+          if (Compare()(data, bst->data))
+            Remove(bst->leftChild, data);
+          else
+            Remove(bst->rightChild, data);
+        }
+        // Proceed removal
+        else
+        {
+          // Recursively delete all subnodes containing the same value
+          if (bst->leftChild && IsEqual()(bst->data, bst->leftChild->data))
+            Remove(bst->leftChild, data);
+
+          // No child - Simply remove node
+          if (!bst->leftChild && !bst->rightChild)
+            bst.reset();
+          // Both children:
+          // - Swap node value with its predecessor
+          // - Remove predecessor node and replace it with its child
+          else if (bst->leftChild && bst->rightChild)
+          {
+            // Delete all node that may be Equal
+            std::unique_ptr<BST>& predecessor = bst->GetPredecessor();
+            std::swap(bst->data, predecessor->data);
+            predecessor.reset(predecessor->leftChild.release());
+          }
+          // Left node is unique child - remove node and replace it with its child.
+          else if (bst->leftChild)
+            bst.reset(bst->leftChild.release());
+          // Right node is unique child - remove node and replace it with its child.
+          else if (bst->rightChild)
+            bst.reset(bst->rightChild.release());
+        }
+
+        // Return pointer handled by bst.
+        return bst.get();
       }
 
       /// Returns the number of nodes composing the BST.
@@ -166,8 +231,8 @@ namespace SHA_Trees
       /// @return number of nodes composing the tree.
       std::size_t Size() const
       {
-        return 1 + ((this->GetLeftChild()) ? this->GetLeftChild()->Size() : 0)
-                 + ((this->GetRightChild()) ? this->GetRightChild()->Size() : 0);
+        return 1 + ((this->leftChild) ? this->leftChild->Size() : 0)
+                 + ((this->rightChild) ? this->rightChild->Size() : 0);
       }
 
       Value_Type GetData() const { return this->data; }
@@ -179,6 +244,20 @@ namespace SHA_Trees
       BST(BST&) {}           // Not Implemented
       BST operator=(BST&) {} // Not Implemented
 
+      /// Check validity of the Binary Search Tree.
+      /// Recursively check if subtrees do not violate any of the rules defined by a BST.
+      ///
+      /// @param unique_ptr reference on const BST* used to keep track of the last node retrieved.
+      ///
+      /// @note Using a preordering traversal, it makes sure that:
+      /// - If the node is the left child of its parent, then it must be smaller than (or equal to)
+      ///   the parent and it must pass down the value from its parent to its right subtree to make sure none
+      ///   of the nodes in that subtree is greater than the parent.
+      /// - If the node is the right child of its parent, then it must be larger than the parent and it must
+      ///   pass down the value from its parent to its left subtree to make sure none of the nodes in that
+      ///   subtree is lesser than the parent.
+      ///
+      /// @return wheter or not the tree is a valid Binary Search Tree (true) or not (false).
       bool IsValid(std::unique_ptr<const BST*>& previousNode) const
       {
         // Recurse on left child without breaking if not failing
@@ -200,6 +279,40 @@ namespace SHA_Trees
           return false;
 
         return true;
+      }
+
+      /// Retrieve the Predecessor unique_ptr reference.
+      ///
+      /// @warning this method should not be called if no left child exists  [assert].
+      ///
+      /// @return the predecessor unique_ptr reference.
+      std::unique_ptr<BST>& GetPredecessor()
+      {
+        // Cannot get predecessor if no left child exists
+        assert(("GetPredecessor should not be called if no left child exists.", this->leftChild));
+
+        // Left child is the predecessor
+        if (!this->leftChild->rightChild)
+          return this->leftChild;
+
+        // Return Right Most Child
+        return this->leftChild->GetRightMostChild();
+      }
+
+      /// Retrieve the Right Most Child unique_ptr reference.
+      ///
+      /// @warning this method should not be called if no right child exists [assert].
+      ///
+      /// @return the right most child unique_ptr reference.
+      std::unique_ptr<BST>& GetRightMostChild()
+      {
+        // Cannot get predecessor if no left child exists
+        assert(("GetRightMostChild should not be called if no right child exists.", this->rightChild));
+
+        if (this->rightChild && !this->rightChild->rightChild)
+          return this->rightChild;
+
+        return this->rightChild->GetRightMostChild();
       }
 
       void SetLeftChild(std::unique_ptr<BST> bst) { this->leftChild = std::move(bst); }

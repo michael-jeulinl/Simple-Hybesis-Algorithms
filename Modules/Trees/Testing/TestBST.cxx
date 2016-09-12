@@ -361,3 +361,155 @@ TEST(TestBST, Find)
     EXPECT_FALSE(tree->Find(6));
   }
 }
+
+// Test Removing key
+TEST(TestBST, Remove)
+{
+  // Empty managed object - Should not change the status
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.begin());
+    ASSERT_TRUE(tree == nullptr);
+    const Const_BST_type* returnTreePtr = Const_BST_type::Remove(tree, 2);
+    EXPECT_TRUE(returnTreePtr == nullptr);
+    EXPECT_TRUE(tree == nullptr);
+  }
+
+  // Unique element - Root should be erased
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.begin() + 1);
+    const Const_BST_type* returnTreePtr = Const_BST_type::Remove(tree, 2);
+    EXPECT_TRUE(returnTreePtr == nullptr);
+    EXPECT_TRUE(tree == nullptr);
+  }
+
+  // Serie of same element - all nodes should be erased
+  {
+    const Container_Type kSmallIntArray(5, 4);
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.end());
+    const Const_BST_type* returnTreePtr = Const_BST_type::Remove(tree, 4);
+    EXPECT_TRUE(returnTreePtr == nullptr);
+    EXPECT_TRUE(tree == nullptr);
+  }
+
+  // Leaf node
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.end());
+    const Const_BST_type* returnTreePtr = Const_BST_type::Remove(tree, 3);
+
+    ASSERT_TRUE(tree);
+    EXPECT_EQ(tree.get(), returnTreePtr);
+    EXPECT_EQ(2, tree->GetData());
+    ASSERT_TRUE(tree->GetLeftChild() != nullptr);
+    EXPECT_EQ(1, tree->GetLeftChild()->GetData());
+    EXPECT_TRUE(tree->GetRightChild() == nullptr);
+  }
+
+  // Root node with a unique child (left)
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.begin() + 2);
+    const Const_BST_type* returnTreePtr = Const_BST_type::Remove(tree, 2);
+
+    ASSERT_TRUE(tree);
+    EXPECT_EQ(tree.get(), returnTreePtr);
+    EXPECT_EQ(1, tree->GetData());
+    EXPECT_TRUE(tree->GetRightChild() == nullptr);
+    EXPECT_TRUE(tree->GetLeftChild() == nullptr);
+  }
+
+  // Root node with a unique child (right)
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin() + 1, kSmallIntArray.end());
+    const Const_BST_type* returnTreePtr = Const_BST_type::Remove(tree, 1);
+
+    ASSERT_TRUE(tree);
+    EXPECT_EQ(tree.get(), returnTreePtr);
+    EXPECT_EQ(3, tree->GetData());
+    EXPECT_TRUE(tree->GetRightChild() == nullptr);
+    EXPECT_TRUE(tree->GetLeftChild() == nullptr);
+  }
+
+  // Root node with a unique subtree child (left)
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.begin() + 1);
+    tree->Insert(0);
+    tree->Insert(-2);
+    tree->Insert(-1);
+    tree->Insert(-3);
+    tree->Insert(1);
+    const Const_BST_type* returnTreePtr = Const_BST_type::Remove(tree, 2);
+
+    ASSERT_TRUE(tree);
+    EXPECT_EQ(tree.get(), returnTreePtr);
+    EXPECT_EQ(0, tree->GetData());
+    ASSERT_TRUE(tree->GetRightChild());
+    EXPECT_EQ(1, tree->GetRightChild()->GetData());
+    ASSERT_TRUE(tree->GetLeftChild());
+    EXPECT_EQ(-2, tree->GetLeftChild()->GetData());
+    EXPECT_EQ(3, tree->GetLeftChild()->Size());
+  }
+
+  // Root node with a unique subtree child (right)
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.begin() + 1);
+    tree->Insert(4);
+    tree->Insert(6);
+    tree->Insert(5);
+    tree->Insert(7);
+    tree->Insert(3);
+    const Const_BST_type* returnTreePtr = Const_BST_type::Remove(tree, 2);
+
+    ASSERT_TRUE(tree);
+    EXPECT_EQ(tree.get(), returnTreePtr);
+    EXPECT_EQ(4, tree->GetData());
+    ASSERT_TRUE(tree->GetLeftChild());
+    EXPECT_EQ(3, tree->GetLeftChild()->GetData());
+    ASSERT_TRUE(tree->GetRightChild());
+    EXPECT_EQ(6, tree->GetRightChild()->GetData());
+    EXPECT_EQ(3, tree->GetRightChild()->Size());
+  }
+
+  // Root node with two childred
+  {
+    const Container_Type kSmallIntArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value_type));
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kSmallIntArray.begin(), kSmallIntArray.end());
+    const Const_BST_type* returnTreePtr = Const_BST_type::Remove(tree, 2);
+
+    ASSERT_TRUE(tree);
+    EXPECT_EQ(tree.get(), returnTreePtr);
+    EXPECT_EQ(1, tree->GetData());
+    ASSERT_TRUE(tree->GetRightChild());
+    EXPECT_EQ(3, tree->GetRightChild()->GetData());
+    EXPECT_TRUE(tree->GetLeftChild() == nullptr);
+  }
+
+  // Root node with two subtrees children
+  {
+    const Container_Type kContainerValue(1, 10);
+    Const_BST_Owner_Type tree =  Const_BST_type::Build(kContainerValue.begin(), kContainerValue.end());
+    tree->Insert(4);
+    tree->Insert(14);
+    tree->Insert(2);
+    tree->Insert(12);
+    tree->Insert(8);
+    tree->Insert(7);
+    tree->Insert(15);
+    tree->Insert(6);
+    const Const_BST_type* returnTreePtr = Const_BST_type::Remove(tree, 10);
+
+    ASSERT_TRUE(tree);
+    EXPECT_EQ(tree.get(), returnTreePtr);
+    EXPECT_EQ(8, tree->GetData());
+    EXPECT_EQ(8, tree->Size());
+    ASSERT_TRUE(tree->GetRightChild());
+    EXPECT_EQ(3, tree->GetRightChild()->Size());
+    ASSERT_TRUE(tree->GetLeftChild()->GetRightChild());
+    ASSERT_EQ(7, tree->GetLeftChild()->GetRightChild()->GetData());
+  }
+}
