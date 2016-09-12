@@ -23,7 +23,7 @@ namespace SHA_Collections
   /// @param pivot iterators to position between begin and end.
   ///
   /// @return void.
-  template <typename Iterator, typename Compare = std::less_equal>
+  template <typename Iterator, typename Compare /*= std::less_equal*/>
   void Partition(const Iterator& begin, Iterator& pivot, const Iterator& end)
   {
     if (std::distance(begin, end) < 2 || pivot == end)
@@ -62,7 +62,7 @@ namespace SHA_Collections
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return void.
-  template <typename Iterator, typename Compare = std::less_equal>
+  template <typename Iterator, typename Compare  /*= std::less_equal*/>
   void QuickSort(Iterator& begin, Iterator& end)
   {
     const int distance = static_cast<const int>(std::distance(begin, end));

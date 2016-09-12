@@ -9,5 +9,12 @@
 #
 ###########################################################################
 
-add_subdirectory(Collections)
-add_subdirectory(Trees)
+project(SHAModuleTrees)
+
+# Source files
+set(SHA_SRCS "${CMAKE_CURRENT_SOURCE_DIR}")
+
+# Testing
+if(BUILD_TESTING)
+  add_subdirectory(Testing)
+endif()

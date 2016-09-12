@@ -14,7 +14,7 @@ namespace SHA_Collections
   ///
   /// @param beginFirst,endFisrt,beginSecond,endSecond - iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
-  /// first and last, including the element pointed by first but not the element pointed by last..
+  /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return a vector containing the intersection of both sequences.
   template <typename Container, typename Iterator>
