@@ -5,12 +5,39 @@
 
 namespace SHA_Trees
 {
+  /// @class BST
+  ///
+  /// A Binary Search Tree, Ordered Tree or Sorted Binary Tree divides all its sub-trees into
+  /// two segments left sub-tree and right sub-tree that follow these rules:
+  /// - The left sub-tree of a node has key that respect the Compare operator (e.g. less_equal) with
+  ///   its parent node's key.
+  /// - The right sub-tree of a node has key that does not respect the Compare operator with
+  ///   its parent node's key.
+  /// - Duplicates key are inserted of the left sub-tree with respect to the Compare operator.
+  ///
+  /// It keeps their keys in sorted order, so that lookup and other operations can use the
+  /// principle of binary search: when looking for a key in a tree (or a place to insert a new key),
+  /// they traverse the tree from root to leaf, making comparisons to keys stored in the nodes of the tree
+  /// and deciding, based on the comparison, to continue searching in the left or right subtrees.
+  ///
+  /// @advantages
+  /// - Memory efficient and managed.
+  /// - Use principe of binary search for insert, delete and lookup operations.
+  /// - Represent well hierarchies.
+  /// - Get all keys in sorted order by just doing Inorder Traversal.
+  /// - Doing order statistics, closest lower/greater elements, range queries etc. operations are easy.
+  ///
+  /// @drawbacks
+  /// - The shape of the binary search tree depends entirely on the order of insertions and
+  ///   deletions, and can become degenerate.
+  /// - When inserting or searching for an element in a binary search tree, the key of each visited node has
+  ///   to be compared with the key of the element to be inserted or found.
   template <typename Iterator, typename Compare, typename IsEqual>
   class BST
   {
     typedef typename Iterator::value_type Value_Type;
     public:
-      /// Build - Construct in a naïve way a Binary Search Tree given an unordered sequence of elements.
+      /// Build - Construct in a naive way a Binary Search Tree given an unordered sequence of elements.
       ///
       /// @param begin,end - iterators to the initial and final positions of
       /// the sequence used to build the tree. The range used is [first,last), which contains
@@ -72,7 +99,7 @@ namespace SHA_Trees
       ///
       /// @param data, data value to be found within the current BST.
       ///
-      /// @note this method may not find the data within an invalid binary search tree (cf. IsValid).
+      /// @remark this method may not find the data within an invalid binary search tree (cf. IsValid).
       ///
       /// @return first BST node matching the data.
       const BST* Find(const Value_Type& data)
@@ -127,7 +154,7 @@ namespace SHA_Trees
       /// Check validity of the Binary Search Tree.
       /// Recursively check if subtrees do not violate any of the rules defined by a BST.
       ///
-      /// @note Using a preordering traversal, it makes sure that:
+      /// @remark Using a preordering traversal, it makes sure that:
       /// - If the node is the left child of its parent, then it must be smaller than (or equal to)
       ///   the parent and it must pass down the value from its parent to its right subtree to make sure none
       ///   of the nodes in that subtree is greater than the parent.
@@ -145,7 +172,7 @@ namespace SHA_Trees
 
       /// Returns the biggest branch height.
       ///
-      /// Complexity O(n)
+      /// Complexity O(n).
       ///
       /// @return biggest branch height composing the tree.
       std::size_t MaxHeight() const
@@ -156,7 +183,7 @@ namespace SHA_Trees
 
       /// Returns the smallest branch height.
       ///
-      /// Complexity O(n)
+      /// Complexity O(n).
       ///
       /// @return smallest branch height composing the tree.
       std::size_t MinHeight() const
@@ -226,7 +253,7 @@ namespace SHA_Trees
 
       /// Returns the number of nodes composing the BST.
       ///
-      /// Complexity O(n)
+      /// Complexity O(n).
       ///
       /// @return number of nodes composing the tree.
       std::size_t Size() const
@@ -249,7 +276,7 @@ namespace SHA_Trees
       ///
       /// @param previousNode unique_ptr reference on const BST* used to keep track of the last node retrieved.
       ///
-      /// @note Using a preordering traversal, it makes sure that:
+      /// @remark Using a preordering traversal, it makes sure that:
       /// - If the node is the left child of its parent, then it must be smaller than (or equal to)
       ///   the parent and it must pass down the value from its parent to its right subtree to make sure none
       ///   of the nodes in that subtree is greater than the parent.
