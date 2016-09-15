@@ -98,7 +98,7 @@ namespace SHA_Collections
   /// Max Subarray
   /// Identify the subarray with the maximum/minimum sum.
   ///
-  /// @detail can be seen as an elicitation of the @MaxDistance one.
+  /// @detail The algorithm can be seen as an elicitation of the MaxDistance one.
   /// One of the problem resolved by this algorithm is:
   /// "Given an array of gains/losses over time, find the period that represents the best/worst
   /// cummulative gain."

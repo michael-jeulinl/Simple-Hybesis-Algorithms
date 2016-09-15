@@ -12,7 +12,7 @@ namespace SHA_Trees
     public:
       /// Build - Construct in a naïve way a Binary Search Tree given an unordered sequence of elements.
       ///
-      /// @param beginFirst,endFisrt,beginSecond,endSecond - iterators to the initial and final positions of
+      /// @param begin,end - iterators to the initial and final positions of
       /// the sequence used to build the tree. The range used is [first,last), which contains
       /// all the elements between first and last, including the element pointed by first but
       /// not the element pointed by last.
@@ -37,17 +37,17 @@ namespace SHA_Trees
 
       /// BuildFromSorted - Construct a Balanced Binary Search Tree given an ordered sequence of elements.
       ///
-      /// @param beginFirst,endFisrt,beginSecond,endSecond - iterators to the initial and final positions of
+      /// @param begin,end - iterators to the initial and final positions of
       /// the sequence used to build the tree. The range used is [first,last), which contains
       /// all the elements between first and last, including the element pointed by first but
       /// not the element pointed by last.
       ///
       /// @complexity O(n).
       ///
-      /// @Warning the algorithm does not check the validity on data order; using this algorithm with
+      /// @warning the algorithm does not check the validity on data order; using this algorithm with
       /// unordored data will most likely result in an invalid BST. (Can be checked using IsValid method).
       ///
-      /// @Warning if the compare template argument is inverting the BST (e.g greater_equal), the sequence
+      /// @warning if the compare template argument is inverting the BST (e.g greater_equal), the sequence
       /// should be sorted given the same paradigme (e.g. greater value first).
       ///
       /// @return Binary Search Tree pointer to be owned, nullptr if construction failed.
@@ -247,7 +247,7 @@ namespace SHA_Trees
       /// Check validity of the Binary Search Tree.
       /// Recursively check if subtrees do not violate any of the rules defined by a BST.
       ///
-      /// @param unique_ptr reference on const BST* used to keep track of the last node retrieved.
+      /// @param previousNode unique_ptr reference on const BST* used to keep track of the last node retrieved.
       ///
       /// @note Using a preordering traversal, it makes sure that:
       /// - If the node is the left child of its parent, then it must be smaller than (or equal to)
