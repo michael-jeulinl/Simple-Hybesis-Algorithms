@@ -53,13 +53,13 @@ namespace SHA_Collections
   /// MaxDistance
   /// Identifies the two indexes of the array with the maximal distance.
   ///
-  /// @detail Known as the simple stock market problem with the default functor (std::minus):
+  /// @details Known as the simple stock market problem with the default functor (std::minus):
   /// It finds i and j that maximizes Aj – Ai, where i < j.
   /// In other words, maximizes the benefice of a resell given an array of prices varying over time.
   ///
   /// @complexity O(N * O(f(a, b))), with f(a,b) the functor used; is O(1) for the default std::minus.
   ///
-  /// @templateparam Distance functor type computing the distance between two elements
+  /// @tparam Distance functor type computing the distance between two elements
   /// @param begin,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
@@ -98,7 +98,7 @@ namespace SHA_Collections
   /// Max Subarray
   /// Identify the subarray with the maximum/minimum sum.
   ///
-  /// @detail can be seen as an elicitation of the @MaxDistance one.
+  /// @details The algorithm can be seen as an elicitation of the MaxDistance one.
   /// One of the problem resolved by this algorithm is:
   /// "Given an array of gains/losses over time, find the period that represents the best/worst
   /// cummulative gain."
@@ -108,8 +108,8 @@ namespace SHA_Collections
   /// - f(a, b) the distance functor used; is O(1) for the default std::minus.
   /// - g(a, b) the compare functor used; is O(1) for the default std::greater.
   ///
-  /// @templateparam Distance functor type computing the distance between two elements
-  /// @templateparam Compare functor type
+  /// @tparam Distance functor type computing the distance between two elements
+  /// @tparam Compare functor type
   /// @param begin,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
@@ -153,14 +153,14 @@ namespace SHA_Collections
   /// Max M Elements
   /// Identify the m maximal/minimal values sorted in decreasing/increasing order.
   ///
-  /// @detail using this algorithm with the size of the vector as the number
+  /// @details using this algorithm with the size of the vector as the number
   /// of elements to be found will give you a bubble sort algorithm in O(N²).
   ///
   /// @complexity O(N * m * O(f(a, b))) with:
   /// - m number of elements to be looking for
   /// - f(a, b) the compare functor used (O(1) for the default std::greater_equal)
   ///
-  /// @templateparam Compare functor type
+  /// @tparam Compare functor type
   /// @param begin,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
@@ -205,8 +205,8 @@ namespace SHA_Collections
   ///
   /// @complexity recursively look on the choosen partition: N + N/2 + N/4 + N/8 + ... = O(N)
   ///
-  /// @templateparam Random-access iterator type
-  /// @templateparam Compare functor type (std::less_equal to find kth smallest element,
+  /// @tparam Random-access iterator type
+  /// @tparam Compare functor type (std::less_equal to find kth smallest element,
   /// std::greater_equal to find the kth biggest one)
   /// @param begin,end - iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between

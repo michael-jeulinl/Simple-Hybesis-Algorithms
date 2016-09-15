@@ -27,7 +27,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 #-----------------------------------------------------------------------------
-# (SimpleHybesisAlgorithm)version number.  
+# Version number.
 # An even minor number corresponds to releases.
 #
 set(SHA_VERSION_MAJOR 0)
@@ -35,6 +35,12 @@ set(SHA_VERSION_MINOR 1)
 set(SHA_VERSION_PATCH 0)
 set(SHA_VERSION
     "${SHA_VERSION_MAJOR}.${SHA_VERSION_MINOR}.${SHA_VERSION_PATCH}")
+
+#-----------------------------------------------------------------------------
+# Information.
+# Variables containing project information.
+#
+set(SHA_PROJECT_TITLE "Simple-Hybesis-Algorithms")
 
 #-----------------------------------------------------------------------------
 # Install directories, used for install rules.
@@ -45,6 +51,30 @@ endif()
 if(NOT SHA_INSTALL_DOC_DIR)
   set(SHA_INSTALL_DOC_DIR "doc")
 endif()
+
+#-----------------------------------------------------------------------------
+# Documentation / Doxygen Options
+#
+option(BUILD_DOC "Build documentation" ON)
+find_package(Doxygen)
+if (DOXYGEN_FOUND)
+    # Set input and output files
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doc/Doxyfile.txt.in)
+    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+
+    # Request to configure the file
+    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+    message("Doxygen build started")
+
+    # Build the docs together with the application
+    add_custom_target(doc_doxygen ALL
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM)
+else (DOXYGEN_FOUND)
+  message("Doxygen need to be installed to generate the doxygen documentation.")
+endif (DOXYGEN_FOUND)
 
 #-----------------------------------------------------------------------------
 # Testing Options

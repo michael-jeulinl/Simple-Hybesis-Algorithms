@@ -12,7 +12,7 @@ namespace SHA_Collections
   ///
   /// @complexity O(N + M)
   ///
-  /// @param beginFirst,endFisrt,beginSecond,endSecond - iterators to the initial and final positions of
+  /// @param beginFirst,endFirst,beginSecond,endSecond - iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
@@ -59,11 +59,11 @@ namespace SHA_Collections
 /// Permutations - Return all possible permutations of the sequence elements.
 ///
 /// @complexity O(N!)
-/// @Note a vector is not recommended as type for the Output_Container to avoid stack overflow as well
+/// @remark a vector is not recommended as type for the Output_Container to avoid stack overflow as well
 /// as extra complexity due to frequent resizing (use instead structure such as list or a another with
 /// your own allocator).
 ///
-/// @param beginFirst,endFisrt - iterators to the initial and final positions of
+/// @param begin,end - iterators to the initial and final positions of
 /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
 /// first and last, including the element pointed by first but not the element pointed by last..
 ///
@@ -107,11 +107,11 @@ std::list<Container> Permutations(const Iterator& begin, const Iterator& end)
 /// Combinations - Return all possible combinations of the sequence.
 ///
 /// @complexity O(2^n)
-/// @Note a vector is not recommended as type for the Output_Container to avoid stack overflow as well
+/// @remark a vector is not recommended as type for the Output_Container to avoid stack overflow as well
 /// as extra complexity due to frequent resizing (use instead structure such as list or a another with
 /// your own allocator).
 ///
-/// @param beginFirst,endFisrt - iterators to the initial and final positions of
+/// @param begin,end - iterators to the initial and final positions of
 /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
 /// first and last, including the element pointed by first but not the element pointed by last..
 ///

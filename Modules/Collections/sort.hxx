@@ -14,8 +14,8 @@ namespace SHA_Collections
   ///
   /// @complexity O(N)
   ///
-  /// @templateparam iterator type
-  /// @templateparam Compare functor type (std::less_equal for smaller elements in left partition,
+  /// @tparam iterator type
+  /// @tparam Compare functor type (std::less_equal for smaller elements in left partition,
   /// std::greater_equal for greater elements in left partition)
   /// @param begin,end const iterators to the initial and final positions of
   /// the sequence to be pivoted. The range used is [first,last), which contains all the elements between
@@ -55,8 +55,8 @@ namespace SHA_Collections
   /// Note: this algorithm performs in general 2 to 3 time faster than a classic merge sort.
   /// Note: this algorithm is easily parallelizable.
   ///
-  /// @templateparam iterator type
-  /// @templateparam Compare functor type (std::less_equal in order, std::greater_equal for inverse order)
+  /// @tparam iterator type
+  /// @tparam Compare functor type (std::less_equal in order, std::greater_equal for inverse order)
   /// @param begin,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
@@ -82,12 +82,12 @@ namespace SHA_Collections
   ///
   /// @warning Both sequence [bengin, middle[ and [middle, end[ need to be ordered.
   ///
-  /// @note use MergeWithBuffer to proceed the merge using a buffer:
+  /// @remark use MergeWithBuffer to proceed the merge using a buffer:
   /// Takes higher memory consumption and lower computation consumption.
   ///
   /// @complexity O(N * M)
   ///
-  /// @templateparam iterator type
+  /// @tparam iterator type
   /// @param begin,middle,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
@@ -134,12 +134,12 @@ namespace SHA_Collections
   ///
   /// @warning Both sequence [bengin, middle[ and [middle, end[ need to be ordered.
   ///
-  /// @note use MergeInPlace to proceed the merge in place:
+  /// @remark use MergeInPlace to proceed the merge in place:
   /// Takes lower memory consumption and higher computation consumption.
   ///
   /// @complexity O(N)
   ///
-  /// @templateparam iterator type
+  /// @tparam iterator type
   /// @param begin,middle,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
@@ -187,7 +187,7 @@ namespace SHA_Collections
   ///
   /// @complexity O(N * log(N))
   ///
-  /// @templateparam iterator type
+  /// @tparam iterator type
   /// @param begin,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
@@ -218,7 +218,7 @@ namespace SHA_Collections
   ///
   /// @complexity O(d * N) with d max number of digits.
   ///
-  /// @templateparam iterator type
+  /// @tparam iterator type
   /// @param begin,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
