@@ -12,9 +12,9 @@
 set(SHA ${PROJECT_NAME})
 
 # Source files
-set(MODULE_TREES_SRCS TestBST.cxx)
+set(MODULE_DATA_STRCTURES_SRCS TestBinarySearchTree.cxx)
 
 # --------------------------------------------------------------------------
 # Build Testing executables
 # --------------------------------------------------------------------------
-cxx_gtest(TestModuleTrees "${MODULE_TREES_SRCS}" ${SHA_SRCS})
+cxx_gtest(TestModuleDataStructures "${MODULE_DATA_STRCTURES_SRCS}" ${SHA_SRCS})

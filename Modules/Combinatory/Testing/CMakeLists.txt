@@ -12,11 +12,11 @@
 set(SHA ${PROJECT_NAME})
 
 # Source files
-set(MODULE_COLLECTIONS_SRCS TestCore.cxx
-                            TestSearch.cxx
-                            TestSort.cxx)
+set(MODULE_COMBINATORY_SRCS TestCombinations.cxx
+                            TestIntersection.cxx
+                            TestPermutations.cxx)
 
 # --------------------------------------------------------------------------
 # Build Testing executables
 # --------------------------------------------------------------------------
-cxx_gtest(TestModuleCollections "${MODULE_COLLECTIONS_SRCS}" ${SHA_SRCS})
+cxx_gtest(TestModuleCombinatory "${MODULE_COMBINATORY_SRCS}" ${SHA_SRCS})

@@ -1,13 +1,13 @@
-#ifndef MODULE_TREES_BST_HXX
-#define MODULE_TREES_BST_HXX
+#ifndef MODULE_DATA_STRUCTURES_BST_HXX
+#define MODULE_DATA_STRUCTURES_BST_HXX
 
 #include <memory>
 
-namespace SHA_Trees
+namespace SHA_DataStructures
 {
   /// @class BST
   ///
-  /// A Binary Search Tree, Ordered Tree or Sorted Binary Tree divides all its sub-trees into
+  /// @detail A Binary Search Tree, Ordered Tree or Sorted Binary Tree divides all its sub-trees into
   /// two segments left sub-tree and right sub-tree that follow these rules:
   /// - The left sub-tree of a node has key that respect the Compare operator (e.g. less_equal) with
   ///   its parent node's key.
@@ -351,4 +351,4 @@ namespace SHA_Trees
   };
 };
 
-#endif() // MODULE_TREES_BST_HXX
+#endif() // MODULE_DATA_STRUCTURES_BST_HXX

@@ -46,10 +46,10 @@ set(SHA_PROJECT_TITLE "Simple-Hybesis-Algorithms")
 # Install directories, used for install rules.
 #
 if(NOT SHA_SOURCE_DIR)
-  set(SHA_SOURCE_DIR "src")
+  set(SHA_SOURCE_DIR "Modules")
 endif()
 if(NOT SHA_INSTALL_DOC_DIR)
-  set(SHA_INSTALL_DOC_DIR "doc")
+  set(SHA_INSTALL_DOC_DIR "Doc")
 endif()
 
 #-----------------------------------------------------------------------------
@@ -122,7 +122,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
   set(SHA_C_FLAGS "${cflags} ${SHA_C_FLAGS}")
   set(SHA_CXX_FLAGS "${cflags} 
       -Woverloaded-virtual -Wold-style-cast 
-	  -Wstrict-null-sentinel -Wsign-promo ${SHA_CXX_FLAGS}")
+      -Wstrict-null-sentinel -Wsign-promo ${SHA_CXX_FLAGS}")
 endif()
 
 if(MSVC)

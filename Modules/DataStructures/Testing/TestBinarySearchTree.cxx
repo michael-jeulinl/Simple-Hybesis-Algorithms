@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
-#include <BST.hxx>
+#include <binary_search_tree.hxx>
 
 #include <functional>
 #include <list>
 
-using namespace SHA_Trees;
+using namespace SHA_DataStructures;
 
 namespace {
   const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366};  // Simple sorted array of integers with negative values

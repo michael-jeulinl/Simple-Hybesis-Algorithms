@@ -9,7 +9,7 @@
 #
 ###########################################################################
 
-project(SHAModuleTrees)
+project(SHAModuleSort)
 
 # Source files
 set(SHA_SRCS "${CMAKE_CURRENT_SOURCE_DIR}")
