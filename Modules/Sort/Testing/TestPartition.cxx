@@ -9,6 +9,7 @@
 // Testing namespace
 using namespace SHA_Sort;
 
+#ifndef DOXYGEN_SKIP
 namespace {
   const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366};       // Simple sorted array of integers with negative values
   const int InvSortedArrayInt[] = {366, 212, 36, 15, 8, 2, 0, -2, -3};    // Simple sorted array of integers with negative values
@@ -20,6 +21,7 @@ namespace {
   typedef std::less_equal<Iterator_type::value_type> Comparator_type;
   typedef std::greater_equal<Iterator_type::value_type> Greater_Comparator_type;
 }
+#endif /* DOXYGEN_SKIP */
 
 // Basic Partition tests
 TEST(TestPartition, Partitions)

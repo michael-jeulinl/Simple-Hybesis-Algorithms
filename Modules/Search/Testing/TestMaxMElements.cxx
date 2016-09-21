@@ -3,6 +3,7 @@
 
 using namespace SHA_Search;
 
+#ifndef DOXYGEN_SKIP
 namespace {
   const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366};  // Simple sorted array of integers with negative values
   const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5}; // Simple random array of integers with negative values
@@ -10,6 +11,8 @@ namespace {
   typedef std::vector<int> Container_Type;
   typedef Container_Type::const_iterator Const_Iterator_Type;
 }
+#endif /* DOXYGEN_SKIP */
+
 // Test MaxMElements
 TEST(TestSearch, MaxMElements)
 {

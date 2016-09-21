@@ -3,13 +3,15 @@
 
 using namespace SHA_Combinatory;
 
+#ifndef DOXYGEN_SKIP
 namespace {
-  const int SmallIntArray[] = {2, 1, 3};                             // Small array containing 2, 1, 3 values
+  const int SmallIntArray[] = {2, 1, 3};  // Small array containing 2, 1, 3 values
 
   typedef std::vector<int> Container_Type;
   typedef Container_Type::const_iterator Const_Iterator_Type;
   typedef std::list<Container_Type> Output_Container_Type;
 }
+#endif /* DOXYGEN_SKIP */
 
 // Test combinations
 TEST(TestCombinations, Combinations)

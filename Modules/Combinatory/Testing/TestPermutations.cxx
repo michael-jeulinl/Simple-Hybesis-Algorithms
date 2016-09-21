@@ -3,6 +3,7 @@
 
 using namespace SHA_Combinatory;
 
+#ifndef DOXYGEN_SKIP
 namespace {
   const int SmallIntArray[] = {2, 1, 3};  // Small array containing 2, 1, 3 values
 
@@ -10,7 +11,7 @@ namespace {
   typedef Container_Type::const_iterator Const_Iterator_Type;
   typedef std::list<Container_Type> Output_Container_Type;
 }
-
+#endif /* DOXYGEN_SKIP */
 
 // Test permutations
 TEST(TestCore, Permutations)

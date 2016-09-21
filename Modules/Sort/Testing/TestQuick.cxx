@@ -6,10 +6,10 @@
 #include <vector>
 #include <string>
 
-
 // Testing namespace
 using namespace SHA_Sort;
 
+#ifndef DOXYGEN_SKIP
 namespace {
   const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366};       // Simple sorted array of integers with negative values
   const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5};      // Simple random array of integers with negative values
@@ -20,6 +20,7 @@ namespace {
   typedef std::less_equal<Iterator_type::value_type> Comparator_type;
   typedef std::greater_equal<Iterator_type::value_type> Greater_Comparator_type;
 }
+#endif /* DOXYGEN_SKIP */
 
 // Basic Quick-Sort tests
 TEST(TestSort, QuickSorts)

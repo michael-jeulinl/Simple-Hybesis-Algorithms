@@ -6,6 +6,7 @@
 
 using namespace SHA_Search;
 
+#ifndef DOXYGEN_SKIP
 namespace {
   const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366};  // Simple sorted array of integers with negative values
   const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5}; // Simple random array of integers with negative values
@@ -16,6 +17,7 @@ namespace {
   typedef std::less_equal<Container_Type::value_type> Comparator_type;
   typedef std::greater_equal<Container_Type::value_type> Greater_Comparator_type;
 }
+#endif /* DOXYGEN_SKIP */
 
 // Test kth smallest elements
 TEST(TestSearch, KthSmallests)

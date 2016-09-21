@@ -4,6 +4,7 @@
 // Testing namespace
 using namespace SHA_Search;
 
+#ifndef DOXYGEN_SKIP
 namespace {
   const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366};  // Simple sorted array of integers with negative values
   const double SortedDoubleArray[] = {-.3, 0.0, 0.12, 2.5, 8};       // Simple sorted array of floats with negative values
@@ -26,6 +27,7 @@ namespace {
     bool operator()(const T& a, const T& b) const { return a == b; }
   };
 }
+#endif /* DOXYGEN_SKIP */
 
 // Basic BinarySearchIterative tests on a sorted array of ints
 TEST(TestSearch, BinarySearchBasics)

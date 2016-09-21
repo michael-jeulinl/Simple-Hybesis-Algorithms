@@ -6,7 +6,7 @@
 
 namespace SHA_Combinatory
 {
-  /// Permutations - Return all possible permutations of the sequence elements.
+  /// Permutations - Return all possible permutations of elements containing within the sequence.
   ///
   /// @complexity O(N!).
   ///

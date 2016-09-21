@@ -4,6 +4,7 @@
 // Testing namespace
 using namespace SHA_Sort;
 
+#ifndef DOXYGEN_SKIP
 namespace {
   const int SortedArrayIntPos[] = {0, 2, 8, 15, 36, 212, 366, 15478};     // Simple sorted array of integers with positive values only
   const int RandomArrayIntPos[] = {4520, 30, 500, 20, 3, 2, 3, 4, 5, 15}; // Simple random array of integers with positive values only
@@ -11,6 +12,7 @@ namespace {
   typedef std::vector<int> Container_type;
   typedef Container_type::iterator Iterator_type;
 }
+#endif /* DOXYGEN_SKIP */
 
 // Basic Quick-Sort tests
 TEST(TestRaddix, RaddixSorts)

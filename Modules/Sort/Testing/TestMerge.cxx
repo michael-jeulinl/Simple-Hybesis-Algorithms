@@ -9,6 +9,7 @@
 // Testing namespace
 using namespace SHA_Sort;
 
+#ifndef DOXYGEN_SKIP
 namespace {
   const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366};       // Simple sorted array of integers with negative values
   const int SortedArrayIntWithRot[] = {-3, 2, 7, 20, 0, 2, 8, 15, 36};    // Simple sorted array of integers with negative values
@@ -24,6 +25,7 @@ namespace {
   typedef MergeWithBuffer<Container_type, Iterator_type> Aggregator_type;
   typedef MergeWithBuffer<std::string, std::string::iterator> AggregatorStr_type;
 }
+#endif /* DOXYGEN_SKIP */
 
 // Basic MergeInPlace tests
 TEST(TestMerge, MergeInPlaces)
