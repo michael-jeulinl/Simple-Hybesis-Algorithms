@@ -44,6 +44,7 @@ E.g. to manually run the 'TestBasicBinary' Unit Test (using GTest):
 #### Combinatory
 - **Combinations:** Compute all possible combinations of elements containing within the sequence.
 - **Intersection:** Compute the intersection of two sequences keeping duplicate keys distinct.
+- **IsInterleaved:** Determine whether or not a sequence is the interleave of the two others.
 - **Permutations:** Compute all possible permutations of elements containing within the sequence.
 
 #### Data Structures
