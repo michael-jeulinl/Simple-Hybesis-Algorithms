@@ -39,23 +39,26 @@ namespace SHA_Search
 
     int minValIdx = 0;
     std::pair<int, int> indexes(minValIdx, minValIdx);
-    Iterator::value_type currSum, maxSum;
-    currSum = maxSum = *begin;
-    Iterator::value_type minSum = static_cast<Iterator::value_type>(0);
-    for (Iterator it = begin + 1; it != end; ++it)
+    auto minSum = static_cast<Iterator::value_type>(0);
+    auto currSum = *begin;
+    auto maxSum = *begin;
+
+    for (auto it = begin + 1; it != end; ++it)
     {
       currSum += *it;
-      int currentIdx = static_cast<int>(std::distance(begin, it));
+      auto currentIdx = static_cast<int>(std::distance(begin, it));
 
       // keep track of the minimum sum and its first value index
-      if (Compare()(minSum, currSum)) {
+      if (Compare()(minSum, currSum))
+      {
         minValIdx = currentIdx;
         minSum = currSum;
       }
 
       // Keeps track of the maximal sub array and its end value index
-      Iterator::value_type curMax = Distance()(currSum, minSum);
-      if (Compare()(curMax, maxSum)) {
+      auto curMax = Distance()(currSum, minSum);
+      if (Compare()(curMax, maxSum))
+      {
         indexes.first = minValIdx + ((*(begin + minValIdx) < 0) ? 1 : 0);
         indexes.second = currentIdx;
         maxSum = Distance()(currSum, minSum);

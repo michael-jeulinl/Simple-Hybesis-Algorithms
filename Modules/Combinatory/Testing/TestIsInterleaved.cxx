@@ -72,4 +72,13 @@ TEST(TestIsInterleaved, Interleaved)
     EXPECT_TRUE(IsInterleaved<std::string::iterator>(aStr.begin(), aStr.end(), bStr.begin(),
       bStr.end(), cStr.begin(), cStr.end()));
   }
+
+  // Run with extra letter on FullStr
+  {
+    std::string aStr = kSequenceAStr;
+    std::string bStr = kSequenceBStr;
+    std::string cStr = kSequenceCStr + 'a';
+    EXPECT_FALSE(IsInterleaved<std::string::iterator>(aStr.begin(), aStr.end(), bStr.begin(),
+      bStr.end(), cStr.begin(), cStr.end()));
+  }
 }

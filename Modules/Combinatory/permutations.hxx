@@ -26,13 +26,13 @@ namespace SHA_Combinatory
   {
     std::list<Container> permutations; // Contains the output permutations
 
-    // Recusion termination
-    const int kSeqSize = static_cast<const int>(std::distance(begin, end));
+    // Recusion termination - Empty sequence
+    const auto kSeqSize = static_cast<const int>(std::distance(begin, end));
     if (kSeqSize <= 0)
-    {
       return permutations;
-    }
-    else if (kSeqSize == 1)
+
+    // Recusion termination - Unique element
+    if (kSeqSize == 1)
     {
       Container elementContainer;
       elementContainer.push_back(*begin);
@@ -41,11 +41,11 @@ namespace SHA_Combinatory
     }
 
     // Build all permutations of the suffix - Recursion
-    std::list<Container> subPermutations = Permutations<Container, Iterator>(begin + 1, end);
+    auto subPermutations = Permutations<Container, Iterator>(begin + 1, end);
 
     // Put the letter into every possible position of the existing permutations.
     Container currentPermutation;
-    for (std::list<Container>::iterator it = subPermutations.begin(); it != subPermutations.end(); ++it)
+    for (auto it = subPermutations.begin(); it != subPermutations.end(); ++it)
       for (int i = 0; i < kSeqSize; ++i)
       {
         currentPermutation = *it;

@@ -43,13 +43,14 @@ namespace SHA_Combinatory
       auto countIt = count.find(*it);
       if (countIt == count.end())
         return false;
-      else if (--countIt->second < 0)
+      if (--countIt->second < 0)
         return false;
     }
 
     // Fail if hte count is not equal to 0
     for (auto it = count.begin(); it != count.end(); ++it)
-      if (it->second != 0) return false;
+      if (it->second != 0)
+        return false;
 
     return true;
   }

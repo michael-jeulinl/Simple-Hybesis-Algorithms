@@ -27,7 +27,7 @@ namespace SHA_Combinatory
     std::list<Container> combinations;
 
     // Recusion termination
-    const int kSeqSize = static_cast<const int>(std::distance(begin, end));
+    const auto kSeqSize = static_cast<const int>(std::distance(begin, end));
     if (kSeqSize <= 0)
       return combinations;
 
@@ -41,11 +41,11 @@ namespace SHA_Combinatory
       return combinations;
 
     // Build all permutations of the suffix - Recursion
-    std::list<Container> subCombinations = Combinations<Container, Iterator>(begin + 1, end);
+    auto subCombinations = Combinations<Container, Iterator>(begin + 1, end);
 
     // Put the letter into every possible position of the existing permutations.
     Container currentPermutation;
-    for (std::list<Container>::iterator it = subCombinations.begin(); it != subCombinations.end(); ++it)
+    for (auto it = subCombinations.begin(); it != subCombinations.end(); ++it)
     {
       combinations.push_back(*it);
       it->push_back(*begin);

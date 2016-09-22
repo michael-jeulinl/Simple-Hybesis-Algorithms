@@ -35,20 +35,19 @@ namespace SHA_Search
       return Container();
 
     // Initiale values depends on the comparator functor
-    const Iterator::value_type limitValue =
-      Compare()(0, std::numeric_limits<Iterator::value_type>::lowest()) ?
-        std::numeric_limits<Iterator::value_type>::lowest() :
-        std::numeric_limits<Iterator::value_type>::max();
+    const auto limitValue = Compare()(0, std::numeric_limits<Iterator::value_type>::lowest()) ?
+                                         std::numeric_limits<Iterator::value_type>::lowest() :
+                                         std::numeric_limits<Iterator::value_type>::max();
 
     // Allocate the container final size
     Container maxMElements;
     maxMElements.resize(m, limitValue);
-    for (Iterator it = begin; it != end; ++it)
+    for (auto it = begin; it != end; ++it)
     {
       // Insert the value at the right place and bubble down replacement value
       int index = 0;
-      Iterator::value_type tmpVal = *it;
-      for (Container::iterator subIt = maxMElements.begin(); index < m; ++subIt, ++index)
+      auto tmpVal = *it;
+      for (auto subIt = maxMElements.begin(); index < m; ++subIt, ++index)
         if (Compare()(tmpVal, *subIt))
           std::swap(*subIt, tmpVal);
     }

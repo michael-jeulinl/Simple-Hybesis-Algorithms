@@ -24,8 +24,8 @@ namespace SHA_Combinatory
                          const Iterator& beginSecond, const Iterator& endSecond)
   {
     // Take the smallest sequence for initial count
-    const size_t kFirstSize = std::distance(beginFirst, endFirst);
-    const size_t kSecondSize = std::distance(beginSecond, endSecond);
+    const auto kFirstSize = std::distance(beginFirst, endFirst);
+    const auto kSecondSize = std::distance(beginSecond, endSecond);
     const bool kIsFirstSmaller = (kFirstSize <= kSecondSize);
 
     // Create and set enough capacity for the intersection
@@ -34,19 +34,16 @@ namespace SHA_Combinatory
 
     // Count each element of the smaller array
     std::multiset<Iterator::value_type> count;
-    const Iterator kCountEndIt = (kIsFirstSmaller) ? endFirst : endSecond;
-    for (Container::const_iterator it = (kIsFirstSmaller) ? beginFirst : beginSecond;
-        it != kCountEndIt; ++it)
+    const auto kCountEndIt = (kIsFirstSmaller) ? endFirst : endSecond;
+    for (auto it = (kIsFirstSmaller) ? beginFirst : beginSecond; it != kCountEndIt; ++it)
         count.insert(*it);
 
     // Push the element if find into the multiset and delete its instance from the counter
-    const Iterator kIntersectEndIt = (kIsFirstSmaller) ? endSecond : endFirst;
-    for (Container::const_iterator it = (kIsFirstSmaller) ? beginSecond : beginFirst;
-         it != kIntersectEndIt; ++it)
+    auto kIntersectEndIt = (kIsFirstSmaller) ? endSecond : endFirst;
+    for (auto it = (kIsFirstSmaller) ? beginSecond : beginFirst; it != kIntersectEndIt; ++it)
     {
-      std::multiset<Container::value_type>::iterator foundIt = count.find(*it);
-
       // Move element from count to intersection if found
+      auto foundIt = count.find(*it);
       if (foundIt != count.end())
       {
         intersection.push_back(*it);

@@ -23,12 +23,12 @@ namespace SHA_Sort
   template <typename Iterator, typename Compare  /*= std::less_equal*/>
   void QuickSort(Iterator& begin, Iterator& end)
   {
-    const int distance = static_cast<const int>(std::distance(begin, end));
+    const auto distance = static_cast<const int>(std::distance(begin, end));
     if (distance < 2)
       return;
 
-    Iterator pivot = begin + (rand() % (end - begin));  // Pick Random Pivot € [begin, end]
-    Partition<Iterator, Compare>(begin, pivot, end);    // Proceed partition
+    auto pivot = begin + (rand() % (end - begin));   // Pick Random Pivot € [begin, end]
+    Partition<Iterator, Compare>(begin, pivot, end); // Proceed partition
 
     QuickSort<Iterator, Compare>(begin, pivot);   // Recurse on first partition
     QuickSort<Iterator, Compare>(pivot + 1, end); // Recurse on second partition

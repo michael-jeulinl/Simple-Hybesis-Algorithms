@@ -53,10 +53,10 @@ namespace SHA_DataStructures
           return  nullptr;
 
         // Create root node
-        std::unique_ptr<BST> root = std::unique_ptr<BST>(new BST(*begin));
+        auto root = std::unique_ptr<BST>(new BST(*begin));
 
         // Insert all remaining elements within the tree
-        for (Iterator it = begin + 1; it != end; ++it)
+        for (auto it = begin + 1; it != end; ++it)
           root->Insert(*it);
 
         return root;
@@ -83,8 +83,8 @@ namespace SHA_DataStructures
         if (begin >= end)
           return nullptr;
 
-        const Iterator middle = begin + (std::distance(begin,end) / 2);
-        std::unique_ptr<BST> root = std::unique_ptr<BST>(new BST(*middle));
+        const auto middle = begin + (std::distance(begin,end) / 2);
+        auto root = std::unique_ptr<BST>(new BST(*middle));
 
         // Recursively insert both children
         root->SetLeftChild(std::move(BuildFromSorted(begin, middle)));
@@ -165,7 +165,7 @@ namespace SHA_DataStructures
       /// @return wheter or not the tree is a valid Binary Search Tree (true) or not (false).
       bool IsValid() const
       {
-        std::unique_ptr<const BST*> previousNode = std::unique_ptr<const BST*>(new const BST*);
+        auto previousNode = std::unique_ptr<const BST*>(new const BST*);
         *previousNode = nullptr;
         return this->IsValid(previousNode);
       }
@@ -235,7 +235,7 @@ namespace SHA_DataStructures
           else if (bst->leftChild && bst->rightChild)
           {
             // Delete all node that may be Equal
-            std::unique_ptr<BST>& predecessor = bst->GetPredecessor();
+            auto& predecessor = bst->GetPredecessor();
             std::swap(bst->data, predecessor->data);
             predecessor.reset(predecessor->leftChild.release());
           }

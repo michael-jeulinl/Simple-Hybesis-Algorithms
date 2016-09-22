@@ -30,11 +30,11 @@ namespace SHA_Search
   template <typename Iterator, typename Compare /*= std::less_equal*/>
   Iterator KthMaxElement(Iterator& begin, Iterator& end, size_t k)
   {
-    const int kSize = static_cast<const int>(std::distance(begin, end));
+    const auto kSize = static_cast<const int>(std::distance(begin, end));
     if (k > kSize || k < 0 || kSize <= 0)
       return end;
 
-    Iterator pivot = begin + (rand() % (end - begin));         // Take random pivot
+    auto pivot = begin + (rand() % (end - begin));             // Take random pivot
     SHA_Sort::Partition<Iterator, Compare>(begin, pivot, end); // Partition
 
     // Get the index of the pivot (i'th smallest/biggest value)

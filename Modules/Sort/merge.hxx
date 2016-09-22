@@ -21,7 +21,7 @@ namespace SHA_Sort
   template <typename Container, typename Iterator, typename Aggregator>
   void MergeSort(Iterator& begin, Iterator& end)
   {
-    const int ksize = static_cast<const int>(std::distance(begin, end));
+    const auto ksize = static_cast<const int>(std::distance(begin, end));
     if (ksize < 2)
       return;
 
@@ -72,7 +72,7 @@ namespace SHA_Sort
         std::swap(*begin, *middle);  // Place it at the beginning of the second list
 
         // Displace the higher value in the right place of the second list by swapping
-        Iterator it = middle;
+        auto it = middle;
         for (; it != end - 1; ++it)
         {
           if (*(it + 1) >= value)
@@ -116,11 +116,11 @@ namespace SHA_Sort
 
       Container buffer;
       buffer.resize(std::distance(begin, end)); // Reserve right space (e.g. string container)
-      Iterator buffIt = buffer.begin();
-      Iterator tmpBegin = begin;
+      auto buffIt = buffer.begin();
+      auto tmpBegin = begin;
 
       // Merge into the buffer array taking one by one the lowest sequence element
-      const Iterator curMiddle(middle);
+      const auto curMiddle(middle);
       while (begin != curMiddle && middle != end)
       {
         if (*begin <= *middle)

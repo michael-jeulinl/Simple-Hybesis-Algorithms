@@ -24,9 +24,9 @@ namespace SHA_Search
   int BinarySearch(const Iterator& begin, const Iterator& end, const T& key)
   {
     int index = -1;
-    Iterator lowIt = begin;
-    Iterator highIt = end;
-    Iterator middleIt = lowIt + std::distance(lowIt, highIt) / 2;
+    auto lowIt = begin;
+    auto highIt = end;
+    auto middleIt = lowIt + std::distance(lowIt, highIt) / 2;
 
     // While there is still objects between the two iterators and no object has been foud yet
     while(lowIt < highIt && index < 0)

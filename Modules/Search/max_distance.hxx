@@ -32,17 +32,18 @@ namespace SHA_Search
 
     int minValIdx = 0;
     std::pair<int, int> indexes(minValIdx, 1);
-    Iterator::value_type maxDist = Distance()(*begin, *(begin + 1));
-    for (Iterator it = begin + 1; it != end; ++it)
+    auto maxDist = Distance()(*begin, *(begin + 1));
+
+    for (auto it = begin + 1; it != end; ++it)
     {
-      const int currentIdx = static_cast<const int>(std::distance(begin, it));
+      const auto currentIdx = static_cast<const int>(std::distance(begin, it));
 
       // Keeps track of the minimum value index
       if (*it < *(begin + minValIdx))
         minValIdx = currentIdx;
 
       // Keeps track of the largest distance and the indexes
-      const Iterator::value_type distance = Distance()(*it, *(begin + minValIdx));
+      const auto distance = Distance()(*it, *(begin + minValIdx));
       if (distance > maxDist)
       {
         maxDist = distance;

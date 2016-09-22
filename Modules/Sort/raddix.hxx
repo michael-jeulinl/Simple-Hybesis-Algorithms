@@ -29,18 +29,18 @@ namespace SHA_Sort
       return;
 
     // Create a bucket for each possible value of a digit
-    std::vector<std::queue<Iterator::value_type> > buckets(base);
+    std::vector<std::queue<Iterator::value_type>> buckets(base);
 
     // For all possible digit
     for (size_t powBase = 1; powBase < std::numeric_limits<Iterator::value_type>::max(); powBase *= base)
     {
       // Push each number into the bucket of its digit value
-      for (Iterator it = begin; it != end; ++it)
+      for (auto it = begin; it != end; ++it)
         buckets[static_cast<int>(*it / powBase) % base].push(*it);
 
       // Dequeu back all the values
-      Iterator itSrc = begin;
-      for (std::vector<std::queue<int> >::iterator it = buckets.begin(); it != buckets.end(); ++it)
+      auto itSrc = begin;
+      for (auto it = buckets.begin(); it != buckets.end(); ++it)
         while (!it->empty())
         {
           *(itSrc++) = it->front();

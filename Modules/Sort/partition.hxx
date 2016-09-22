@@ -27,12 +27,12 @@ namespace SHA_Sort
     if (std::distance(begin, end) < 2 || pivot == end)
       return;
 
-    Iterator::value_type pivotValue = *pivot;  // Keep the pivot value;
-    std::swap(*pivot, *(end - 1));             // Put the pivot at the end for convenience
-    Iterator store = begin;                    // Put the store pointer at the beginning
+    auto pivotValue = *pivot;       // Keep the pivot value;
+    std::swap(*pivot, *(end - 1));  // Put the pivot at the end for convenience
+    auto store = begin;             // Put the store pointer at the beginning
 
     // Swap each smaller before the pivot item
-    for (Iterator it = begin; it != end - 1; ++it)
+    for (auto it = begin; it != end - 1; ++it)
     {
       if (Compare()(*it, pivotValue))
       {
