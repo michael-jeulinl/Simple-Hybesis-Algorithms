@@ -14,6 +14,7 @@ set(SHA ${PROJECT_NAME})
 # Source files
 set(MODULE_COMBINATORY_SRCS TestCombinations.cxx
                             TestIntersection.cxx
+                            TestIsInterleaved.cxx
                             TestPermutations.cxx)
 
 # --------------------------------------------------------------------------
