@@ -1,6 +1,11 @@
 # Simple-Hybesis-Algorithms
 Educational demonstration of building simple algorithms under good practices development (cross-building, unit testing, ...)
 
+# Simple-Hybesis-Algorithms
+You can find a fork repository adding algorithm logging features (used for visualization) and its documentation here:
+- https://github.com/michael-jeulinl/Simple-Hybesis-Algorithms-Logger/
+- http://michaeljeulin-l.com/Projects/SHAL/Doc/
+
 # CMake - Cross-Building
 The building relies on CMake, an Open-Source system that allows to easily build cross-platform applications by generating native makefiles (cf. http://www.cmake.org/cmake/resources/software.html).
 
@@ -24,7 +29,7 @@ The building relies on CMake, an Open-Source system that allows to easily build 
 Use the CMake **'BUILD_DOC'** (default to true) option to automatically setup Documentation Generation with doxygen.
 
 Please find the last generated documentation here:
-http://michaeljeulin-l.com/Projects/SHADocumentation/
+http://michaeljeulin-l.com/Projects/SHAC/Doc/
 
 # GTest - Unit Testing & CMake
 Use the CMake **'BUILD_TESTING'** (default to true) option to automatically setup Unit Testing with google test.

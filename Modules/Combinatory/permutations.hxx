@@ -17,7 +17,7 @@
  * substantial portions of the Software.
  *
  *=========================================================================================================*/
- #ifndef MODULE_COMBINATORY_PERMUTATIONS_HXX
+#ifndef MODULE_COMBINATORY_PERMUTATIONS_HXX
 #define MODULE_COMBINATORY_PERMUTATIONS_HXX
 
 // STD includes

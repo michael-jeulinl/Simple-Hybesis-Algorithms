@@ -253,7 +253,6 @@ namespace SHA_DataStructures
           // - Remove predecessor node and replace it with its child
           else if (bst->leftChild && bst->rightChild)
           {
-            // Delete all node that may be Equal
             auto& predecessor = bst->GetPredecessor();
             std::swap(bst->data, predecessor->data);
             predecessor.reset(predecessor->leftChild.release());

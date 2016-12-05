@@ -47,8 +47,6 @@ namespace SHA_Search
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
-  /// @todo return Iterators instead of indexes.
-  ///
   /// @return indexes of the array with the maximum/minimum sum, <-1,-1> in case of error.
   template <typename Iterator, typename Distance /*= std::minus*/, typename Compare /*= std::greater*/>
   std::pair<int, int> MaxSubSequence(const Iterator& begin, const Iterator& end)

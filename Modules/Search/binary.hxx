@@ -52,7 +52,10 @@ namespace SHA_Search
     {
       // Found object - Set index computed from initial begin iterator
       if (IsEqual()(key, *middleIt))
+      {
         index = static_cast<int>(std::distance(begin, middleIt));
+        break;
+      }
       // Search key within upper collection
       else if (key > *middleIt)
         lowIt = middleIt + 1;
