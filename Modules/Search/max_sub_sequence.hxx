@@ -39,7 +39,7 @@ namespace SHA_Search
   /// - f(a, b) the distance functor used; is O(1) for the default std::minus.
   /// - g(a, b) the compare functor used; is O(1) for the default std::greater.
   ///
-  /// @tparam Iterator type using to go through the collection.
+  /// @tparam IT type using to go through the collection.
   /// @tparam Distance functor type computing the distance between two elements.
   /// @tparam Compare functor type.
   ///
@@ -48,15 +48,18 @@ namespace SHA_Search
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return indexes of the array with the maximum/minimum sum, <-1,-1> in case of error.
-  template <typename Iterator, typename Distance /*= std::minus*/, typename Compare /*= std::greater*/>
-  std::pair<int, int> MaxSubSequence(const Iterator& begin, const Iterator& end)
+  /// @todo return iterators instead.
+  template <typename IT,
+            typename Distance = std::minus<typename std::iterator_traits<IT>::value_type>,
+            typename Compare = std::greater<typename std::iterator_traits<IT>::value_type>>
+  std::pair<int, int> MaxSubSequence(const IT& begin, const IT& end)
   {
     if (std::distance(begin, end) < 2)
       return std::pair<int, int>(-1, -1);
 
     int minValIdx = 0;
     std::pair<int, int> indexes(minValIdx, minValIdx);
-    auto minSum = static_cast<Iterator::value_type>(0);
+    auto minSum = static_cast<typename std::iterator_traits<IT>::value_type>(0);
     auto currSum = *begin;
     auto maxSum = *begin;
 
@@ -86,4 +89,4 @@ namespace SHA_Search
   }
 };
 
-#endif() // MODULE_SEARCH_MAX_SUB_SEQUENCE_HXX
+#endif // MODULE_SEARCH_MAX_SUB_SEQUENCE_HXX
