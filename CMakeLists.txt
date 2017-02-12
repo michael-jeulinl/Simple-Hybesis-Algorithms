@@ -40,7 +40,7 @@ endif()
 # An even minor number corresponds to releases.
 #
 set(SHA_VERSION_MAJOR 0)
-set(SHA_VERSION_MINOR 1)
+set(SHA_VERSION_MINOR 2)
 set(SHA_VERSION_PATCH 0)
 set(SHA_VERSION
     "${SHA_VERSION_MAJOR}.${SHA_VERSION_MINOR}.${SHA_VERSION_PATCH}")
