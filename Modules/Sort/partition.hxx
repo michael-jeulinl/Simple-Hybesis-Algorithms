@@ -39,7 +39,7 @@ namespace SHA_Sort
   /// first and last, including the element pointed by first but not the element pointed by last.
   /// @param pivot iterator on which the partition is delimited between begin and end.
   ///
-  /// @return new pivot.
+  /// @return new pivot iterator.
   template <typename IT, typename Compare = std::less_equal<typename std::iterator_traits<IT>::value_type>>
   IT Partition(const IT& begin, const IT& pivot, const IT& end)
   {
@@ -65,6 +65,6 @@ namespace SHA_Sort
 
     return store;
   }
-};
+}
 
 #endif // MODULE_SORT_PARTITION_HXX

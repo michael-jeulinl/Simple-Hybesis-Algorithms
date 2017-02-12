@@ -51,7 +51,9 @@ namespace SHA_Sort
     std::vector<std::queue<typename std::iterator_traits<IT>::value_type>> buckets(base);
 
     // For all possible digit
-    for (size_t powBase = 1; powBase < std::numeric_limits<typename std::iterator_traits<IT>::value_type>::max(); powBase *= base)
+    for (size_t powBase = 1;
+         powBase < std::numeric_limits<typename std::iterator_traits<IT>::value_type>::max();
+         powBase *= base)
     {
       // Push each number into the bucket of its digit value
       for (auto it = begin; it != end; ++it)
@@ -67,6 +69,6 @@ namespace SHA_Sort
         }
     }
   }
-};
+}
 
 #endif // MODULE_SORT_RADDIX_HXX

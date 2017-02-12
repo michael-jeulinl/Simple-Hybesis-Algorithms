@@ -25,35 +25,6 @@
 
 namespace SHA_Sort
 {
-  /// MergeSort - John von Neumann in 1945
-  /// Proceed merge-sort on the elements whether using an in-place strategy or using a buffer.
-  ///
-  /// @complexity O(N * log(N)).
-  ///
-  /// @tparam IT type using to go through the collection.
-  ///
-  /// @param begin,end iterators to the initial and final positions of
-  /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
-  /// first and last, including the element pointed by first but not the element pointed by last.
-  ///
-  /// @return void.
-  template <typename Container, typename IT, typename Aggregator>
-  void MergeSort(IT begin, IT end)
-  {
-    const auto ksize = static_cast<const int>(std::distance(begin, end));
-    if (ksize < 2)
-      return;
-
-    auto middle = begin + ksize / 2;
-
-    // Recursively break the vector into two pieces
-    MergeSort<Container, IT, Aggregator>(begin, middle);
-    MergeSort<Container, IT, Aggregator>(middle, end);
-
-    // Merge the two pieces
-    Aggregator()(begin, middle, end);
-  }
-
   /// MergeInplace - Inplace merging of two ordered sequences of a collection
   /// Proceed a in place merge of two sequences of elements contained in [begin, middle[ and [middle, end[.
   ///
@@ -86,7 +57,7 @@ namespace SHA_Sort
         if (*middle >= *begin)
           continue;
 
-        typename IT::value_type value;
+        typename std::iterator_traits<IT>::value_type value;
         std::swap(value, *begin);    // keep the higher value
         std::swap(*begin, *middle);  // Place it at the beginning of the second list
 
@@ -159,6 +130,36 @@ namespace SHA_Sort
         *tmpBegin = *buffIt;
     }
   };
-};
+
+  /// MergeSort - John von Neumann in 1945
+  /// Proceed merge-sort on the elements whether using an in-place strategy or using a buffer.
+  ///
+  /// @complexity O(N * log(N)).
+  ///
+  /// @tparam IT type using to go through the collection.
+  ///
+  /// @param begin,end iterators to the initial and final positions of
+  /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
+  /// first and last, including the element pointed by first but not the element pointed by last.
+  ///
+  /// @return void.
+  /// @todo add compare template functor
+  template <typename Container, typename IT, typename Aggregator = MergeWithBuffer<Container, IT>>
+  void MergeSort(const IT& begin, const IT& end)
+  {
+    const auto ksize = static_cast<const int>(std::distance(begin, end));
+    if (ksize < 2)
+      return;
+
+    auto middle = begin + ksize / 2;
+
+    // Recursively break the vector into two pieces
+    MergeSort<Container, IT, Aggregator>(begin, middle);
+    MergeSort<Container, IT, Aggregator>(middle, end);
+
+    // Merge the two pieces
+    Aggregator()(begin, middle, end);
+  }
+}
 
 #endif // MODULE_SORT_MERGE_HXX

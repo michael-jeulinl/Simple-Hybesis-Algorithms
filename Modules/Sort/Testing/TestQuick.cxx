@@ -30,9 +30,12 @@ using namespace SHA_Sort;
 
 #ifndef DOXYGEN_SKIP
 namespace {
-  const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366};       // Simple sorted array of integers with negative values
-  const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5};      // Simple random array of integers with negative values
-  const std::string RandomStr = "xacvgeze";                               // Random string
+  // Simple sorted array of integers with negative values
+  const int SortedArrayInt[] = {-3, -2, 0, 2, 8, 15, 36, 212, 366};
+  // Simple random array of integers with negative values
+  const int RandomArrayInt[] = {4, 3, 5, 2, -18, 3, 2, 3, 4, 5, -5};
+  // Random string
+  const std::string RandomStr = "xacvgeze";
 
   typedef std::vector<int> Container;
   typedef Container::iterator IT;
@@ -49,7 +52,7 @@ TEST(TestSort, QuickSorts)
     QuickSort<IT>(randomdArray.begin(), randomdArray.end());
 
     // All elements are sorted
-    for (IT it = randomdArray.begin(); it < randomdArray.end() - 1; ++it)
+    for (auto it = randomdArray.begin(); it < randomdArray.end() - 1; ++it)
       EXPECT_LE(*it, *(it + 1));
   }
 
@@ -59,7 +62,7 @@ TEST(TestSort, QuickSorts)
     QuickSort<IT>(sortedArray.begin(), sortedArray.end());
 
     // All elements are still sorted
-    for (IT it = sortedArray.begin(); it < sortedArray.end() - 1; ++it)
+    for (auto it = sortedArray.begin(); it < sortedArray.end() - 1; ++it)
       EXPECT_LE(*it, *(it + 1));
   }
 
@@ -69,7 +72,7 @@ TEST(TestSort, QuickSorts)
     QuickSort<IT>(randomdArray.end(), randomdArray.begin());
 
     int i = 0;
-    for (IT it = randomdArray.begin(); it < randomdArray.end(); ++it, ++i)
+    for (auto it = randomdArray.begin(); it < randomdArray.end(); ++it, ++i)
       EXPECT_EQ(RandomArrayInt[i], *it);
   }
 
@@ -90,14 +93,8 @@ TEST(TestSort, QuickSorts)
   {
     std::string stringToSort = RandomStr;
     QuickSort<std::string::iterator, std::less_equal<char>>(stringToSort.begin(), stringToSort.end());
-    EXPECT_EQ('a', stringToSort[0]);
-    EXPECT_EQ('c', stringToSort[1]);
-    EXPECT_EQ('e', stringToSort[2]);
-    EXPECT_EQ('e', stringToSort[3]);
-    EXPECT_EQ('g', stringToSort[4]);
-    EXPECT_EQ('v', stringToSort[5]);
-    EXPECT_EQ('x', stringToSort[6]);
-    EXPECT_EQ('z', stringToSort[7]);
+    for (auto it = stringToSort.begin(); it < stringToSort.end() - 1; ++it)
+      EXPECT_LE(*it, *(it + 1));
   }
 }
 
@@ -110,7 +107,7 @@ TEST(TestSort, QuickSortGreaterComparator)
     QuickSort<IT, GE_Comparator>(randomdArray.begin(), randomdArray.end());
 
     // All elements are sorted in inverse order
-    for (IT it = randomdArray.begin(); it < randomdArray.end() - 1; ++it)
+    for (auto it = randomdArray.begin(); it < randomdArray.end() - 1; ++it)
       EXPECT_GE(*it, *(it + 1));
   }
 
@@ -120,7 +117,7 @@ TEST(TestSort, QuickSortGreaterComparator)
     QuickSort<IT, GE_Comparator>(invSortedArray.begin(), invSortedArray.end());
 
     // All elements are still sorted in inverse order
-    for (IT it = invSortedArray.begin(); it < invSortedArray.end() - 1; ++it)
+    for (auto it = invSortedArray.begin(); it < invSortedArray.end() - 1; ++it)
       EXPECT_GE(*it, *(it + 1));
   }
 
@@ -130,7 +127,7 @@ TEST(TestSort, QuickSortGreaterComparator)
     QuickSort<std::string::iterator, std::greater_equal<char>>(stringToSort.begin(), stringToSort.end());
 
     // All elements are sorted in inverse order
-    for (std::string::iterator it = stringToSort.begin(); it < stringToSort.end() - 1; ++it)
+    for (auto it = stringToSort.begin(); it < stringToSort.end() - 1; ++it)
       EXPECT_GE(*it, *(it + 1));
   }
 }

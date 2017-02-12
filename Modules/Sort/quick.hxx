@@ -40,18 +40,18 @@ namespace SHA_Sort
   ///
   /// @return void.
   template <typename IT, typename Compare = std::less_equal<typename std::iterator_traits<IT>::value_type>>
-  void QuickSort(IT begin, IT end)
+  void QuickSort(const IT& begin, const IT& end)
   {
     const auto distance = static_cast<const int>(std::distance(begin, end));
     if (distance < 2)
       return;
 
-    auto pivot = begin + (rand() % distance);  // Pick Random Pivot € [begin, end]
-    Partition<IT, Compare>(begin, pivot, end); // Proceed partition
+    auto pivot = begin + (rand() % distance);                   // Pick Random Pivot € [begin, end]
+    auto newPivot = Partition<IT, Compare>(begin, pivot, end);  // Proceed partition
 
-    QuickSort<IT, Compare>(begin, pivot);   // Recurse on first partition
-    QuickSort<IT, Compare>(pivot + 1, end); // Recurse on second partition
+    QuickSort<IT, Compare>(begin, newPivot);   // Recurse on first partition
+    QuickSort<IT, Compare>(newPivot + 1, end); // Recurse on second partition
   }
-};
+}
 
-#endif() // MODULE_SORT_QUICK_HXX
+#endif // MODULE_SORT_QUICK_HXX
