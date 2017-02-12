@@ -47,16 +47,21 @@ namespace SHA_Search
   ///
   /// @return a vector of sorted in decreasing/increasing order of the m maximum/minimum
   /// elements, an empty array in case of failure.
-  template <typename Container, typename IT, typename Compare = std::greater_equal<typename std::iterator_traits<IT>::value_type>>
+  template <typename Container,
+            typename IT,
+            typename Compare = std::greater_equal<typename std::iterator_traits<IT>::value_type>>
   Container MaxMElements(const IT& begin, const IT& end, const int m)
   {
     if (m < 1 || m > std::distance(begin, end))
       return Container();
 
     // Initiale values depends on the comparator functor
-    const auto limitValue = Compare()(0, std::numeric_limits<typename std::iterator_traits<IT>::value_type>::lowest()) ?
-                                         std::numeric_limits<typename std::iterator_traits<IT>::value_type>::lowest() :
-                                         std::numeric_limits<typename std::iterator_traits<IT>::value_type>::max();
+    const auto limitValue = Compare()(0, std::numeric_limits<typename std::iterator_traits<IT>::value_type>::
+                                      lowest()) ?
+                                         std::numeric_limits<typename std::iterator_traits<IT>::value_type>::
+                                      lowest() :
+                                         std::numeric_limits<typename std::iterator_traits<IT>::value_type>::
+                                      max();
 
     // Allocate the container final size
     Container maxMElements;
@@ -73,6 +78,6 @@ namespace SHA_Search
 
     return maxMElements;
   }
-};
+}
 
 #endif // MODULE_COLLECTIONS_SEARCH_HXX

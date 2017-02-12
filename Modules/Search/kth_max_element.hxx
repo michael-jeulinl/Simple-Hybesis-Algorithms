@@ -57,7 +57,7 @@ namespace SHA_Search
     auto newPivot = SHA_Sort::Partition<IT, Compare>(begin, pivot, end); // Partition
 
     // Get the index of the pivot (i'th smallest/biggest value)
-    const size_t kPivotIndex = std::distance(begin, newPivot);
+    const auto kPivotIndex = std::distance(begin, newPivot);
 
     // Return if at the kth position
     if (kPivotIndex == k)

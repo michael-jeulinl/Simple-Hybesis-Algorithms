@@ -48,7 +48,10 @@ namespace SHA_Search
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return indexes of the array with the maximum/minimum sum, <-1,-1> in case of error.
-  template <typename IT, typename Distance /*= std::minus*/, typename Compare /*= std::greater*/>
+  /// @todo return iterators instead.
+  template <typename IT,
+            typename Distance = std::minus<typename std::iterator_traits<IT>::value_type>,
+            typename Compare = std::greater<typename std::iterator_traits<IT>::value_type>>
   std::pair<int, int> MaxSubSequence(const IT& begin, const IT& end)
   {
     if (std::distance(begin, end) < 2)
@@ -86,4 +89,4 @@ namespace SHA_Search
   }
 };
 
-#endif() // MODULE_SEARCH_MAX_SUB_SEQUENCE_HXX
+#endif // MODULE_SEARCH_MAX_SUB_SEQUENCE_HXX
