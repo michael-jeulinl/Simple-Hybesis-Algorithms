@@ -72,6 +72,6 @@ namespace SHA_Combinatory
 
     return intersection;
   }
-};
+}
 
-#endif() // MODULE_COMBINATORY_INTERSECTION_HXX
+#endif // MODULE_COMBINATORY_INTERSECTION_HXX

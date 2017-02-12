@@ -74,6 +74,6 @@ namespace SHA_Combinatory
 
     return permutations;
   }
-};
+}
 
 #endif // MODULE_COMBINATORY_PERMUTATIONS_HXX

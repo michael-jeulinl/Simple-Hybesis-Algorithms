@@ -27,6 +27,7 @@ namespace {
   const int SmallIntArray[] = {2, 1, 3};  // Small array containing 2, 1, 3 values
 
   typedef std::vector<int> Container;
+  typedef Container::value_type Value;
   typedef Container::const_iterator Const_IT;
   typedef std::list<Container> List;
 }
@@ -60,8 +61,7 @@ TEST(TestCombinations, Combinations)
 
   // Run with value 2, 1, 3
   {
-    const Container kSmallArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) /
-                                sizeof(Container::value_type));
+    const Container kSmallArray(SmallIntArray, SmallIntArray + sizeof(SmallIntArray) / sizeof(Value));
     List combinations = Combinations<Container, Const_IT>(kSmallArray.begin(), kSmallArray.end());
     EXPECT_EQ(static_cast<size_t>(7), combinations.size());
 

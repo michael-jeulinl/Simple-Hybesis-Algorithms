@@ -73,6 +73,6 @@ namespace SHA_Combinatory
 
     return combinations;
   }
-};
+}
 
 #endif // MODULE_COMBINATORY_COMBINATIONS_HXX

@@ -73,6 +73,6 @@ namespace SHA_Combinatory
 
     return true;
   }
-};
+}
 
 #endif // MODULE_COMBINATORY_IS_INTERLEAVED_HXX

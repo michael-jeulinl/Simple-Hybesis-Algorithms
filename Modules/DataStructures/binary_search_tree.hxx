@@ -54,7 +54,7 @@ namespace SHA_DataStructures
   template <typename IT, typename Compare, typename IsEqual>
   class BST
   {
-    typedef typename IT::value_type Value_Type;
+    typedef typename std::iterator_traits<IT>::value_type Value;
     public:
       /// Build - Construct in a naive way a Binary Search Tree given an unordered sequence of elements.
       ///
@@ -121,7 +121,7 @@ namespace SHA_DataStructures
       /// @remark this method may not find the data within an invalid binary search tree (cf. IsValid).
       ///
       /// @return first BST node matching the data.
-      const BST* Find(const Value_Type& data)
+      const BST* Find(const Value& data)
       {
         // Key found returns node
         if (IsEqual()(this->data, data))
@@ -139,12 +139,12 @@ namespace SHA_DataStructures
       ///
       /// @complexity O(n).
       ///
-      /// @param data data value to be added to the current BST. Member type Value_Type is the type of the
-      /// elements in the BST, defined as an alias of its first template parameter value_type
-      /// (IT::value_type).
+      /// @param data data value to be added to the current BST. Member type Value is the type of the
+      /// elements in the BST, defined as an alias of its first template parameter Value
+      /// (IT::Value).
       ///
       /// @return void.
-      void Insert(const Value_Type& data)
+      void Insert(const Value& data)
       {
         // Key is lower or equal than current root - Insert on the left side
         if (Compare()(data, this->data))
@@ -216,15 +216,15 @@ namespace SHA_DataStructures
       /// @param bst the unique_ptr owning the bst on which the removal occurs.
       /// @param data to be removed from the BST. All elements with a value equivalent (IsEqual template
       /// parameter) to this are removed from the container.
-      /// Member type Value_Type is the type of the elements in the BST, defined as an alias of its first
-      /// template parameter value_type (IT::value_type).
+      /// Member type Value is the type of the elements in the BST, defined as an alias of its first
+      /// template parameter Value (IT::Value).
       ///
       /// @warning this method is destructive and may delete the bst owned by the unique_ptr. Return value
       /// may be used for inline checking as:
       /// (!Remove(bst, data)) ? tree no longer exist : tree still contains node
       ///
       /// @return the pointer handler by the bst passed as argument, nullptr if bst has been erased (empty).
-      static const BST* Remove(std::unique_ptr<BST>& bst, const Value_Type& data)
+      static const BST* Remove(std::unique_ptr<BST>& bst, const Value& data)
       {
         // Break on empty unique_ptr
         if (!bst)
@@ -280,12 +280,12 @@ namespace SHA_DataStructures
                  + ((this->rightChild) ? this->rightChild->Size() : 0);
       }
 
-      Value_Type GetData() const { return this->data; }
+      Value GetData() const { return this->data; }
       const BST* GetLeftChild() const { return this->leftChild.get(); }
       const BST* GetRightChild() const { return this->rightChild.get(); }
 
     private:
-      BST(const Value_Type& data) : data(data) {}
+      BST(const Value& data) : data(data) {}
       BST(BST&) {}           // Not Implemented
       BST operator=(BST&) {} // Not Implemented
 
