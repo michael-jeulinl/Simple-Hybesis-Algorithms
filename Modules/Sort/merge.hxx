@@ -30,25 +30,25 @@ namespace SHA_Sort
   ///
   /// @complexity O(N * log(N)).
   ///
-  /// @tparam Iterator type using to go through the collection.
+  /// @tparam IT type using to go through the collection.
   ///
   /// @param begin,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return void.
-  template <typename Container, typename Iterator, typename Aggregator>
-  void MergeSort(Iterator& begin, Iterator& end)
+  template <typename Container, typename IT, typename Aggregator>
+  void MergeSort(IT begin, IT end)
   {
     const auto ksize = static_cast<const int>(std::distance(begin, end));
     if (ksize < 2)
       return;
 
-    Iterator middle = begin + ksize / 2;
+    auto middle = begin + ksize / 2;
 
     // Recursively break the vector into two pieces
-    MergeSort<Container, Iterator, Aggregator>(begin, middle);
-    MergeSort<Container, Iterator, Aggregator>(middle, end);
+    MergeSort<Container, IT, Aggregator>(begin, middle);
+    MergeSort<Container, IT, Aggregator>(middle, end);
 
     // Merge the two pieces
     Aggregator()(begin, middle, end);
@@ -64,18 +64,18 @@ namespace SHA_Sort
   ///
   /// @complexity O(N * M)
   ///
-  /// @tparam iterator type.
+  /// @tparam IT type.
   ///
   /// @param begin,middle,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return void.
-  template <typename Iterator>
+  template <typename IT>
   class MergeInPlace
   {
   public:
-    void operator()(Iterator begin, Iterator middle, Iterator end)
+    void operator()(IT begin, IT middle, IT end)
     {
       if (std::distance(begin, middle) < 1 || std::distance(middle, end) < 1)
         return;
@@ -86,7 +86,7 @@ namespace SHA_Sort
         if (*middle >= *begin)
           continue;
 
-        Iterator::value_type value;
+        typename IT::value_type value;
         std::swap(value, *begin);    // keep the higher value
         std::swap(*begin, *middle);  // Place it at the beginning of the second list
 
@@ -117,18 +117,18 @@ namespace SHA_Sort
   ///
   /// @complexity O(N).
   ///
-  /// @tparam iterator type.
+  /// @tparam IT type.
   ///
   /// @param begin,middle,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return void.
-  template <typename Container, typename Iterator>
+  template <typename Container, typename IT>
   class MergeWithBuffer
   {
   public:
-    void operator()(Iterator begin, Iterator middle, Iterator end)
+    void operator()(IT begin, IT middle, IT end)
     {
       if (std::distance(begin, middle) < 1 || std::distance(middle, end) < 1)
         return;
@@ -161,4 +161,4 @@ namespace SHA_Sort
   };
 };
 
-#endif() // MODULE_SORT_MERGE_HXX
+#endif // MODULE_SORT_MERGE_HXX

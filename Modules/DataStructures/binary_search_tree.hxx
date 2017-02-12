@@ -26,7 +26,7 @@ namespace SHA_DataStructures
 {
   /// @class BST
   ///
-  /// @detail A Binary Search Tree, Ordered Tree or Sorted Binary Tree divides all its sub-trees into
+  /// A Binary Search Tree, Ordered Tree or Sorted Binary Tree divides all its sub-trees into
   /// two segments left sub-tree and right sub-tree that follow these rules:
   /// - The left sub-tree of a node has key that respect the Compare operator (e.g. less_equal) with
   ///   its parent node's key.
@@ -51,14 +51,14 @@ namespace SHA_DataStructures
   ///   deletions, and can become degenerate.
   /// - When inserting or searching for an element in a binary search tree, the key of each visited node has
   ///   to be compared with the key of the element to be inserted or found.
-  template <typename Iterator, typename Compare, typename IsEqual>
+  template <typename IT, typename Compare, typename IsEqual>
   class BST
   {
-    typedef typename Iterator::value_type Value_Type;
+    typedef typename IT::value_type Value_Type;
     public:
       /// Build - Construct in a naive way a Binary Search Tree given an unordered sequence of elements.
       ///
-      /// @param begin,end - iterators to the initial and final positions of
+      /// @param begin,end - ITs to the initial and final positions of
       /// the sequence used to build the tree. The range used is [first,last), which contains
       /// all the elements between first and last, including the element pointed by first but
       /// not the element pointed by last.
@@ -66,7 +66,7 @@ namespace SHA_DataStructures
       /// @complexity O(n * m).
       ///
       /// @return Binary Search Tree pointer to be owned, nullptr if construction failed.
-      static std::unique_ptr<BST> Build(const Iterator& begin, const Iterator& end)
+      static std::unique_ptr<BST> Build(const IT& begin, const IT& end)
       {
         if (begin >= end)
           return  nullptr;
@@ -83,7 +83,7 @@ namespace SHA_DataStructures
 
       /// BuildFromSorted - Construct a Balanced Binary Search Tree given an ordered sequence of elements.
       ///
-      /// @param begin,end - iterators to the initial and final positions of
+      /// @param begin,end - ITs to the initial and final positions of
       /// the sequence used to build the tree. The range used is [first,last), which contains
       /// all the elements between first and last, including the element pointed by first but
       /// not the element pointed by last.
@@ -97,7 +97,7 @@ namespace SHA_DataStructures
       /// should be sorted given the same paradigme (e.g. greater value first).
       ///
       /// @return Binary Search Tree pointer to be owned, nullptr if construction failed.
-      static std::unique_ptr<BST> BuildFromSorted(const Iterator& begin, const Iterator& end)
+      static std::unique_ptr<BST> BuildFromSorted(const IT& begin, const IT& end)
       {
         if (begin >= end)
           return nullptr;
@@ -141,7 +141,7 @@ namespace SHA_DataStructures
       ///
       /// @param data data value to be added to the current BST. Member type Value_Type is the type of the
       /// elements in the BST, defined as an alias of its first template parameter value_type
-      /// (Iterator::value_type).
+      /// (IT::value_type).
       ///
       /// @return void.
       void Insert(const Value_Type& data)
@@ -217,7 +217,7 @@ namespace SHA_DataStructures
       /// @param data to be removed from the BST. All elements with a value equivalent (IsEqual template
       /// parameter) to this are removed from the container.
       /// Member type Value_Type is the type of the elements in the BST, defined as an alias of its first
-      /// template parameter value_type (Iterator::value_type).
+      /// template parameter value_type (IT::value_type).
       ///
       /// @warning this method is destructive and may delete the bst owned by the unique_ptr. Return value
       /// may be used for inline checking as:
@@ -363,10 +363,10 @@ namespace SHA_DataStructures
       void SetLeftChild(std::unique_ptr<BST> bst) { this->leftChild = std::move(bst); }
       void SetRightChild(std::unique_ptr<BST> bst) { this->rightChild = std::move(bst); }
 
-      typename Iterator::value_type data;
+      typename std::iterator_traits<IT>::value_type data;
       std::unique_ptr<BST> leftChild;
       std::unique_ptr<BST> rightChild;
   };
 };
 
-#endif() // MODULE_DATA_STRUCTURES_BST_HXX
+#endif // MODULE_DATA_STRUCTURES_BST_HXX
