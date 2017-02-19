@@ -32,6 +32,9 @@ Please find the last generated documentation here:
 http://michaeljeulin-l.com/Projects/SHAC/Doc/
 
 # GTest - Unit Testing & CMake
+Please find the last testing dashboard here:
+http://my.cdash.org/index.php?project=Simple-Hybesis-Algorithm
+
 Use the CMake **'BUILD_TESTING'** (default to true) option to automatically setup Unit Testing with google test.
 It allows to very quickly get set up with C++ and google test:
 
@@ -39,7 +42,11 @@ It allows to very quickly get set up with C++ and google test:
 - Setup the Unit Testings
 - Compile GTest at build time
 
+The minimal requiered coverage is 95%.
+
 ## Running Unit Tests (UTs)
+You can whether use CTest or manually run the unit tests.
+
 E.g. to manually run the 'TestBasicBinary' Unit Test (using GTest):
 
     Simple-Hybesis-Algorithms-Build/Modules/Search/Testing/Debug/TestBinary.exe  (Win)
@@ -64,6 +71,7 @@ E.g. to manually run the 'TestBasicBinary' Unit Test (using GTest):
 "Given an array of gains/losses over time, find the period that represents the best/worst cumulative gain."
 
 #### Sort
+- **Bubble Sort:** Sometimes referred to as sinking sort: proceed an in-place bubble-sort on the elements.
 - **MergeInplace:** Functor that proceeds a in place merge of two sequences of elements.
 - **MergeSort:** John von Neumann in 1945: Proceed merge-sort on the elements whether using an in-place strategy or using a buffer.
 - **MergeWithBuffer:** Functor that proceeds a merge of two sequences of elements using a buffer to improve time computation.
