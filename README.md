@@ -1,5 +1,7 @@
 # Simple-Hybesis-Algorithms
 Educational demonstration of building simple algorithms under good practices development (cross-building, unit testing, ...)
+- http://michaeljeulin-l.com/Projects/SHAC/Doc/ **(Documentation)**
+- http://my.cdash.org/index.php?project=Simple-Hybesis-Algorithm **(Dashboard)**
 
 # Simple-Hybesis-Algorithms
 You can find a fork repository adding algorithm logging features (used for visualization) and its documentation here:
@@ -32,9 +34,6 @@ Please find the last generated documentation here:
 http://michaeljeulin-l.com/Projects/SHAC/Doc/
 
 # GTest - Unit Testing & CMake
-Please find the last testing dashboard here:
-http://my.cdash.org/index.php?project=Simple-Hybesis-Algorithm
-
 Use the CMake **'BUILD_TESTING'** (default to true) option to automatically setup Unit Testing with google test.
 It allows to very quickly get set up with C++ and google test:
 
@@ -42,7 +41,11 @@ It allows to very quickly get set up with C++ and google test:
 - Setup the Unit Testings
 - Compile GTest at build time
 
-The minimal requiered coverage is 95%.
+Use the CMake **'WITH_COVERAGE'** (default to true) option to automatically setup Coverage Generation.
+The minimal requiered coverage is **95%**.
+
+Please find the last testing dashboard here:
+http://my.cdash.org/index.php?project=Simple-Hybesis-Algorithm
 
 ## Running Unit Tests (UTs)
 You can whether use CTest or manually run the unit tests.
