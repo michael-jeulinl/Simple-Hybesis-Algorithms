@@ -75,6 +75,9 @@ E.g. to manually run the 'TestBasicBinary' Unit Test (using GTest):
 
 #### Sort
 - **Bubble Sort:** Sometimes referred to as sinking sort: proceed an in-place bubble-sort on the elements.
+- **Cocktail Sort:** Variation of bubble sort. Optimize a bubble sort bubbling in both directions on each pass.
+- **Comb Sort:** Variation of bubble sort. The inner loop of bubble sort, which does the actual swap,
+is modified such that gap between swapped elements goes down (for each iteration of outer loop) in steps of a "shrink factor" k: [ n/k, n/k2, n/k3, ..., 1 ].
 - **MergeInplace:** Functor that proceeds a in place merge of two sequences of elements.
 - **MergeSort:** John von Neumann in 1945: Proceed merge-sort on the elements whether using an in-place strategy or using a buffer.
 - **MergeWithBuffer:** Functor that proceeds a merge of two sequences of elements using a buffer to improve time computation.
