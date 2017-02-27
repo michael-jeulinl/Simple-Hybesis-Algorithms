@@ -108,8 +108,8 @@ TEST(TestMerge, MergeInPlaces)
 
     MergeInPlace<IT>()(doubleValues.begin(), doubleValues.begin() + 1, doubleValues.end());
 
-    EXPECT_EQ(66, doubleValuesArray[0]);
-    EXPECT_EQ(511, doubleValuesArray[1]);
+    EXPECT_EQ(66, doubleValues[0]);
+    EXPECT_EQ(511, doubleValues[1]);
   }
 
   // String Collection - All elements should be sorted in order
