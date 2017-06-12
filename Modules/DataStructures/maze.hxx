@@ -20,6 +20,7 @@
 #ifndef MODULE_DATA_STRUCTURES_MAZE_HXX
 #define MODULE_DATA_STRUCTURES_MAZE_HXX
 
+// STD includes
 #include <chrono>
 #include <memory>
 #include <random>
@@ -142,13 +143,13 @@ namespace SHA_DataStructures
             // Only the choosen item should be add to the top following a DFS strategy
             for (unsigned int i = 0; i < curNeighbours.size(); ++i)
             {
-              curCell->AddCellConnection(curNeighbours[i]);
+              curCell->AddCellConnection(Cell::Visite(curNeighbours[i]));
               if (i != randIdx)
-                pathStack.push(Cell::Visite(curNeighbours[i]));
+                pathStack.push(curNeighbours[i]);
             }
 
             // Add the choosen node as the next one to be processed
-            pathStack.push(Cell::Visite(curNeighbours[randIdx]));
+            pathStack.push(curNeighbours[randIdx]);
           }
         }
       }
@@ -163,10 +164,10 @@ namespace SHA_DataStructures
         const auto curY = cell.getY();
 
         // Push left if available
-        if (static_cast<int>(curX - 1) > 0 && !this->mazeMatrix[curX - 1][curY]->IsVisited())
+        if (static_cast<int>(curX - 1) >= 0 && !this->mazeMatrix[curX - 1][curY]->IsVisited())
           neighbour.push_back(this->mazeMatrix[curX - 1][curY]);
         // Push bottom if available
-        if (static_cast<int>(curY - 1) > 0 && !this->mazeMatrix[curX][curY - 1]->IsVisited())
+        if (static_cast<int>(curY - 1) >= 0 && !this->mazeMatrix[curX][curY - 1]->IsVisited())
           neighbour.push_back(this->mazeMatrix[curX][curY - 1]);
         // Push top if available
         if (curX + 1 < this->mazeMatrix.size() && !this->mazeMatrix[curX + 1][curY]->IsVisited())
