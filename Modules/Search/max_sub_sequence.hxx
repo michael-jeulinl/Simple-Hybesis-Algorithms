@@ -63,10 +63,10 @@ namespace SHA_Search
     auto currSum = *begin;
     auto maxSum = *begin;
 
-    for (auto it = begin + 1; it != end; ++it)
+    int currentIdx = 1;
+    for (auto it = begin + 1; it != end; ++it, ++currentIdx)
     {
       currSum += *it;
-      auto currentIdx = static_cast<int>(std::distance(begin, it));
 
       // keep track of the minimum sum and its first value index
       if (Compare()(minSum, currSum))
