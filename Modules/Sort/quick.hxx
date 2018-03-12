@@ -24,12 +24,7 @@
 
 namespace SHA_Sort
 {
-  /// Quick Sort - Partition-Exchange Sort
-  /// Proceed an in-place quick-sort on the elements.
-  ///
-  /// @complexity O(N * log(N)) in average case and O(N²) on worst case.
-  /// @remark: this algorithm performs in general 2 to 3 time faster than a classic merge sort.
-  /// @remark: this algorithm is easily parallelizable.
+  /// Quick Sort - Proceed an in-place sort on the elements.
   ///
   /// @tparam IT type using to go through the collection.
   /// @tparam Compare functor type (std::less_equal in order, std::greater_equal for inverse order).
@@ -39,7 +34,8 @@ namespace SHA_Sort
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return void.
-  template <typename IT, typename Compare = std::less_equal<typename std::iterator_traits<IT>::value_type>>
+  template <typename IT,
+            typename Compare = std::less_equal<typename std::iterator_traits<IT>::value_type>>
   void QuickSort(const IT& begin, const IT& end)
   {
     const auto distance = static_cast<const int>(std::distance(begin, end));

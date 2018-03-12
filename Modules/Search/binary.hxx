@@ -25,21 +25,20 @@
 
 namespace SHA_Search
 {
-  /// Binary Search
-  /// Iteratively proceed a dichotomic search within a sorted collection on the first occurence
-  /// of the key passed as parameter.
-  ///
-  /// @complexity O(log(N)).
+  /// Binary Search - Given a sorted sequence, find the exact position of a specific value.
   ///
   /// @tparam IT type using to go through the collection.
+  /// @tparam Compare functor type (std::less_equal to find kth smallest element,
+  /// std::greater_equal to find the kth biggest one).
 
   /// @param begin,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   /// @param key the key value to be searched.
   ///
-  /// @return The vector index of the first found key, -1 otherwise.
-  template <typename IT, typename IsEqual>
+  /// @return The index of the first key occurence found, -1 if not found.
+  template <typename IT,
+            typename IsEqual = std::equal_to<typename std::iterator_traits<IT>::value_type>>
   int BinarySearch(const IT& begin, const IT& end, const typename std::iterator_traits<IT>::value_type& key)
   {
     int index = -1;

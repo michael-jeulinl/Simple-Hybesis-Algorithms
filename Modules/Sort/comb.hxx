@@ -25,20 +25,7 @@
 
 namespace SHA_Sort
 {
-  /// Comb Sort - Comb Sort
-  /// Proceed an in-place Comb-sort on the elements.
-  /// Proceed an in-place Cocktail-sort on the elements.
-  /// Comb sort is a relatively simple sorting algorithm originally designed by Wlodzimierz Dobosiewicz in
-  /// 1980.
-  /// It was later rediscovered and popularized by Stephen Lacey and Richard Box with a Byte Magazine article
-  ///  published in April 1991. Comb sort improves on bubble sort.
-  /// The basic idea is to eliminate turtles, or small values near the end of the list,
-  /// since in a bubble sort these slow the sorting down tremendously.
-  /// (Rabbits, large values around the beginning of the list, do not pose a problem in bubble sort)
-  ///
-  /// @complexity O(N²) in average case, O(N²) on worst case and (N log(N)) on best case.
-  /// @remark: Although the algorithm is simple and an optimization of the bubble sort,
-  /// it is too slow and impractical for most problem.
+  /// Comb Sort - Proceed an in-place sort on the elements.
   ///
   /// @tparam IT type using to go through the collection.
   /// @tparam Compare functor type (std::less_equal in order, std::greater_equal for inverse order).
@@ -48,14 +35,15 @@ namespace SHA_Sort
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return void.
-  template <typename IT, typename Compare = std::less<typename std::iterator_traits<IT>::value_type>>
+  template <typename IT,
+            typename Compare = std::less<typename std::iterator_traits<IT>::value_type>>
   void Comb(const IT& begin, const IT& end)
   {
     const auto distance = static_cast<const int>(std::distance(begin, end));
     if (distance < 2)
       return;
 
-    int gap = distance;
+    auto gap = distance;
     double shrink = 1.3;
     bool hasSwapped = true;
     while (hasSwapped)

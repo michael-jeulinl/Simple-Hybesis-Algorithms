@@ -18,7 +18,7 @@
  *
  *=========================================================================================================*/
 #include <gtest/gtest.h>
-#include <kth_max_element.hxx>
+#include <kth_order_statistic.hxx>
 
 // STD includes
 #include <functional>
@@ -38,35 +38,35 @@ namespace {
 #endif /* DOXYGEN_SKIP */
 
 // Test kth smallest elements
-TEST(TestSearch, MaxKthElement)
+TEST(TestSearch, KthOrderStatistic)
 {
   {
     // Basic run on random array - Should return 4
     Container krandomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-    EXPECT_EQ(4, *MaxKthElement<IT>(krandomdArray.begin(), krandomdArray.end(), 7));
+    EXPECT_EQ(4, *KthOrderStatistic<IT>(krandomdArray.begin(), krandomdArray.end(), 7));
   }
 
   Container ksortedArray(SortedArrayInt, SortedArrayInt + sizeof(SortedArrayInt) / sizeof(int));
 
   // Basic run on sorted array with unique element - Should the kth element
-  EXPECT_EQ(ksortedArray.begin() + 4, MaxKthElement<IT>(ksortedArray.begin(), ksortedArray.end(), 4));
+  EXPECT_EQ(ksortedArray.begin() + 4, KthOrderStatistic<IT>(ksortedArray.begin(), ksortedArray.end(), 4));
 
   // Empty sequence - Should return end on empty sequence
-  EXPECT_EQ(ksortedArray.begin(), MaxKthElement<IT>(ksortedArray.begin(), ksortedArray.begin(), 0));
+  EXPECT_EQ(ksortedArray.begin(), KthOrderStatistic<IT>(ksortedArray.begin(), ksortedArray.begin(), 0));
 
   // Unique element sequence - Should return the unique element
-  EXPECT_EQ(ksortedArray.begin(), MaxKthElement<IT>(ksortedArray.begin(), ksortedArray.begin() + 1, 0));
+  EXPECT_EQ(ksortedArray.begin(), KthOrderStatistic<IT>(ksortedArray.begin(), ksortedArray.begin() + 1, 0));
 
   // Negative index - Should return end for out of scope search (k = 0)
-  EXPECT_EQ(ksortedArray.begin(), MaxKthElement<IT>(ksortedArray.begin(), ksortedArray.end(), 0));
+  EXPECT_EQ(ksortedArray.begin(), KthOrderStatistic<IT>(ksortedArray.begin(), ksortedArray.end(), 0));
 
   // k bigger than the size of the sequence - Should return end for out of scope search
-  EXPECT_EQ(ksortedArray.end(), MaxKthElement<IT>(ksortedArray.begin(), ksortedArray.end(), 100));
+  EXPECT_EQ(ksortedArray.end(), KthOrderStatistic<IT>(ksortedArray.begin(), ksortedArray.end(), 100));
 
   // String
   {
     std::string randomStr = RandomStr;
-    const char secondSmallestLetter = *MaxKthElement
+    const char secondSmallestLetter = *KthOrderStatistic
       <std::string::iterator, std::less_equal<char>>(randomStr.begin(), randomStr.end(), 1);
     EXPECT_EQ('c', secondSmallestLetter);
   }
@@ -77,6 +77,6 @@ TEST(TestSearch, MinKthElement)
 {
   // Basic run on random array - Should return 5 (second biggest value)
   Container krandomdArray(RandomArrayInt, RandomArrayInt + sizeof(RandomArrayInt) / sizeof(int));
-  IT::value_type value = *MaxKthElement<IT, GR_Compare>(krandomdArray.begin(), krandomdArray.end(), 1);
+  IT::value_type value = *KthOrderStatistic<IT, GR_Compare>(krandomdArray.begin(), krandomdArray.end(), 1);
   EXPECT_EQ(5, value);
 }

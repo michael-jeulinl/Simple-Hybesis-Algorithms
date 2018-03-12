@@ -27,14 +27,11 @@
 
 namespace SHA_Search
 {
-  /// Kth Smallest / Biggest element - Order Statitstics
+  /// Kt'h Order Statitstic
   /// Find the kth smallest/biggest element contained within [begin, end[.
   ///
   /// @warning this method is not stable (does not keep order with element of the same value).
   /// @warning this method changes the elements order between your iterators.
-  ///
-  /// @complexity recursively look on the choosen partition:
-  ///             N + N/2 + N/4 + N/8 + ... = O(N).
   ///
   /// @tparam IT Random-access iterator type.
   /// @tparam Compare functor type (std::less_equal to find kth smallest element,
@@ -47,8 +44,9 @@ namespace SHA_Search
   ///
   /// @return the kth smallest IT element of the array, the end IT in case of failure.
   template <typename IT, typename Compare = std::less_equal<typename std::iterator_traits<IT>::value_type>>
-  IT MaxKthElement(const IT& begin, const IT& end, unsigned int k)
+  IT KthOrderStatistic(const IT& begin, const IT& end, unsigned int k)
   {
+    // Sequence does not contain enough elements: Could not find the k'th one.
     const auto kSize = static_cast<const int>(std::distance(begin, end));
     if (k >= static_cast<unsigned int>(kSize))
       return end;
@@ -56,17 +54,17 @@ namespace SHA_Search
     auto pivot = begin + (rand() % kSize);                               // Take random pivot
     auto newPivot = SHA_Sort::Partition<IT, Compare>(begin, pivot, end); // Partition
 
-    // Get the index of the pivot (i'th smallest/biggest value)
+    // Get the index of the pivot (i'th value)
     const auto kPivotIndex = std::distance(begin, newPivot);
 
-    // Return if at the kth position
+    // If at the k'th position: found!
     if (kPivotIndex == k)
       return newPivot;
 
     // Recurse search on left part if there is more than k elements within the left sequence
     // Recurse search on right otherwise
-    return (kPivotIndex > k) ? MaxKthElement<IT, Compare>(begin, newPivot, k)
-                             : MaxKthElement<IT, Compare>(newPivot, end, k - kPivotIndex);
+    return (kPivotIndex > k) ? KthOrderStatistic<IT, Compare>(begin, newPivot, k)
+                             : KthOrderStatistic<IT, Compare>(newPivot, end, k - kPivotIndex);
 
   }
 }

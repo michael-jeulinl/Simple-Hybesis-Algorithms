@@ -22,7 +22,7 @@ set(SHA ${PROJECT_NAME})
 
 # Source files
 set(MODULE_SEARCH_SRCS TestBinary.cxx
-                       TestKthMaxElement.cxx
+                       TestKthOrderStatistic.cxx
                        TestMaxDistance.cxx
                        TestMaxMElements.cxx
                        TestMaxSubSequence.cxx)

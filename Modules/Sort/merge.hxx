@@ -25,24 +25,24 @@
 
 namespace SHA_Sort
 {
-  /// MergeInplace - Inplace merging of two ordered sequences of a collection
-  /// Proceed a in place merge of two sequences of elements contained in [begin, middle[ and [middle, end[.
+  /// MergeInplace Functor - In-Place merging of two ordered sequences of a collection
+  /// contained in [begin, middle[ and [middle, end[.
   ///
   /// @warning Both sequence [bengin, middle[ and [middle, end[ need to be ordered.
   ///
   /// @remark use MergeWithBuffer to proceed the merge using a buffer:
   /// Takes higher memory consumption and lower computation consumption.
   ///
-  /// @complexity O(N * M)
-  ///
-  /// @tparam IT type.
+  /// @tparam IT type using to go through the collection.
+  /// @tparam Compare functor type (std::less_equal in order, std::greater_equal for inverse order).
   ///
   /// @param begin,middle,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return void.
-  template <typename IT, typename Compare = std::less<typename std::iterator_traits<IT>::value_type>>
+  template <typename IT,
+            typename Compare = std::less<typename std::iterator_traits<IT>::value_type>>
   class MergeInPlace
   {
   public:
@@ -74,24 +74,24 @@ namespace SHA_Sort
   };
 
 
-  /// MergeWithBuffer - Merging of two ordered sequences of a collection using intermediate buffer
-  /// Proceed a merge of two sequences of elements contained in [begin, middle[ and [middle, end[.
+  /// MergeWithBuffer Functor - Merging of two ordered sequences of a collection
+  /// of elements contained in [begin, middle[ and [middle, end[ using intermediate buffer.
   ///
   /// @warning Both sequence [bengin, middle[ and [middle, end[ need to be ordered.
   ///
   /// @remark use MergeInPlace to proceed the merge in place:
   /// Takes lower memory consumption and higher computation consumption.
   ///
-  /// @complexity O(N).
-  ///
-  /// @tparam IT type.
+  /// @tparam IT type using to go through the collection.
+  /// @tparam Compare functor type (std::less_equal in order, std::greater_equal for inverse order).
   ///
   /// @param begin,middle,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return void.
-  template <typename IT>
+  template <typename IT,
+            typename Compare = std::less<typename std::iterator_traits<IT>::value_type>>
   class MergeWithBuffer
   {
   public:
@@ -110,7 +110,7 @@ namespace SHA_Sort
       const auto curMiddle(middle);
       while (begin != curMiddle && middle != end)
       {
-        if (*begin <= *middle)
+        if (Compare()(*begin, *middle))
           *buffIt++ = *begin++;
         else
           *buffIt++ = *middle++;
@@ -128,20 +128,18 @@ namespace SHA_Sort
     }
   };
 
-  /// MergeSort - John von Neumann in 1945
-  /// Proceed merge-sort on the elements whether using an in-place strategy or using a buffer.
-  ///
-  /// @complexity O(N * log(N)).
+  /// MergeSort - Proceed sort on the elements whether using an in-place strategy or using a buffer one.
   ///
   /// @tparam IT type using to go through the collection.
+  /// @tparam Aggregator functor type used to aggregate two sorted sequences.
   ///
   /// @param begin,end iterators to the initial and final positions of
   /// the sequence to be sorted. The range used is [first,last), which contains all the elements between
   /// first and last, including the element pointed by first but not the element pointed by last.
   ///
   /// @return void.
-  /// @todo add compare template functor
-  template <typename IT, typename Aggregator = MergeWithBuffer<IT>>
+  template <typename IT,
+            typename Aggregator = MergeWithBuffer<IT>>
   void MergeSort(const IT& begin, const IT& end)
   {
     const auto ksize = static_cast<const int>(std::distance(begin, end));

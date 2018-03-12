@@ -25,10 +25,7 @@
 
 namespace SHA_Sort
 {
-  /// Partition-Exchange
-  /// Proceed an in-place patitionning on the elements.
-  ///
-  /// @complexity O(N).
+  /// Partition-Exchange - Proceed an in-place patitionning on the elements.
   ///
   /// @tparam IT type using to go through the collection.
   /// @tparam Compare functor type (std::less_equal for smaller elements in left partition,
@@ -40,7 +37,8 @@ namespace SHA_Sort
   /// @param pivot iterator on which the partition is delimited between begin and end.
   ///
   /// @return new pivot iterator.
-  template <typename IT, typename Compare = std::less_equal<typename std::iterator_traits<IT>::value_type>>
+  template <typename IT,
+            typename Compare = std::less_equal<typename std::iterator_traits<IT>::value_type>>
   IT Partition(const IT& begin, const IT& pivot, const IT& end)
   {
     if (std::distance(begin, end) < 2 || pivot == end)
